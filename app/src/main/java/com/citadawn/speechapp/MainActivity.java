@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
     private String pendingAudioText = null;
     private TextView textSpeechRateValue, textPitchValue;
     private Button btnSpeedMinus, btnSpeedPlus, btnPitchMinus, btnPitchPlus, btnSpeedReset, btnPitchReset;
-    private EditText editSpeedValue, editPitchValue;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -146,10 +145,8 @@ public class MainActivity extends AppCompatActivity {
         textPitchValue = findViewById(R.id.textPitchValue);
         btnSpeedMinus = findViewById(R.id.btnSpeedMinus);
         btnSpeedPlus = findViewById(R.id.btnSpeedPlus);
-        editSpeedValue = findViewById(R.id.editSpeedValue);
         btnPitchMinus = findViewById(R.id.btnPitchMinus);
         btnPitchPlus = findViewById(R.id.btnPitchPlus);
-        editPitchValue = findViewById(R.id.editPitchValue);
         btnSpeedReset = findViewById(R.id.btnSpeedReset);
         btnPitchReset = findViewById(R.id.btnPitchReset);
 
@@ -160,108 +157,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float value = 0.5f + progress * 0.1f;
-                textSpeechRateValue.setText(String.format("%.1f", value));
-                editSpeedValue.setText(String.format("%.1f", value));
+                value = Math.round(value * 10f) / 10f; // 保留一位小数
+                textSpeechRateValue.setText(String.format("%.2f", value));
                 speechRate = value;
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
         btnSpeedMinus.setOnClickListener(v -> {
-            int progress = seekBarSpeed.getProgress();
-            if (progress > 0) seekBarSpeed.setProgress(progress - 1);
+            float value = Float.parseFloat(textSpeechRateValue.getText().toString());
+            value -= 0.01f;
+            if (value < 0.5f) value = 0.5f;
+            value = Math.round(value * 100f) / 100f; // 保留两位小数
+            textSpeechRateValue.setText(String.format("%.2f", value));
+            speechRate = value;
+            // 同步SeekBar
+            int progress = Math.round((value - 0.5f) / 0.1f);
+            seekBarSpeed.setProgress(progress);
         });
         btnSpeedPlus.setOnClickListener(v -> {
-            int progress = seekBarSpeed.getProgress();
-            if (progress < 15) seekBarSpeed.setProgress(progress + 1);
+            float value = Float.parseFloat(textSpeechRateValue.getText().toString());
+            value += 0.01f;
+            if (value > 2.0f) value = 2.0f;
+            value = Math.round(value * 100f) / 100f;
+            textSpeechRateValue.setText(String.format("%.2f", value));
+            speechRate = value;
+            int progress = Math.round((value - 0.5f) / 0.1f);
+            seekBarSpeed.setProgress(progress);
         });
-        editSpeedValue.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                try {
-                    float value = Float.parseFloat(editSpeedValue.getText().toString());
-                    if (value < 0.5f) value = 0.5f;
-                    if (value > 2.0f) value = 2.0f;
-                    value = Math.round((value - 0.5f) / 0.1f) * 0.1f;
-                    int progress = Math.round((value - 0.5f) / 0.1f);
-                    seekBarSpeed.setProgress(progress);
-                    editSpeedValue.setText(String.format("%.1f", value));
-                } catch (Exception e) {
-                    seekBarSpeed.setProgress(5); // 恢复默认
-                    editSpeedValue.setText("1.0");
-                }
-            }
-        });
-        editSpeedValue.setOnEditorActionListener((v, actionId, event) -> {
-            try {
-                float value = Float.parseFloat(editSpeedValue.getText().toString());
-                if (value < 0.5f) value = 0.5f;
-                if (value > 2.0f) value = 2.0f;
-                value = Math.round((value - 0.5f) / 0.1f) * 0.1f;
-                int progress = Math.round((value - 0.5f) / 0.1f);
-                seekBarSpeed.setProgress(progress);
-                editSpeedValue.setText(String.format("%.1f", value));
-            } catch (Exception e) {
-                seekBarSpeed.setProgress(5);
-                editSpeedValue.setText("1.0");
-            }
-            return false;
-        });
-
-        // 音调调节
-        seekBarPitch.setMax(15);
-        seekBarPitch.setProgress(5);
-        seekBarPitch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float value = 0.5f + progress * 0.1f;
-                textPitchValue.setText(String.format("%.1f", value));
-                editPitchValue.setText(String.format("%.1f", value));
-                pitch = value;
-            }
-            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
-        btnPitchMinus.setOnClickListener(v -> {
-            int progress = seekBarPitch.getProgress();
-            if (progress > 0) seekBarPitch.setProgress(progress - 1);
-        });
-        btnPitchPlus.setOnClickListener(v -> {
-            int progress = seekBarPitch.getProgress();
-            if (progress < 15) seekBarPitch.setProgress(progress + 1);
-        });
-        editPitchValue.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                try {
-                    float value = Float.parseFloat(editPitchValue.getText().toString());
-                    if (value < 0.5f) value = 0.5f;
-                    if (value > 2.0f) value = 2.0f;
-                    value = Math.round((value - 0.5f) / 0.1f) * 0.1f;
-                    int progress = Math.round((value - 0.5f) / 0.1f);
-                    seekBarPitch.setProgress(progress);
-                    editPitchValue.setText(String.format("%.1f", value));
-                } catch (Exception e) {
-                    seekBarPitch.setProgress(5);
-                    editPitchValue.setText("1.0");
-                }
-            }
-        });
-        editPitchValue.setOnEditorActionListener((v, actionId, event) -> {
-            try {
-                float value = Float.parseFloat(editPitchValue.getText().toString());
-                if (value < 0.5f) value = 0.5f;
-                if (value > 2.0f) value = 2.0f;
-                value = Math.round((value - 0.5f) / 0.1f) * 0.1f;
-                int progress = Math.round((value - 0.5f) / 0.1f);
-                seekBarPitch.setProgress(progress);
-                editPitchValue.setText(String.format("%.1f", value));
-            } catch (Exception e) {
-                seekBarPitch.setProgress(5);
-                editPitchValue.setText("1.0");
-            }
-            return false;
-        });
-
-        // 重置按钮
         btnSpeedReset.setOnClickListener(v -> {
             v.animate()
                 .scaleX(0.85f)
@@ -274,8 +197,43 @@ public class MainActivity extends AppCompatActivity {
                     .start())
                 .start();
             seekBarSpeed.setProgress(5);
-            editSpeedValue.setText("1.0");
-            textSpeechRateValue.setText("1.0");
+            textSpeechRateValue.setText("1.00");
+            speechRate = 1.0f;
+        });
+
+        // 音调调节
+        seekBarPitch.setMax(15);
+        seekBarPitch.setProgress(5);
+        seekBarPitch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float value = 0.5f + progress * 0.1f;
+                value = Math.round(value * 10f) / 10f; // 保留一位小数
+                textPitchValue.setText(String.format("%.2f", value));
+                pitch = value;
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        btnPitchMinus.setOnClickListener(v -> {
+            float value = Float.parseFloat(textPitchValue.getText().toString());
+            value -= 0.01f;
+            if (value < 0.5f) value = 0.5f;
+            value = Math.round(value * 100f) / 100f;
+            textPitchValue.setText(String.format("%.2f", value));
+            pitch = value;
+            int progress = Math.round((value - 0.5f) / 0.1f);
+            seekBarPitch.setProgress(progress);
+        });
+        btnPitchPlus.setOnClickListener(v -> {
+            float value = Float.parseFloat(textPitchValue.getText().toString());
+            value += 0.01f;
+            if (value > 2.0f) value = 2.0f;
+            value = Math.round(value * 100f) / 100f;
+            textPitchValue.setText(String.format("%.2f", value));
+            pitch = value;
+            int progress = Math.round((value - 0.5f) / 0.1f);
+            seekBarPitch.setProgress(progress);
         });
         btnPitchReset.setOnClickListener(v -> {
             v.animate()
@@ -289,8 +247,8 @@ public class MainActivity extends AppCompatActivity {
                     .start())
                 .start();
             seekBarPitch.setProgress(5);
-            editPitchValue.setText("1.0");
-            textPitchValue.setText("1.0");
+            textPitchValue.setText("1.00");
+            pitch = 1.0f;
         });
 
         tts = new TextToSpeech(this, status -> {

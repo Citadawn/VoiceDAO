@@ -40,25 +40,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="8dp" />
 
-    <!-- 语速调节区块（两行结构） -->
+    <!-- 语速调节区块 两行结构 -->
     <LinearLayout
         android:id="@+id/layoutSpeedBlock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/editText"
         android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/editText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- 语速区块第一行 优化版 -->
+        <!-- 第一行：标题、步进器、数值、重置 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- 语速标题 -->
             <TextView
                 android:id="@+id/tvSpeedLabel"
                 android:layout_width="wrap_content"
@@ -66,113 +65,78 @@
                 android:text="语速"
                 android:textSize="24sp"
                 android:textColor="#333"
-                android:layout_marginEnd="16dp"/>
-
-            <!-- 步进器整体 -->
-            <LinearLayout
-                android:id="@+id/stepperSpeed"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                android:background="@drawable/stepper_bg"
-                android:gravity="center"
-                android:layout_marginEnd="12dp">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnSpeedMinus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@color/main_dark"
-                    android:gravity="center"
-                    android:text="-"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:stateListAnimator="@null"/>
-
-                <EditText
-                    android:id="@+id/editSpeedValue"
-                    android:layout_width="48dp"
-                    android:layout_height="32dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="center"
-                    android:inputType="numberDecimal"
-                    android:text="1.0"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:padding="0dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"/>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnSpeedPlus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@color/main_dark"
-                    android:gravity="center"
-                    android:text="+"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:stateListAnimator="@null"/>
-            </LinearLayout>
-
-            <!-- 重置按钮 -->
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSpeedReset"
-                android:layout_width="72dp"
-                android:layout_height="40dp"
-                android:text="重置"
-                android:textSize="15sp"
-                android:background="@color/main_dark"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:stateListAnimator="@null"/>
-        </LinearLayout>
-
-        <!-- 语速滑块与上方间距16dp -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="16dp">
-            <SeekBar
-                android:id="@+id/seekBarSpeed"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:max="150"
-                android:progress="50"
-                android:layout_weight="1"
                 android:layout_marginEnd="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSpeedMinus"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/stepper_bg"
+                android:text="-"
+                android:textColor="@color/main_dark"
+                android:textSize="18sp"
+                android:layout_marginEnd="4dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSpeedPlus"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/stepper_bg"
+                android:text="+"
+                android:textColor="@color/main_dark"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp"/>
+
             <TextView
                 android:id="@+id/textSpeechRateValue"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:text="1.0"
+                android:text="1.00"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:textColor="#333"/>
+                android:textColor="#333"
+                android:layout_marginEnd="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSpeedReset"
+                android:layout_width="64dp"
+                android:layout_height="36dp"
+                android:text="重置"
+                android:textSize="15sp"
+                android:background="@color/main_dark"
+                android:textColor="@color/white"
+                android:gravity="center"/>
         </LinearLayout>
+
+        <!-- 第二行：滑块 -->
+        <SeekBar
+            android:id="@+id/seekBarSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:max="15"
+            android:progress="5"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"/>
     </LinearLayout>
 
-    <!-- 音调调节区块（两行结构） -->
+    <!-- 音调调节区块 两行结构 -->
     <LinearLayout
         android:id="@+id/layoutPitchBlock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/layoutSpeedBlock"
         android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutSpeedBlock"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- 音调区块第一行 优化版 -->
+        <!-- 第一行：标题、步进器、数值、重置 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- 音调标题 -->
             <TextView
                 android:id="@+id/tvPitchLabel"
                 android:layout_width="wrap_content"
@@ -180,105 +144,71 @@
                 android:text="音调"
                 android:textSize="24sp"
                 android:textColor="#333"
-                android:layout_marginEnd="16dp"/>
-
-            <!-- 步进器整体 -->
-            <LinearLayout
-                android:id="@+id/stepperPitch"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                android:background="@drawable/stepper_bg"
-                android:gravity="center"
-                android:layout_marginEnd="12dp">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnPitchMinus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@color/main_dark"
-                    android:gravity="center"
-                    android:text="-"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:stateListAnimator="@null"/>
-
-                <EditText
-                    android:id="@+id/editPitchValue"
-                    android:layout_width="48dp"
-                    android:layout_height="32dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="center"
-                    android:inputType="numberDecimal"
-                    android:text="1.0"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:padding="0dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"/>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnPitchPlus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@color/main_dark"
-                    android:gravity="center"
-                    android:text="+"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:stateListAnimator="@null"/>
-            </LinearLayout>
-
-            <!-- 重置按钮 -->
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnPitchReset"
-                android:layout_width="72dp"
-                android:layout_height="40dp"
-                android:text="重置"
-                android:textSize="15sp"
-                android:background="@color/main_dark"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:stateListAnimator="@null"/>
-        </LinearLayout>
-
-        <!-- 音调滑块与上方间距16dp -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="16dp">
-            <SeekBar
-                android:id="@+id/seekBarPitch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:max="150"
-                android:progress="50"
-                android:layout_weight="1"
                 android:layout_marginEnd="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnPitchMinus"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/stepper_bg"
+                android:text="-"
+                android:textColor="@color/main_dark"
+                android:textSize="18sp"
+                android:layout_marginEnd="4dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnPitchPlus"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/stepper_bg"
+                android:text="+"
+                android:textColor="@color/main_dark"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp"/>
+
             <TextView
                 android:id="@+id/textPitchValue"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:text="1.0"
+                android:text="1.00"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:textColor="#333"/>
+                android:textColor="#333"
+                android:layout_marginEnd="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnPitchReset"
+                android:layout_width="64dp"
+                android:layout_height="36dp"
+                android:text="重置"
+                android:textSize="15sp"
+                android:background="@color/main_dark"
+                android:textColor="@color/white"
+                android:gravity="center"/>
         </LinearLayout>
+
+        <!-- 第二行：滑块 -->
+        <SeekBar
+            android:id="@+id/seekBarPitch"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:max="15"
+            android:progress="5"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"/>
     </LinearLayout>
 
-    <!-- 朗读/停止按钮横向排列 -->
+    <!-- 朗读/停止按钮横向排列，约束在音调区块下方 -->
     <LinearLayout
         android:id="@+id/layoutSpeakRow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@id/layoutPitchBlock"
         android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutPitchBlock"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -306,7 +236,7 @@
             android:stateListAnimator="@null"/>
     </LinearLayout>
 
-    <!-- 保存为音频按钮 -->
+    <!-- 保存为音频按钮，约束在朗读/停止按钮下方 -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSaveAudio"
         android:layout_width="0dp"

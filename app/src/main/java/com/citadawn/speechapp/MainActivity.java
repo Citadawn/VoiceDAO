@@ -263,11 +263,31 @@ public class MainActivity extends AppCompatActivity {
 
         // 重置按钮
         btnSpeedReset.setOnClickListener(v -> {
+            v.animate()
+                .scaleX(0.85f)
+                .scaleY(0.85f)
+                .setDuration(80)
+                .withEndAction(() -> v.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(80)
+                    .start())
+                .start();
             seekBarSpeed.setProgress(5);
             editSpeedValue.setText("1.0");
             textSpeechRateValue.setText("1.0");
         });
         btnPitchReset.setOnClickListener(v -> {
+            v.animate()
+                .scaleX(0.85f)
+                .scaleY(0.85f)
+                .setDuration(80)
+                .withEndAction(() -> v.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(80)
+                    .start())
+                .start();
             seekBarPitch.setProgress(5);
             editPitchValue.setText("1.0");
             textPitchValue.setText("1.0");

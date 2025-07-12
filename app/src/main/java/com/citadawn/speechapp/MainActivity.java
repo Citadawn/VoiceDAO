@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private float speechRate = 1.0f;
     private float pitch = 1.0f;
     private Locale currentLocale = Locale.CHINESE;
-    private ImageButton btnClear;
+    private Button btnClear;
     private Button btnStop;
     private Button btnSaveAudio;
     private ActivityResultLauncher<Intent> createFileLauncher;

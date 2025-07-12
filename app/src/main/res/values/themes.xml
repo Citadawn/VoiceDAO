@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 兼容所有版本的Toolbar样式 -->
+    <style name="AppToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/main_dark</item>
+        <item name="titleTextColor">@color/main_white</item>
+        <item name="subtitleTextColor">@color/main_white</item>
+    </style>
+
+    <!-- 应用主题（AppCompat/Material2） -->
+    <style name="Theme.文本转语音" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/main_dark</item>
+        <item name="colorOnPrimary">@color/main_white</item>
+        <item name="toolbarStyle">@style/AppToolbar</item>
+    </style>
+</resources>

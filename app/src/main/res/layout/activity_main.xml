@@ -57,63 +57,82 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-            <TextView
-                android:id="@+id/tvSpeedLabel"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="语速"
-                android:textSize="24sp"
-                android:textColor="#333"/>
-            <LinearLayout
-                android:id="@+id/stepperSpeed"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:orientation="horizontal"
-                android:background="@drawable/stepper_bg"
-                android:gravity="center">
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tvSpeedLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="语速"
+                    android:textSize="24sp"
+                    android:textColor="#333"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/stepperSpeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/stepper_bg"
+                    android:gravity="center"
+                    android:layout_gravity="center">
+                    <Button
+                        android:id="@+id/btnSpeedMinus"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:text="-"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:background="@color/main_dark"
+                        android:gravity="center"
+                        android:padding="0dp"/>
+                    <EditText
+                        android:id="@+id/editSpeedValue"
+                        android:layout_width="44dp"
+                        android:layout_height="32dp"
+                        android:inputType="numberDecimal"
+                        android:text="1.0"
+                        android:gravity="center"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:background="@android:color/transparent"
+                        android:padding="0dp"/>
+                    <Button
+                        android:id="@+id/btnSpeedPlus"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:text="+"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:background="@color/main_dark"
+                        android:gravity="center"
+                        android:padding="0dp"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
                 <Button
-                    android:id="@+id/btnSpeedMinus"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:text="-"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
+                    android:id="@+id/btnSpeedReset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:minWidth="56dp"
+                    android:text="重置"
+                    android:textSize="12sp"
                     android:background="@color/main_dark"
-                    android:gravity="center"
-                    android:padding="0dp"/>
-                <EditText
-                    android:id="@+id/editSpeedValue"
-                    android:layout_width="44dp"
-                    android:layout_height="32dp"
-                    android:inputType="numberDecimal"
-                    android:text="1.0"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:background="@android:color/transparent"
-                    android:padding="0dp"/>
-                <Button
-                    android:id="@+id/btnSpeedPlus"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:text="+"
-                    android:textSize="14sp"
                     android:textColor="@color/white"
-                    android:background="@color/main_dark"
                     android:gravity="center"
-                    android:padding="0dp"/>
-            </LinearLayout>
-            <Button
-                android:id="@+id/btnSpeedReset"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:minWidth="56dp"
-                android:text="重置"
-                android:textSize="12sp"
-                android:layout_marginStart="12dp"
-                android:background="@color/main_dark"
-                android:textColor="@color/white"
-                android:gravity="center"/>
+                    android:layout_gravity="end|center_vertical"/>
+            </FrameLayout>
         </LinearLayout>
 
         <!-- 语速滑块与上方间距16dp -->
@@ -159,63 +178,82 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-            <TextView
-                android:id="@+id/tvPitchLabel"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="音调"
-                android:textSize="24sp"
-                android:textColor="#333"/>
-            <LinearLayout
-                android:id="@+id/stepperPitch"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:orientation="horizontal"
-                android:background="@drawable/stepper_bg"
-                android:gravity="center">
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tvPitchLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="音调"
+                    android:textSize="24sp"
+                    android:textColor="#333"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/stepperPitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/stepper_bg"
+                    android:gravity="center"
+                    android:layout_gravity="center">
+                    <Button
+                        android:id="@+id/btnPitchMinus"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:text="-"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:background="@color/main_dark"
+                        android:gravity="center"
+                        android:padding="0dp"/>
+                    <EditText
+                        android:id="@+id/editPitchValue"
+                        android:layout_width="44dp"
+                        android:layout_height="32dp"
+                        android:inputType="numberDecimal"
+                        android:text="1.0"
+                        android:gravity="center"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:background="@android:color/transparent"
+                        android:padding="0dp"/>
+                    <Button
+                        android:id="@+id/btnPitchPlus"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:text="+"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:background="@color/main_dark"
+                        android:gravity="center"
+                        android:padding="0dp"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
                 <Button
-                    android:id="@+id/btnPitchMinus"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:text="-"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
+                    android:id="@+id/btnPitchReset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:minWidth="56dp"
+                    android:text="重置"
+                    android:textSize="12sp"
                     android:background="@color/main_dark"
-                    android:gravity="center"
-                    android:padding="0dp"/>
-                <EditText
-                    android:id="@+id/editPitchValue"
-                    android:layout_width="44dp"
-                    android:layout_height="32dp"
-                    android:inputType="numberDecimal"
-                    android:text="1.0"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:background="@android:color/transparent"
-                    android:padding="0dp"/>
-                <Button
-                    android:id="@+id/btnPitchPlus"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:text="+"
-                    android:textSize="14sp"
                     android:textColor="@color/white"
-                    android:background="@color/main_dark"
                     android:gravity="center"
-                    android:padding="0dp"/>
-            </LinearLayout>
-            <Button
-                android:id="@+id/btnPitchReset"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:minWidth="56dp"
-                android:text="重置"
-                android:textSize="12sp"
-                android:layout_marginStart="12dp"
-                android:background="@color/main_dark"
-                android:textColor="@color/white"
-                android:gravity="center"/>
+                    android:layout_gravity="end|center_vertical"/>
+            </FrameLayout>
         </LinearLayout>
 
         <!-- 音调滑块与上方间距16dp -->

@@ -132,6 +132,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "请输入要保存的文本", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (text.length() > 3500) {
+                new AlertDialog.Builder(this)
+                    .setTitle("提示")
+                    .setMessage("Android TTS单次最大支持3999字节，建议每次朗读不超过3500字符（含标点、空格），超长文本请分段朗读")
+                    .setPositiveButton("确定", null)
+                    .show();
+                return;
+            }
             // 弹出SAF文件管理器
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -287,6 +295,18 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             String text = editText.getText().toString();
+            if (text.isEmpty()) {
+                Toast.makeText(this, "请输入要朗读的文本", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (text.length() > 3500) {
+                new AlertDialog.Builder(this)
+                    .setTitle("提示")
+                    .setMessage("Android TTS单次最大支持3999字节，建议每次朗读不超过3500字符（含标点、空格），超长文本请分段朗读")
+                    .setPositiveButton("确定", null)
+                    .show();
+                return;
+            }
             if (!text.isEmpty()) {
                 tts.setLanguage(currentLocale);
                 tts.setSpeechRate(speechRate);

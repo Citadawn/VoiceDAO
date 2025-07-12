@@ -14,13 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.ViewGroup;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -272,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         tts = new TextToSpeech(this, status -> {
+
             if (status == TextToSpeech.SUCCESS) {
                 int result = tts.setLanguage(currentLocale);
                 tts.setSpeechRate(speechRate);

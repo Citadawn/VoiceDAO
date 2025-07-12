@@ -136,7 +136,19 @@ public class MainActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                     .setTitle("提示")
                     .setMessage("Android TTS单次最大支持3999字节，建议每次朗读不超过3500字符（含标点、空格），超长文本请分段朗读")
-                    .setPositiveButton("确定", null)
+                    .setPositiveButton("继续", (dialog, which) -> {
+                        // 弹出SAF文件管理器
+                        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.setType("audio/wav");
+                        intent.putExtra(Intent.EXTRA_TITLE, "tts_output.wav");
+                        pendingAudioText = text;
+                        createFileLauncher.launch(intent);
+                        Toast.makeText(this, "请耐心等待", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("退出", (dialog, which) -> {
+                        Toast.makeText(this, "请缩减文本后继续", Toast.LENGTH_SHORT).show();
+                    })
                     .show();
                 return;
             }
@@ -303,16 +315,24 @@ public class MainActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                     .setTitle("提示")
                     .setMessage("Android TTS单次最大支持3999字节，建议每次朗读不超过3500字符（含标点、空格），超长文本请分段朗读")
-                    .setPositiveButton("确定", null)
+                    .setPositiveButton("继续", (dialog, which) -> {
+                        tts.setLanguage(currentLocale);
+                        tts.setSpeechRate(speechRate);
+                        tts.setPitch(pitch);
+                        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+                        Toast.makeText(this, "请耐心等待", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("退出", (dialog, which) -> {
+                        if (tts != null && isTtsReady) tts.stop();
+                        Toast.makeText(this, "请缩减文本后继续", Toast.LENGTH_SHORT).show();
+                    })
                     .show();
                 return;
             }
-            if (!text.isEmpty()) {
-                tts.setLanguage(currentLocale);
-                tts.setSpeechRate(speechRate);
-                tts.setPitch(pitch);
-                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-            }
+            tts.setLanguage(currentLocale);
+            tts.setSpeechRate(speechRate);
+            tts.setPitch(pitch);
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         });
 
         @SuppressLint("ClickableViewAccessibility") View.OnTouchListener scaleTouch = (v, event) -> {

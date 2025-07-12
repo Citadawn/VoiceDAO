@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="语速"
-                android:textSize="16sp"
+                android:textSize="24sp"
                 android:textColor="#333"/>
             <LinearLayout
                 android:id="@+id/stepperSpeed"
@@ -73,10 +73,10 @@
                 android:gravity="center">
                 <Button
                     android:id="@+id/btnSpeedMinus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:text="-"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:textColor="@color/white"
                     android:background="@color/main_dark"
                     android:gravity="center"
@@ -94,10 +94,10 @@
                     android:padding="0dp"/>
                 <Button
                     android:id="@+id/btnSpeedPlus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:text="+"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:textColor="@color/white"
                     android:background="@color/main_dark"
                     android:gravity="center"
@@ -109,7 +109,7 @@
                 android:layout_height="36dp"
                 android:minWidth="56dp"
                 android:text="重置"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:layout_marginStart="12dp"
                 android:background="@color/main_dark"
                 android:textColor="@color/white"
@@ -135,7 +135,7 @@
                 android:id="@+id/textSpeechRateValue"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:text="1.00"
+                android:text="1.0"
                 android:gravity="center"
                 android:textSize="16sp"
                 android:textColor="#333"/>
@@ -164,7 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="音调"
-                android:textSize="16sp"
+                android:textSize="24sp"
                 android:textColor="#333"/>
             <LinearLayout
                 android:id="@+id/stepperPitch"
@@ -175,10 +175,10 @@
                 android:gravity="center">
                 <Button
                     android:id="@+id/btnPitchMinus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:text="-"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:textColor="@color/white"
                     android:background="@color/main_dark"
                     android:gravity="center"
@@ -196,10 +196,10 @@
                     android:padding="0dp"/>
                 <Button
                     android:id="@+id/btnPitchPlus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:text="+"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:textColor="@color/white"
                     android:background="@color/main_dark"
                     android:gravity="center"
@@ -211,7 +211,7 @@
                 android:layout_height="36dp"
                 android:minWidth="56dp"
                 android:text="重置"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:layout_marginStart="12dp"
                 android:background="@color/main_dark"
                 android:textColor="@color/white"
@@ -237,7 +237,7 @@
                 android:id="@+id/textPitchValue"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:text="1.00"
+                android:text="1.0"
                 android:gravity="center"
                 android:textSize="16sp"
                 android:textColor="#333"/>

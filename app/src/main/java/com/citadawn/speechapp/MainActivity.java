@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             if (text.length() > 3500) {
                 new AlertDialog.Builder(this)
                     .setTitle("提示")
-                    .setMessage("Android TTS单次最大支持3999字节，建议每次朗读不超过3500字符（含标点、空格），超长文本请分段朗读")
+                    .setMessage("建议每次朗读不超过 3500 字符（含标点、空格），是否继续朗读？")
                     .setPositiveButton("继续", (dialog, which) -> {
                         // 弹出SAF文件管理器
                         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
             if (text.length() > 3500) {
                 new AlertDialog.Builder(this)
                     .setTitle("提示")
-                    .setMessage("Android TTS单次最大支持3999字节，建议每次朗读不超过3500字符（含标点、空格），超长文本请分段朗读")
+                    .setMessage("建议每次朗读不超过 3500 字符（含标点、空格），是否继续朗读？")
                     .setPositiveButton("继续", (dialog, which) -> {
                         tts.setLanguage(currentLocale);
                         tts.setSpeechRate(speechRate);

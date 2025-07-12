@@ -108,6 +108,11 @@
                     android:textColor="#333"
                     android:layout_marginEnd="8dp" />
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSpeedReset"
                     android:layout_width="64dp"
@@ -186,6 +191,11 @@
                     android:textSize="16sp"
                     android:textColor="#333"
                     android:layout_marginEnd="8dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnPitchReset"

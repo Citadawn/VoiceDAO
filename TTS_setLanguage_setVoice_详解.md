@@ -31,15 +31,7 @@ int result = tts.setLanguage(new Locale("sw", "KE")); // 斯瓦希里语（肯�
 - `TextToSpeech.LANG_NOT_SUPPORTED`：TTS引擎不支持该语言。
 - 其他负数：错误。
 
-**常用判断：**
-
-```java
-if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-    // 该语言不可用或需要下载语音包
-}
-```
-
-#### `LANG_AVAILABLE` 与 `LANG_COUNTRY_AVAILABLE` 的详细区别
+### LANG_AVAILABLE 与 LANG_COUNTRY_AVAILABLE 的区别
 
 - **`LANG_AVAILABLE`**：TTS 引擎**完全支持**你传入的语言和地区（Locale），有专门为这个地区定制的发音模型。
   
@@ -63,10 +55,7 @@ if (result == TextToSpeech.LANG_AVAILABLE) {
 }
 ```
 
-**总结：**
 
-- `LANG_AVAILABLE`：TTS 发音**完全匹配**你指定的语言和地区，发音最地道。
-- `LANG_COUNTRY_AVAILABLE`：TTS 发音**只能部分匹配**，用通用或最接近的发音代替，可能没有你想要的地区特色。
 
 ### 典型场景
 

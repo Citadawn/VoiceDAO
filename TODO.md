@@ -5,3 +5,6 @@
 5. 在 UI 上显示朗读状态，使用TextToSpeech的isSpeaking()方法来检查 TTS 是否正在朗读，如果正在朗读，则显示“正在朗读”，否则显示“停止朗读”。又比如可以添加一个进度条或者一个文本框来显示朗读的进度，用户可以直观地看到朗读的状态。
 6. 添加一个继续朗读的功能。
 7. 使用getDefaultVoice、getDefaultVoice().getLocale()【getDefaultLanguage】、getDefaultEngine方法,还有getLocale()，获取语言和地区（Locale对象），如zh_CN、en_US等。
+
+
+TTS 初始化每次打开软件的时候会执行，如果在打开软件的情况下更改了系统TTS引擎的话，是不是软件的TTS引擎任然是更改之前到的，怎么做到实时同步系统TTS引擎的更改

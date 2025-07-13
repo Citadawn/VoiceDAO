@@ -4,4 +4,4 @@
 4. 列出所有已安装的 TTS 引擎。可以使用TextToSpeech的getEngines()方法来获取已安装的 TTS 引擎列表，该方法返回一个List<EngineInfo>对象，其中每个EngineInfo对象包含了引擎的名称、包名等信息。
 5. 在 UI 上显示朗读状态，使用TextToSpeech的isSpeaking()方法来检查 TTS 是否正在朗读，如果正在朗读，则显示“正在朗读”，否则显示“停止朗读”。又比如可以添加一个进度条或者一个文本框来显示朗读的进度，用户可以直观地看到朗读的状态。
 6. 添加一个继续朗读的功能。
-7. 使用getDefaultVoice、getDefaultVoice().getLocale()【getDefaultLanguage】、getDefaultEngine方法
+7. 使用getDefaultVoice、getDefaultVoice().getLocale()【getDefaultLanguage】、getDefaultEngine方法,还有getLocale()，获取语言和地区（Locale对象），如zh_CN、en_US等。

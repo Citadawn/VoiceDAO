@@ -89,9 +89,7 @@ public class MainActivity extends AppCompatActivity {
         seekBarPitch = findViewById(R.id.seekBarPitch);
         tvStatus = findViewById(R.id.tvStatus);
         tvSupportedLanguages = findViewById(R.id.tvSupportedLanguages);
-        btnSpeak.setEnabled(false);
         btnStop = findViewById(R.id.btnStop);
-        btnStop.setEnabled(false);
         btnSaveAudio = findViewById(R.id.btnSaveAudio);
         // TTS未初始化时按钮不可用
         btnSpeak.setEnabled(false);

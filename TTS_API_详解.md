@@ -1,16 +1,3 @@
-# TTS API 详解
-
-## 目录
-
----
-
-1. [setLanguage 方法详解](#setlanguage-方法详解)
-2. [setVoice 方法与 setLanguage 的区别](#setvoice-方法与-setlanguage-的区别)
-3. [setLanguage 与 setVoice 配合使用](#setlanguage-与-setvoice-配合使用)
-4. [isSpeaking 方法详解](#isspeaking-方法详解)
-5. [常见问题与注意事项](#常见问题与注意事项)
-6. [参考文档](#参考文档)
-
 ## setLanguage 方法详解
 
 ---

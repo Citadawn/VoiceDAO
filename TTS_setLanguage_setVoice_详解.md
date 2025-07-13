@@ -39,6 +39,35 @@ if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_
 }
 ```
 
+#### `LANG_AVAILABLE` 与 `LANG_COUNTRY_AVAILABLE` 的详细区别
+
+- **`LANG_AVAILABLE`**：TTS 引擎**完全支持**你传入的语言和地区（Locale），有专门为这个地区定制的发音模型。
+  
+  - 例如：你传入 `Locale("en", "US")`（美式英语），TTS 引擎有专门的美式英语发音人。
+  - 朗读效果：发音最地道，最贴合你指定的地区。
+
+- **`LANG_COUNTRY_AVAILABLE`**：TTS 引擎**只支持你指定的语言和国家**，但没有专门为你指定的“地区”或“方言”定制的发音。
+  
+  - 例如：你传入 `Locale("en", "CA")`（加拿大英语），但 TTS 引擎没有专门的加拿大英语发音人，只能用美式英语或英式英语来朗读。
+  - 朗读效果：发音是“通用的”或“最接近的”，不是你指定地区的特色口音。
+
+**代码举例：**
+
+```java
+Locale usEnglish = new Locale("en", "US");
+int result = tts.setLanguage(usEnglish);
+if (result == TextToSpeech.LANG_AVAILABLE) {
+    // 完全支持美式英语
+} else if (result == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+    // 支持英语，但没有专门的美式英语发音
+}
+```
+
+**总结：**
+
+- `LANG_AVAILABLE`：TTS 发音**完全匹配**你指定的语言和地区，发音最地道。
+- `LANG_COUNTRY_AVAILABLE`：TTS 发音**只能部分匹配**，用通用或最接近的发音代替，可能没有你想要的地区特色。
+
 ### 典型场景
 
 - **切换朗读语言**：如中英文、日语、法语、斯瓦希里语等。

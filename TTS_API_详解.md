@@ -1,6 +1,19 @@
-# TextToSpeech.setLanguage() 与 setVoice() 方法详解
+# TTS API 详解
 
-## 1. setLanguage 方法详解
+## 目录
+
+---
+
+1. [setLanguage 方法详解](#setlanguage-方法详解)
+2. [setVoice 方法与 setLanguage 的区别](#setvoice-方法与-setlanguage-的区别)
+3. [setLanguage 与 setVoice 配合使用](#setlanguage-与-setvoice-配合使用)
+4. [isSpeaking 方法详解](#isspeaking-方法详解)
+5. [常见问题与注意事项](#常见问题与注意事项)
+6. [参考文档](#参考文档)
+
+## setLanguage 方法详解
+
+---
 
 ### 方法签名
 
@@ -8,8 +21,8 @@
 public int setLanguage(Locale loc)
 ```
 
-- **参数**：`loc` —— 你希望 TTS 朗读时使用的语言和地区（`Locale` 对象）。
-- **返回值**：`int`，表示设置结果的状态码。
+- **参数**：`loc` —— 目标语言和地区（`Locale` 对象）
+- **返回值**：`int`，表示设置结果的状态码
 
 ### 作用
 
@@ -31,7 +44,7 @@ int result = tts.setLanguage(new Locale("sw", "KE")); // 斯瓦希里语（肯�
 - `TextToSpeech.LANG_NOT_SUPPORTED`：TTS引擎不支持该语言。
 - 其他负数：错误。
 
-### LANG_AVAILABLE 与 LANG_COUNTRY_AVAILABLE 的区别
+#### LANG_AVAILABLE 与 LANG_COUNTRY_AVAILABLE 的区别
 
 - **`LANG_AVAILABLE`**：TTS 引擎**完全支持**你传入的语言和地区（Locale），有专门为这个地区定制的发音模型。
   
@@ -54,8 +67,6 @@ if (result == TextToSpeech.LANG_AVAILABLE) {
     // 支持英语，但没有专门的美式英语发音
 }
 ```
-
-
 
 ### 典型场景
 
@@ -82,6 +93,7 @@ if (result == TextToSpeech.LANG_AVAILABLE) {
 ### 官方文档
 
 - [TextToSpeech.setLanguage | Android Developers](https://developer.android.com/reference/android/speech/tts/TextToSpeech#setLanguage(java.util.Locale))
+- [TextToSpeech.setVoice | Android Developers](https://developer.android.com/reference/android/speech/tts/TextToSpeech#setVoice(android.speech.tts.Voice))
 
 ### 示例代码
 
@@ -97,9 +109,7 @@ if (result == TextToSpeech.LANG_MISSING_DATA) {
 }
 ```
 
----
-
-## 2. setLanguage 和 setVoice 的区别
+### setVoice 方法与 setLanguage 的区别
 
 | 方法          | 控制对象         | 典型参数   | 适用场景           | 备注              |
 | ----------- | ------------ | ------ | -------------- | --------------- |
@@ -109,17 +119,15 @@ if (result == TextToSpeech.LANG_MISSING_DATA) {
 - **setLanguage** 只指定“说什么语言”，发音人由系统决定。
 - **setVoice** 直接指定“用哪个发音人”，你可以选性别、风格、特色等，适合高级自定义。
 
----
+### setLanguage 与 setVoice 配合使用
 
-## 3. setLanguage 和 setVoice 配合使用
+#### 推荐流程
 
-### 推荐流程
+1. 先 setLanguage() 设置目标语言
+2. 用 getVoices() 获取所有可用发音人，筛选 Locale 匹配的 Voice
+3. 用 setVoice() 精确切换到目标发音人
 
-1. **先用 setLanguage() 设置目标语言**，保证 TTS 引擎加载了目标语言环境。
-2. **用 getVoices() 获取所有可用发音人**，筛选出 Locale 匹配的 Voice。
-3. **用 setVoice() 精确切换到你想要的发音人**（如男/女声、儿童声等）。
-
-### 代码示例
+#### 代码示例
 
 ```java
 // 1. 设置目标语言（如日语）
@@ -146,23 +154,69 @@ if (targetVoice != null) {
 }
 ```
 
-### 注意事项
+#### 注意事项
 
-- **顺序建议**：先 setLanguage，再 setVoice。
-- **Voice 必须和 Language 匹配**，否则可能朗读失败或降级为默认 Voice。
-- **部分 TTS 引擎 setVoice 后会自动覆盖 setLanguage**，但大多数情况下 setVoice 更精确。
-- **setLanguage 的返回值要判断**，如果不支持该语言，setVoice 也会失败。
+- 建议先 setLanguage，再 setVoice
+- Voice 必须和 Language 匹配
+- setVoice 后部分TTS引擎会覆盖 setLanguage
+- setLanguage 的返回值要判断
 
-### 典型场景
-
-- 多语言 App：用户输入多种语言，App 自动切换语言和发音人。
-- 发音人选择：用户在 UI 上选择男声/女声/特色音色，App 先 setLanguage，再 setVoice。
-- 朗读多段不同语言文本：每段切换 setLanguage 和 setVoice，保证朗读效果。
+## isSpeaking 方法详解
 
 ---
 
-## 4. 总结
+### 方法签名
 
-- `setLanguage` 控制“说什么语言”，发音人由系统自动选。
-- `setVoice` 控制“用哪个发音人”，你可以选性别、风格、特色等。
-- 配合使用，让 TTS 既能朗读正确语言，又能用你想要的声音风格。 
+```java
+public boolean isSpeaking()
+```
+
+### 作用
+
+判断当前TTS引擎是否正在朗读文本（有语音正在播放）
+
+### 返回值
+
+- `true`：TTS正在朗读
+- `false`：TTS空闲
+
+### 典型用法
+
+#### 判断TTS是否正在朗读
+
+```java
+if (tts != null && tts.isSpeaking()) {
+    // 正在朗读
+    Toast.makeText(context, "TTS正在朗读", Toast.LENGTH_SHORT).show();
+} else {
+    // 没有朗读
+    Toast.makeText(context, "TTS未在朗读", Toast.LENGTH_SHORT).show();
+}
+```
+
+#### 实现“暂停/继续”按钮逻辑
+
+```java
+if (tts.isSpeaking()) {
+    tts.stop(); // 停止当前朗读
+} else {
+    tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null); // 开始朗读
+}
+```
+
+#### 在 UI 上显示朗读状态
+
+```java
+boolean speaking = tts.isSpeaking();
+tvStatus.setText(speaking ? "正在朗读" : "空闲");
+```
+
+### 注意事项
+
+- `isSpeaking()` 只能判断**当前TTS实例**是否有朗读任务，不能判断系统全局TTS状态。
+- 某些TTS引擎实现可能有延迟（如刚调用`speak()`时，`isSpeaking()`可能还未立即变为`true`）。
+- 适合用于UI状态显示、避免重复朗读、实现“朗读中禁止再次点击”等场景。
+
+### 官方文档
+
+- [TextToSpeech.isSpeaking | Android Developers](https://developer.android.com/reference/android/speech/tts/TextToSpeech#isSpeaking())

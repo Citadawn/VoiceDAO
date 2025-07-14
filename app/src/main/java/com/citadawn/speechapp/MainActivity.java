@@ -409,9 +409,7 @@ public class MainActivity extends AppCompatActivity {
                     tts.setLanguage(currentLocale);
                     tts.setSpeechRate(speechRate);
                     tts.setPitch(pitch);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        tts.synthesizeToFile(text, params, pfd, "tts_output");
-                    }
+                    tts.synthesizeToFile(text, params, pfd, "tts_output");
                     Toast.makeText(this, "已开始保存音频，完成后请在文件管理器中查看。", Toast.LENGTH_LONG).show();
                     pfd.close();
                 }

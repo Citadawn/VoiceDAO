@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private String pendingAudioText = null;
     private TextView textSpeechRateValue, textPitchValue;
     private Button btnSpeedMinus, btnSpeedPlus, btnPitchMinus, btnPitchPlus, btnSpeedReset, btnPitchReset;
+    private TextView tvSpeedSetResult, tvPitchSetResult;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -166,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
         btnPitchPlus = findViewById(R.id.btnPitchPlus);
         btnSpeedReset = findViewById(R.id.btnSpeedReset);
         btnPitchReset = findViewById(R.id.btnPitchReset);
+        tvSpeedSetResult = findViewById(R.id.tvSpeedSetResult);
+        tvPitchSetResult = findViewById(R.id.tvPitchSetResult);
 
         // 语速调节
         seekBarSpeed.setMax(15); // 0.5~2.0，步进0.1
@@ -188,9 +191,15 @@ public class MainActivity extends AppCompatActivity {
             value = Math.round(value * 100f) / 100f; // 保留两位小数
             textSpeechRateValue.setText(String.format("%.2f", value));
             speechRate = value;
-            // 同步SeekBar
             int progress = Math.round((value - 0.5f) / 0.1f);
             seekBarSpeed.setProgress(progress);
+            if (tts != null && isTtsReady) {
+                int result = tts.setSpeechRate(speechRate);
+                if (result != TextToSpeech.SUCCESS) {
+                    tvSpeedSetResult.setText("语速设置失败");
+                    tvSpeedSetResult.postDelayed(() -> tvSpeedSetResult.setText(""), 500);
+                }
+            }
         });
         btnSpeedPlus.setOnClickListener(v -> {
             float value = Float.parseFloat(textSpeechRateValue.getText().toString());
@@ -201,6 +210,13 @@ public class MainActivity extends AppCompatActivity {
             speechRate = value;
             int progress = Math.round((value - 0.5f) / 0.1f);
             seekBarSpeed.setProgress(progress);
+            if (tts != null && isTtsReady) {
+                int result = tts.setSpeechRate(speechRate);
+                if (result != TextToSpeech.SUCCESS) {
+                    tvSpeedSetResult.setText("语速设置失败");
+                    tvSpeedSetResult.postDelayed(() -> tvSpeedSetResult.setText(""), 500);
+                }
+            }
         });
         btnSpeedReset.setOnClickListener(v -> {
             v.animate()
@@ -216,6 +232,13 @@ public class MainActivity extends AppCompatActivity {
             seekBarSpeed.setProgress(5);
             textSpeechRateValue.setText("1.00");
             speechRate = 1.0f;
+            if (tts != null && isTtsReady) {
+                int result = tts.setSpeechRate(speechRate);
+                if (result != TextToSpeech.SUCCESS) {
+                    tvSpeedSetResult.setText("语速设置失败");
+                    tvSpeedSetResult.postDelayed(() -> tvSpeedSetResult.setText(""), 500);
+                }
+            }
         });
 
         // 音调调节
@@ -241,6 +264,13 @@ public class MainActivity extends AppCompatActivity {
             pitch = value;
             int progress = Math.round((value - 0.5f) / 0.1f);
             seekBarPitch.setProgress(progress);
+            if (tts != null && isTtsReady) {
+                int result = tts.setPitch(pitch);
+                if (result != TextToSpeech.SUCCESS) {
+                    tvPitchSetResult.setText("音调设置失败");
+                    tvPitchSetResult.postDelayed(() -> tvPitchSetResult.setText(""), 500);
+                }
+            }
         });
         btnPitchPlus.setOnClickListener(v -> {
             float value = Float.parseFloat(textPitchValue.getText().toString());
@@ -251,6 +281,13 @@ public class MainActivity extends AppCompatActivity {
             pitch = value;
             int progress = Math.round((value - 0.5f) / 0.1f);
             seekBarPitch.setProgress(progress);
+            if (tts != null && isTtsReady) {
+                int result = tts.setPitch(pitch);
+                if (result != TextToSpeech.SUCCESS) {
+                    tvPitchSetResult.setText("音调设置失败");
+                    tvPitchSetResult.postDelayed(() -> tvPitchSetResult.setText(""), 500);
+                }
+            }
         });
         btnPitchReset.setOnClickListener(v -> {
             v.animate()
@@ -266,6 +303,13 @@ public class MainActivity extends AppCompatActivity {
             seekBarPitch.setProgress(5);
             textPitchValue.setText("1.00");
             pitch = 1.0f;
+            if (tts != null && isTtsReady) {
+                int result = tts.setPitch(pitch);
+                if (result != TextToSpeech.SUCCESS) {
+                    tvPitchSetResult.setText("音调设置失败");
+                    tvPitchSetResult.postDelayed(() -> tvPitchSetResult.setText(""), 500);
+                }
+            }
         });
 
         tts = new TextToSpeech(this, status -> {

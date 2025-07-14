@@ -39,7 +39,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnClear"
             android:layout_width="48dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:text="清空"
             android:textSize="14sp"
             android:background="@drawable/btn_clear_bg"
@@ -74,37 +74,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="语速"
-                    android:textSize="24sp"
+                    android:textSize="16sp"
                     android:textColor="#333"
                     android:layout_marginEnd="8dp" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSpeedMinus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:background="@drawable/stepper_bg"
                     android:text="-"
                     android:textColor="@color/main_dark"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:layout_marginEnd="4dp" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSpeedPlus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:background="@drawable/stepper_bg"
                     android:text="+"
                     android:textColor="@color/main_dark"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:layout_marginEnd="8dp" />
 
                 <TextView
                     android:id="@+id/textSpeechRateValue"
-                    android:layout_width="40dp"
+                    android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:text="1.00"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textColor="#333"
                     android:layout_marginEnd="8dp" />
 
@@ -115,10 +115,10 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSpeedReset"
-                    android:layout_width="64dp"
-                    android:layout_height="36dp"
+                    android:layout_width="44dp"
+                    android:layout_height="28dp"
                     android:text="重置"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:background="@color/main_dark"
                     android:textColor="@color/white"
                     android:gravity="center" />
@@ -128,11 +128,11 @@
             <SeekBar
                 android:id="@+id/seekBarSpeed"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="20dp"
                 android:max="15"
                 android:progress="5"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
         </LinearLayout>
 
         <!-- 音调调节区块 两行结构 -->
@@ -158,37 +158,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="音调"
-                    android:textSize="24sp"
+                    android:textSize="16sp"
                     android:textColor="#333"
                     android:layout_marginEnd="8dp" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnPitchMinus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:background="@drawable/stepper_bg"
                     android:text="-"
                     android:textColor="@color/main_dark"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:layout_marginEnd="4dp" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnPitchPlus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:background="@drawable/stepper_bg"
                     android:text="+"
                     android:textColor="@color/main_dark"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:layout_marginEnd="8dp" />
 
                 <TextView
                     android:id="@+id/textPitchValue"
-                    android:layout_width="40dp"
+                    android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:text="1.00"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textColor="#333"
                     android:layout_marginEnd="8dp" />
 
@@ -199,10 +199,10 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnPitchReset"
-                    android:layout_width="64dp"
-                    android:layout_height="36dp"
+                    android:layout_width="44dp"
+                    android:layout_height="28dp"
                     android:text="重置"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:background="@color/main_dark"
                     android:textColor="@color/white"
                     android:gravity="center" />
@@ -212,11 +212,11 @@
             <SeekBar
                 android:id="@+id/seekBarPitch"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="20dp"
                 android:max="15"
                 android:progress="5"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
         </LinearLayout>
 
         <!-- 朗读/停止按钮横向排列，约束在音调区块下方 -->

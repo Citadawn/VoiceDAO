@@ -12,6 +12,7 @@
                 int queueMode, 
                 Bundle params, 
                 String utteranceId)方法的返回值，判断是否成功，显示在UI上。
+13. 使用TextToSpeech的setOnUtteranceProgressListener()方法来监听语音合成的进度，当语音合成开始、结束或者出错时，会触发相应的回调方法，可以在回调方法中更新 UI，显示语音合成的进度。
 
 
 TTS 初始化每次打开软件的时候会执行，如果在打开软件的情况下更改了系统TTS引擎的话，是不是软件的TTS引擎任然是更改之前到的，怎么做到实时同步系统TTS引擎的更改

@@ -8,6 +8,10 @@
 9. “已开始保存音频，完成后请在文件管理器中查看。”、“音频已保存到自定义目录”统一一下。
 10. 将Android Studio中划黄线的代码修改一下。
 11. 中文与英文要加空格、数字与英文之间要加空格、数字与中文之间要加空格。
+12. 使用public int speak (CharSequence text, 
+                int queueMode, 
+                Bundle params, 
+                String utteranceId)方法的返回值，判断是否成功，显示在UI上。
 
 
 TTS 初始化每次打开软件的时候会执行，如果在打开软件的情况下更改了系统TTS引擎的话，是不是软件的TTS引擎任然是更改之前到的，怎么做到实时同步系统TTS引擎的更改

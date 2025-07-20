@@ -385,6 +385,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         btnLangVoiceReset.setOnClickListener(v -> {
+            v.animate()
+                .scaleX(0.85f)
+                .scaleY(0.85f)
+                .setDuration(80)
+                .withEndAction(() -> v.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(80)
+                    .start())
+                .start();
             if (defaultLocale != null) {
                 int idx = localeList.indexOf(defaultLocale);
                 if (idx >= 0)
@@ -401,9 +411,6 @@ public class MainActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     // API 21+ 使用 getDefaultVoice().getLocale() 获取默认语言
                     Voice defaultVoice = tts.getDefaultVoice();
-                    // ====== 测试代码开始 ======
-                    defaultVoice = null; // 模拟获取不到默认发音人
-                    // ====== 测试代码结束 ======
                     if (defaultVoice != null) {
                         defaultLocale = defaultVoice.getLocale();
                         this.globalDefaultVoice = defaultVoice;

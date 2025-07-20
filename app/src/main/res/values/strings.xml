@@ -31,4 +31,5 @@
     <string name="toast_using_system_language">未能获取到 TTS 引擎的默认发音人，已切换为系统默认语言：%s</string>
     <string name="status_ready_with_system_language">未能获取到 TTS 引擎的默认发音人，已切换为系统默认语言：%s</string>
     <string name="status_info_title">状态信息</string>
+    <string name="tip_reset_lang_voice">恢复默认语言和发音人</string>
 </resources>

@@ -305,16 +305,17 @@
             </LinearLayout>
 
             <!-- 第三行：重置按钮 -->
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLangVoiceReset"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="重置"
-                android:textSize="14sp"
+                android:layout_width="44dp"
+                android:layout_height="23dp"
+                android:layout_gravity="end"
                 android:background="@color/main_dark"
-                android:textColor="@color/white"
                 android:gravity="center"
-                android:layout_gravity="end" />
+                android:text="重置"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:tooltipText="@string/tip_reset_lang_voice" />
         </LinearLayout>
 
         <!-- 朗读/停止按钮横向排列，约束在语言发音人区块下方 -->

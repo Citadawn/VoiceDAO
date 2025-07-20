@@ -415,23 +415,15 @@ public class MainActivity extends AppCompatActivity {
                         defaultLocale = defaultVoice.getLocale();
                         this.globalDefaultVoice = defaultVoice;
                         currentLocale = defaultLocale; // 使用默认语言作为当前语言
-                        System.out.println("获取到默认语言: " + defaultLocale.getDisplayName());
-                        System.out.println("获取到全局默认发音人: " + defaultVoice.getName());
                     } else {
                         // 如果获取不到默认发音人，使用系统默认语言
                         defaultLocale = Locale.getDefault();
                         currentLocale = defaultLocale;
-                        System.out.println("使用系统默认语言: " + defaultLocale.getDisplayName());
-                        // 提示用户正在使用系统默认语言
-                        Toast.makeText(this,
-                                getString(R.string.toast_using_system_language, defaultLocale.getDisplayName()),
-                                Toast.LENGTH_LONG).show();
                     }
                 } else {
                     // API 21 以下使用已废弃的 getDefaultLanguage()
                     defaultLocale = tts.getDefaultLanguage();
                     currentLocale = defaultLocale;
-                    System.out.println("获取到默认语言: " + defaultLocale.getDisplayName());
                 }
 
                 int result = tts.setLanguage(currentLocale);
@@ -475,7 +467,6 @@ public class MainActivity extends AppCompatActivity {
                                 name += "（默认）";
                             }
                             defaultIndex = 0; // 默认语言现在总是在第一位
-                            System.out.println("找到默认语言: " + name); // 调试信息
                         }
                         langAdapter.add(name);
                         idx++;
@@ -488,6 +479,31 @@ public class MainActivity extends AppCompatActivity {
                 initializeLanguageDefaultVoices();
                 // 获取可用发音人
                 updateVoiceList(currentLocale, true);
+
+                // 输出语言列表和默认发音人
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Set<Locale> locales = tts.getAvailableLanguages();
+                    ArrayList<Locale> sortedLocales = new ArrayList<>(locales);
+                    // 默认语言排在最前面，其余按拼音/本地化排序
+                    Collator collator = Collator.getInstance(Locale.CHINESE);
+                    sortedLocales.sort((l1, l2) -> {
+                        if (l1.equals(defaultLocale)) return -1;
+                        if (l2.equals(defaultLocale)) return 1;
+                        return collator.compare(l1.getDisplayName(), l2.getDisplayName());
+                    });
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("语言列表：\n");
+                    for (Locale locale : sortedLocales) {
+                        String display = locale.getDisplayName() + " (" + locale.toLanguageTag() + ")";
+                        Voice defVoice = languageDefaultVoices.get(locale);
+                        if (locale.equals(defaultLocale)) {
+                            sb.append(display).append("  默认发音人: ");
+                        } else {
+                            sb.append(display).append(" 的默认发音人: ");
+                        }
+                        sb.append(defVoice != null ? defVoice.getName() : "无").append("\n");
+                    }
+                }
             } else {
                 btnSpeak.setEnabled(false);
                 btnStop.setEnabled(false);
@@ -722,7 +738,6 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     languageDefaultVoices.put(locale, defaultVoice);
-                    System.out.println("语言 " + locale.getDisplayName() + " 的默认发音人: " + defaultVoice.getName());
                 }
             }
         }
@@ -760,12 +775,13 @@ public class MainActivity extends AppCompatActivity {
 
             for (Voice voice : voiceList) {
                 String name = voice.getName();
+                // 去除下划线及后缀数字
+                name = name.replaceAll("_[0-9]+$", "");
                 // 检查是否是当前语言的默认发音人
                 boolean isDefault = (currentLangDefaultVoice != null && voice.equals(currentLangDefaultVoice));
                 if (isDefault) {
                     name += "（默认）";
                     defaultIndex = 0; // 默认发音人现在总是在第一位
-                    System.out.println("找到当前语言默认发音人: " + name); // 调试信息
                 }
                 voiceAdapter.add(name);
                 idx++;

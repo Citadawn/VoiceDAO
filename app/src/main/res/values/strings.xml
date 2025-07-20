@@ -8,4 +8,27 @@
     <string name="status_not_ready">TTS引擎未初始化完成，请稍后再试</string>
     <string name="desc_tts_info">本软件的朗读语言由系统TTS引擎决定。如需切换语言，请在所用TTS引擎（如 MultiTTS、TTS-Server-Android 等）或系统TTS设置中更改语言。</string>
     <string name="desc_tts_length_limit">单次朗读最大支持约3500字符（含标点、空格），超长文本请分段朗读。Android TTS API 单次最大3999字节，超出部分将被截断或报错。</string>
+    <string name="hint_input_save_text">请输入要保存的文本</string>
+    <string name="dialog_title_warning">提示</string>
+    <string name="dialog_message_text_too_long">建议每次朗读不超过 3500 字符（含标点、空格），是否继续朗读？</string>
+    <string name="dialog_button_continue">继续</string>
+    <string name="dialog_button_cancel">退出</string>
+    <string name="toast_please_wait">请耐心等待</string>
+    <string name="toast_reduce_text">请缩减文本后继续</string>
+    <string name="toast_cannot_open_tts_settings">无法打开系统TTS设置界面</string>
+    <string name="dialog_title_info">说明</string>
+    <string name="dialog_title_about">关于</string>
+    <string name="dialog_message_about">（内容待补充）</string>
+    <string name="dialog_button_ok">确定</string>
+    <string name="message_speed_set_failed">语速设置失败</string>
+    <string name="message_pitch_set_failed">音调设置失败</string>
+    <string name="message_audio_synthesis_failed">音频合成失败</string>
+    <string name="message_save_failed">保存失败: %s</string>
+    <string name="message_copy_audio_failed">拷贝音频失败: %s</string>
+    <string name="message_audio_saved">音频已保存到自定义目录</string>
+    <string name="message_audio_saving">已开始保存音频，完成后请在文件管理器中查看。</string>
+    <string name="message_android_version_not_support">Android 5.0及以上才支持保存为音频文件</string>
+    <string name="toast_using_system_language">正在使用系统默认语言：%s</string>
+    <string name="status_ready_with_system_language">TTS引擎已就绪（使用系统语言：%s）</string>
+    <string name="status_info_title">状态信息</string>
 </resources>

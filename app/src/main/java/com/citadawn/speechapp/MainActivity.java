@@ -20,6 +20,12 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.speech.tts.Voice;
+
+import java.util.ArrayList;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,8 +40,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.text.Collator;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private TextToSpeech tts;
@@ -43,11 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private Button btnSpeak;
     private SeekBar seekBarSpeed, seekBarPitch;
     private TextView tvStatus;
-    private TextView tvSupportedLanguages;
     private boolean isTtsReady = false;
     private float speechRate = 1.0f;
     private float pitch = 1.0f;
-    private Locale currentLocale = Locale.CHINESE;
+    private Locale currentLocale = null; // 当前语言，将通过TTS API动态获取
     private Button btnClear;
     private Button btnStop;
     private Button btnSaveAudio;
@@ -56,6 +63,17 @@ public class MainActivity extends AppCompatActivity {
     private TextView textSpeechRateValue, textPitchValue;
     private Button btnSpeedMinus, btnSpeedPlus, btnPitchMinus, btnPitchPlus, btnSpeedReset, btnPitchReset;
     private TextView tvSpeedSetResult, tvPitchSetResult;
+    private Spinner spinnerLanguage, spinnerVoice;
+    private Button btnLangVoiceReset;
+    private Locale defaultLocale = null; // 默认语言，将通过TTS API获取
+    private Voice globalDefaultVoice = null; // 全局默认发音人
+    private HashMap<Locale, Voice> languageDefaultVoices = new HashMap<>(); // 每个语言的默认发音人
+    private ArrayList<Locale> localeList = new ArrayList<>();
+    private ArrayList<Voice> voiceList = new ArrayList<>();
+    private ArrayAdapter<String> langAdapter;
+    private ArrayAdapter<String> voiceAdapter;
+    private boolean isLangSpinnerInit = false;
+    private boolean isVoiceSpinnerInit = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -89,14 +107,13 @@ public class MainActivity extends AppCompatActivity {
         seekBarSpeed = findViewById(R.id.seekBarSpeed);
         seekBarPitch = findViewById(R.id.seekBarPitch);
         tvStatus = findViewById(R.id.tvStatus);
-        tvSupportedLanguages = findViewById(R.id.tvSupportedLanguages);
         btnStop = findViewById(R.id.btnStop);
         btnSaveAudio = findViewById(R.id.btnSaveAudio);
         // TTS未初始化时按钮不可用
         btnSpeak.setEnabled(false);
         btnStop.setEnabled(false);
         btnSaveAudio.setEnabled(false);
-        tvStatus.setText(R.string.status_not_ready);
+        updateStatusInfo();
         btnClear = findViewById(R.id.btnClear);
         btnClear.setOnClickListener(v -> editText.setText(""));
         btnStop = findViewById(R.id.btnStop);
@@ -109,17 +126,16 @@ public class MainActivity extends AppCompatActivity {
         btnSaveAudio = findViewById(R.id.btnSaveAudio);
         // SAF文件选择器回调
         createFileLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri uri = result.getData().getData();
-                    if (uri != null && pendingAudioText != null) {
-                        synthesizeTextToUri(pendingAudioText, uri);
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        if (uri != null && pendingAudioText != null) {
+                            synthesizeTextToUri(pendingAudioText, uri);
+                        }
                     }
-                }
-                pendingAudioText = null;
-            }
-        );
+                    pendingAudioText = null;
+                });
         btnSaveAudio.setOnClickListener(v -> {
             if (!isTtsReady) {
                 Toast.makeText(this, R.string.status_not_ready, Toast.LENGTH_SHORT).show();
@@ -127,27 +143,27 @@ public class MainActivity extends AppCompatActivity {
             }
             String text = editText.getText().toString();
             if (text.isEmpty()) {
-                Toast.makeText(this, "请输入要保存的文本", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.hint_input_save_text, Toast.LENGTH_SHORT).show();
                 return;
             }
             if (text.length() > 3500) {
                 new AlertDialog.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("建议每次朗读不超过 3500 字符（含标点、空格），是否继续朗读？")
-                    .setPositiveButton("继续", (dialog, which) -> {
-                        // 弹出SAF文件管理器
-                        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.setType("audio/wav");
-                        intent.putExtra(Intent.EXTRA_TITLE, "tts_output.wav");
-                        pendingAudioText = text;
-                        createFileLauncher.launch(intent);
-                        Toast.makeText(this, "请耐心等待", Toast.LENGTH_SHORT).show();
-                    })
-                    .setNegativeButton("退出", (dialog, which) -> {
-                        Toast.makeText(this, "请缩减文本后继续", Toast.LENGTH_SHORT).show();
-                    })
-                    .show();
+                        .setTitle(R.string.dialog_title_warning)
+                        .setMessage(R.string.dialog_message_text_too_long)
+                        .setPositiveButton(R.string.dialog_button_continue, (dialog, which) -> {
+                            // 弹出SAF文件管理器
+                            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            intent.setType("audio/wav");
+                            intent.putExtra(Intent.EXTRA_TITLE, "tts_output.wav");
+                            pendingAudioText = text;
+                            createFileLauncher.launch(intent);
+                            Toast.makeText(this, R.string.toast_please_wait, Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton(R.string.dialog_button_cancel, (dialog, which) -> {
+                            Toast.makeText(this, R.string.toast_reduce_text, Toast.LENGTH_SHORT).show();
+                        })
+                        .show();
                 return;
             }
             // 弹出SAF文件管理器
@@ -170,6 +186,17 @@ public class MainActivity extends AppCompatActivity {
         tvSpeedSetResult = findViewById(R.id.tvSpeedSetResult);
         tvPitchSetResult = findViewById(R.id.tvPitchSetResult);
 
+        spinnerLanguage = findViewById(R.id.spinnerLanguage);
+        spinnerVoice = findViewById(R.id.spinnerVoice);
+        btnLangVoiceReset = findViewById(R.id.btnLangVoiceReset);
+        // 初始化语言和发音人Spinner
+        langAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>());
+        langAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerLanguage.setAdapter(langAdapter);
+        voiceAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>());
+        voiceAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerVoice.setAdapter(voiceAdapter);
+
         // 语速调节
         seekBarSpeed.setMax(15); // 0.5~2.0，步进0.1
         seekBarSpeed.setProgress(5); // 默认1.0
@@ -181,13 +208,20 @@ public class MainActivity extends AppCompatActivity {
                 textSpeechRateValue.setText(String.format("%.2f", value));
                 speechRate = value;
             }
-            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
         btnSpeedMinus.setOnClickListener(v -> {
             float value = Float.parseFloat(textSpeechRateValue.getText().toString());
             value -= 0.01f;
-            if (value < 0.5f) value = 0.5f;
+            if (value < 0.5f)
+                value = 0.5f;
             value = Math.round(value * 100f) / 100f; // 保留两位小数
             textSpeechRateValue.setText(String.format("%.2f", value));
             speechRate = value;
@@ -196,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
             if (tts != null && isTtsReady) {
                 int result = tts.setSpeechRate(speechRate);
                 if (result != TextToSpeech.SUCCESS) {
-                    tvSpeedSetResult.setText("语速设置失败");
+                    tvSpeedSetResult.setText(R.string.message_speed_set_failed);
                     tvSpeedSetResult.postDelayed(() -> tvSpeedSetResult.setText(""), 500);
                 }
             }
@@ -204,7 +238,8 @@ public class MainActivity extends AppCompatActivity {
         btnSpeedPlus.setOnClickListener(v -> {
             float value = Float.parseFloat(textSpeechRateValue.getText().toString());
             value += 0.01f;
-            if (value > 2.0f) value = 2.0f;
+            if (value > 2.0f)
+                value = 2.0f;
             value = Math.round(value * 100f) / 100f;
             textSpeechRateValue.setText(String.format("%.2f", value));
             speechRate = value;
@@ -213,29 +248,29 @@ public class MainActivity extends AppCompatActivity {
             if (tts != null && isTtsReady) {
                 int result = tts.setSpeechRate(speechRate);
                 if (result != TextToSpeech.SUCCESS) {
-                    tvSpeedSetResult.setText("语速设置失败");
+                    tvSpeedSetResult.setText(R.string.message_speed_set_failed);
                     tvSpeedSetResult.postDelayed(() -> tvSpeedSetResult.setText(""), 500);
                 }
             }
         });
         btnSpeedReset.setOnClickListener(v -> {
             v.animate()
-                .scaleX(0.85f)
-                .scaleY(0.85f)
-                .setDuration(80)
-                .withEndAction(() -> v.animate()
-                    .scaleX(1f)
-                    .scaleY(1f)
+                    .scaleX(0.85f)
+                    .scaleY(0.85f)
                     .setDuration(80)
-                    .start())
-                .start();
+                    .withEndAction(() -> v.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(80)
+                            .start())
+                    .start();
             seekBarSpeed.setProgress(5);
             textSpeechRateValue.setText("1.00");
             speechRate = 1.0f;
             if (tts != null && isTtsReady) {
                 int result = tts.setSpeechRate(speechRate);
                 if (result != TextToSpeech.SUCCESS) {
-                    tvSpeedSetResult.setText("语速设置失败");
+                    tvSpeedSetResult.setText(R.string.message_speed_set_failed);
                     tvSpeedSetResult.postDelayed(() -> tvSpeedSetResult.setText(""), 500);
                 }
             }
@@ -252,13 +287,20 @@ public class MainActivity extends AppCompatActivity {
                 textPitchValue.setText(String.format("%.2f", value));
                 pitch = value;
             }
-            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
         btnPitchMinus.setOnClickListener(v -> {
             float value = Float.parseFloat(textPitchValue.getText().toString());
             value -= 0.01f;
-            if (value < 0.5f) value = 0.5f;
+            if (value < 0.5f)
+                value = 0.5f;
             value = Math.round(value * 100f) / 100f;
             textPitchValue.setText(String.format("%.2f", value));
             pitch = value;
@@ -267,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
             if (tts != null && isTtsReady) {
                 int result = tts.setPitch(pitch);
                 if (result != TextToSpeech.SUCCESS) {
-                    tvPitchSetResult.setText("音调设置失败");
+                    tvPitchSetResult.setText(R.string.message_pitch_set_failed);
                     tvPitchSetResult.postDelayed(() -> tvPitchSetResult.setText(""), 500);
                 }
             }
@@ -275,7 +317,8 @@ public class MainActivity extends AppCompatActivity {
         btnPitchPlus.setOnClickListener(v -> {
             float value = Float.parseFloat(textPitchValue.getText().toString());
             value += 0.01f;
-            if (value > 2.0f) value = 2.0f;
+            if (value > 2.0f)
+                value = 2.0f;
             value = Math.round(value * 100f) / 100f;
             textPitchValue.setText(String.format("%.2f", value));
             pitch = value;
@@ -284,37 +327,106 @@ public class MainActivity extends AppCompatActivity {
             if (tts != null && isTtsReady) {
                 int result = tts.setPitch(pitch);
                 if (result != TextToSpeech.SUCCESS) {
-                    tvPitchSetResult.setText("音调设置失败");
+                    tvPitchSetResult.setText(R.string.message_pitch_set_failed);
                     tvPitchSetResult.postDelayed(() -> tvPitchSetResult.setText(""), 500);
                 }
             }
         });
         btnPitchReset.setOnClickListener(v -> {
             v.animate()
-                .scaleX(0.85f)
-                .scaleY(0.85f)
-                .setDuration(80)
-                .withEndAction(() -> v.animate()
-                    .scaleX(1f)
-                    .scaleY(1f)
+                    .scaleX(0.85f)
+                    .scaleY(0.85f)
                     .setDuration(80)
-                    .start())
-                .start();
+                    .withEndAction(() -> v.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(80)
+                            .start())
+                    .start();
             seekBarPitch.setProgress(5);
             textPitchValue.setText("1.00");
             pitch = 1.0f;
             if (tts != null && isTtsReady) {
                 int result = tts.setPitch(pitch);
                 if (result != TextToSpeech.SUCCESS) {
-                    tvPitchSetResult.setText("音调设置失败");
+                    tvPitchSetResult.setText(R.string.message_pitch_set_failed);
                     tvPitchSetResult.postDelayed(() -> tvPitchSetResult.setText(""), 500);
                 }
+            }
+        });
+
+        // 语言和发音人设置
+        spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!isLangSpinnerInit)
+                    return;
+                Locale selected = localeList.get(position);
+                currentLocale = selected;
+                tts.setLanguage(selected);
+                updateVoiceList(selected, false);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        spinnerVoice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!isVoiceSpinnerInit)
+                    return;
+                Voice selected = voiceList.get(position);
+                tts.setVoice(selected);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        btnLangVoiceReset.setOnClickListener(v -> {
+            if (defaultLocale != null) {
+                int idx = localeList.indexOf(defaultLocale);
+                if (idx >= 0)
+                    spinnerLanguage.setSelection(idx);
+                tts.setLanguage(defaultLocale);
+                updateVoiceList(defaultLocale, true);
             }
         });
 
         tts = new TextToSpeech(this, status -> {
 
             if (status == TextToSpeech.SUCCESS) {
+                // 获取默认语言和全局默认发音人
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // API 21+ 使用 getDefaultVoice().getLocale() 获取默认语言
+                    Voice defaultVoice = tts.getDefaultVoice();
+                    // ====== 测试代码开始 ======
+                    defaultVoice = null; // 模拟获取不到默认发音人
+                    // ====== 测试代码结束 ======
+                    if (defaultVoice != null) {
+                        defaultLocale = defaultVoice.getLocale();
+                        this.globalDefaultVoice = defaultVoice;
+                        currentLocale = defaultLocale; // 使用默认语言作为当前语言
+                        System.out.println("获取到默认语言: " + defaultLocale.getDisplayName());
+                        System.out.println("获取到全局默认发音人: " + defaultVoice.getName());
+                    } else {
+                        // 如果获取不到默认发音人，使用系统默认语言
+                        defaultLocale = Locale.getDefault();
+                        currentLocale = defaultLocale;
+                        System.out.println("使用系统默认语言: " + defaultLocale.getDisplayName());
+                        // 提示用户正在使用系统默认语言
+                        Toast.makeText(this,
+                                getString(R.string.toast_using_system_language, defaultLocale.getDisplayName()),
+                                Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    // API 21 以下使用已废弃的 getDefaultLanguage()
+                    defaultLocale = tts.getDefaultLanguage();
+                    currentLocale = defaultLocale;
+                    System.out.println("获取到默认语言: " + defaultLocale.getDisplayName());
+                }
+
                 int result = tts.setLanguage(currentLocale);
                 tts.setSpeechRate(speechRate);
                 tts.setPitch(pitch);
@@ -323,23 +435,57 @@ public class MainActivity extends AppCompatActivity {
                 btnStop.setEnabled(true);
                 btnSaveAudio.setEnabled(true);
                 tvStatus.setText(R.string.status_ready);
+                // 更新状态信息显示区域，包含系统语言提示
+                updateStatusInfo();
 
-                // 显示支持的语言
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                // 获取可用语言
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Set<Locale> locales = tts.getAvailableLanguages();
-                    StringBuilder sb = new StringBuilder();
+                    localeList.clear();
+                    langAdapter.clear();
+                    int defaultIndex = 0, idx = 0;
                     for (Locale locale : locales) {
-                        sb.append(LocaleDisplayNameMapper.getLocaleDisplayName(locale)).append("\n");
+                        localeList.add(locale);
                     }
-                    tvSupportedLanguages.setText(sb.toString().trim());
-                } else {
-                    tvSupportedLanguages.setText("(当前系统不支持查询)");
+                    // 按语言名称排序（默认语言排在最前面）
+                    Collator collator = Collator.getInstance(Locale.CHINESE);
+                    localeList.sort((l1, l2) -> {
+                        // 默认语言始终排在最前面
+                        if (l1.equals(defaultLocale))
+                            return -1;
+                        if (l2.equals(defaultLocale))
+                            return 1;
+                        // 其他语言按拼音排序
+                        return collator.compare(l1.getDisplayName(), l2.getDisplayName());
+                    });
+                    for (Locale locale : localeList) {
+                        String name = locale.getDisplayName();
+                        if (locale.equals(defaultLocale)) {
+                            // 如果使用的是系统默认语言且没有获取到TTS默认发音人，显示特殊标识
+                            if (defaultLocale.equals(Locale.getDefault()) && globalDefaultVoice == null) {
+                                name += "（系统默认）";
+                            } else {
+                                name += "（默认）";
+                            }
+                            defaultIndex = 0; // 默认语言现在总是在第一位
+                            System.out.println("找到默认语言: " + name); // 调试信息
+                        }
+                        langAdapter.add(name);
+                        idx++;
+                    }
+                    langAdapter.notifyDataSetChanged();
+                    isLangSpinnerInit = true;
+                    spinnerLanguage.setSelection(defaultIndex);
                 }
+                // 初始化每个语言的默认发音人
+                initializeLanguageDefaultVoices();
+                // 获取可用发音人
+                updateVoiceList(currentLocale, true);
             } else {
-                tvStatus.setText(R.string.status_not_ready);
                 btnSpeak.setEnabled(false);
                 btnStop.setEnabled(false);
                 btnSaveAudio.setEnabled(false);
+                updateStatusInfo();
             }
         });
 
@@ -350,25 +496,26 @@ public class MainActivity extends AppCompatActivity {
             }
             String text = editText.getText().toString();
             if (text.isEmpty()) {
-                Toast.makeText(this, "请输入要朗读的文本", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.hint_input_text, Toast.LENGTH_SHORT).show();
                 return;
             }
             if (text.length() > 3500) {
                 new AlertDialog.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("建议每次朗读不超过 3500 字符（含标点、空格），是否继续朗读？")
-                    .setPositiveButton("继续", (dialog, which) -> {
-                        tts.setLanguage(currentLocale);
-                        tts.setSpeechRate(speechRate);
-                        tts.setPitch(pitch);
-                        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-                        Toast.makeText(this, "请耐心等待", Toast.LENGTH_SHORT).show();
-                    })
-                    .setNegativeButton("退出", (dialog, which) -> {
-                        if (tts != null && isTtsReady) tts.stop();
-                        Toast.makeText(this, "请缩减文本后继续", Toast.LENGTH_SHORT).show();
-                    })
-                    .show();
+                        .setTitle(R.string.dialog_title_warning)
+                        .setMessage(R.string.dialog_message_text_too_long)
+                        .setPositiveButton(R.string.dialog_button_continue, (dialog, which) -> {
+                            tts.setLanguage(currentLocale);
+                            tts.setSpeechRate(speechRate);
+                            tts.setPitch(pitch);
+                            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+                            Toast.makeText(this, R.string.toast_please_wait, Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton(R.string.dialog_button_cancel, (dialog, which) -> {
+                            if (tts != null && isTtsReady)
+                                tts.stop();
+                            Toast.makeText(this, R.string.toast_reduce_text, Toast.LENGTH_SHORT).show();
+                        })
+                        .show();
                 return;
             }
             tts.setLanguage(currentLocale);
@@ -377,7 +524,8 @@ public class MainActivity extends AppCompatActivity {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         });
 
-        @SuppressLint("ClickableViewAccessibility") View.OnTouchListener scaleTouch = (v, event) -> {
+        @SuppressLint("ClickableViewAccessibility")
+        View.OnTouchListener scaleTouch = (v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.setScaleX(0.92f);
@@ -420,23 +568,23 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent("com.android.settings.TTS_SETTINGS");
                 startActivity(intent);
             } catch (Exception e) {
-                Toast.makeText(this, "无法打开系统TTS设置界面", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_cannot_open_tts_settings, Toast.LENGTH_SHORT).show();
             }
             return true;
         } else if (id == R.id.action_info) {
             String info = getString(R.string.desc_tts_info) + "\n\n" + getString(R.string.desc_tts_length_limit);
             new AlertDialog.Builder(this)
-                .setTitle("说明")
-                .setMessage(info)
-                .setPositiveButton("确定", null)
-                .show();
+                    .setTitle(R.string.dialog_title_info)
+                    .setMessage(info)
+                    .setPositiveButton(R.string.dialog_button_ok, null)
+                    .show();
             return true;
         } else if (id == R.id.action_about) {
             new AlertDialog.Builder(this)
-                .setTitle("关于")
-                .setMessage("（内容待补充）")
-                .setPositiveButton("确定", null)
-                .show();
+                    .setTitle(R.string.dialog_title_about)
+                    .setMessage(R.string.dialog_message_about)
+                    .setPositiveButton(R.string.dialog_button_ok, null)
+                    .show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -454,11 +602,12 @@ public class MainActivity extends AppCompatActivity {
                     tts.setSpeechRate(speechRate);
                     tts.setPitch(pitch);
                     tts.synthesizeToFile(text, params, pfd, "tts_output");
-                    Toast.makeText(this, "已开始保存音频，完成后请在文件管理器中查看。", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.message_audio_saving, Toast.LENGTH_LONG).show();
                     pfd.close();
                 }
             } catch (Exception e) {
-                Toast.makeText(this, "保存失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.message_save_failed, e.getMessage()), Toast.LENGTH_SHORT)
+                        .show();
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // Android 5.0~9.0
             File tempWav = new File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "tts_temp.wav");
@@ -472,43 +621,50 @@ public class MainActivity extends AppCompatActivity {
             if (result == TextToSpeech.SUCCESS) {
                 tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                     @Override
-                    public void onStart(String utteranceId) {}
+                    public void onStart(String utteranceId) {
+                    }
+
                     @Override
                     public void onDone(String utteranceId) {
                         runOnUiThread(() -> {
                             try (FileInputStream fis = new FileInputStream(tempWav);
-                                 OutputStream os = getContentResolver().openOutputStream(uri)) {
+                                    OutputStream os = getContentResolver().openOutputStream(uri)) {
                                 byte[] buffer = new byte[4096];
                                 int len;
                                 while ((len = fis.read(buffer)) > 0) {
                                     os.write(buffer, 0, len);
                                 }
                                 os.flush();
-                                Toast.makeText(MainActivity.this, "音频已保存到自定义目录", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, R.string.message_audio_saved, Toast.LENGTH_LONG)
+                                        .show();
                             } catch (IOException e) {
-                                Toast.makeText(MainActivity.this, "拷贝音频失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this,
+                                        getString(R.string.message_copy_audio_failed, e.getMessage()),
+                                        Toast.LENGTH_SHORT).show();
                             }
                             tempWav.delete();
                         });
                     }
+
                     @Override
                     public void onError(String utteranceId) {
-                        runOnUiThread(() -> Toast.makeText(MainActivity.this, "音频合成失败", Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(MainActivity.this, R.string.message_audio_synthesis_failed,
+                                Toast.LENGTH_SHORT).show());
                         tempWav.delete();
                     }
                 });
             } else {
-                Toast.makeText(this, "音频合成失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.message_audio_synthesis_failed, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Android 5.0及以上才支持保存为音频文件", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.message_android_version_not_support, Toast.LENGTH_SHORT).show();
         }
     }
 
     // 拷贝文件到SAF Uri
     private void copyFileToUri(File src, Uri uri, String mimeType) {
         try (FileInputStream fis = new FileInputStream(src);
-             OutputStream os = getContentResolver().openOutputStream(uri)) {
+                OutputStream os = getContentResolver().openOutputStream(uri)) {
             byte[] buffer = new byte[4096];
             int len;
             while ((len = fis.read(buffer)) > 0) {
@@ -517,8 +673,122 @@ public class MainActivity extends AppCompatActivity {
             os.flush();
             Toast.makeText(this, "音频已保存到自定义目录", Toast.LENGTH_LONG).show();
         } catch (IOException e) {
-            Toast.makeText(this, "拷贝音频失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.message_copy_audio_failed, e.getMessage()), Toast.LENGTH_SHORT)
+                    .show();
         }
         src.delete();
+    }
+
+    // 初始化每个语言的默认发音人
+    private void initializeLanguageDefaultVoices() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Set<Voice> voices = tts.getVoices();
+            languageDefaultVoices.clear();
+
+            // 按语言分组，为每个语言确定默认发音人
+            HashMap<Locale, ArrayList<Voice>> voicesByLanguage = new HashMap<>();
+
+            for (Voice voice : voices) {
+                Locale locale = voice.getLocale();
+                if (!voicesByLanguage.containsKey(locale)) {
+                    voicesByLanguage.put(locale, new ArrayList<>());
+                }
+                voicesByLanguage.get(locale).add(voice);
+            }
+
+            // 为每个语言确定默认发音人（通常是第一个）
+            for (Map.Entry<Locale, ArrayList<Voice>> entry : voicesByLanguage.entrySet()) {
+                Locale locale = entry.getKey();
+                ArrayList<Voice> voiceList = entry.getValue();
+
+                if (!voiceList.isEmpty()) {
+                    // 如果全局默认发音人是这个语言的，优先使用它
+                    Voice defaultVoice = null;
+                    if (globalDefaultVoice != null && globalDefaultVoice.getLocale().equals(locale)) {
+                        defaultVoice = globalDefaultVoice;
+                    } else {
+                        // 否则使用该语言的第一个发音人
+                        defaultVoice = voiceList.get(0);
+                    }
+
+                    languageDefaultVoices.put(locale, defaultVoice);
+                    System.out.println("语言 " + locale.getDisplayName() + " 的默认发音人: " + defaultVoice.getName());
+                }
+            }
+        }
+    }
+
+    // 更新发音人列表
+    private void updateVoiceList(Locale locale, boolean resetToDefault) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Set<Voice> voices = tts.getVoices();
+            voiceList.clear();
+            voiceAdapter.clear();
+            int defaultIndex = 0, idx = 0;
+
+            // 先收集所有匹配语言的发音人
+            for (Voice voice : voices) {
+                if (voice.getLocale().equals(locale)) {
+                    voiceList.add(voice);
+                }
+            }
+
+            // 获取当前语言的默认发音人
+            Voice currentLangDefaultVoice = languageDefaultVoices.get(locale);
+
+            // 默认发音人排在最前面
+            voiceList.sort((v1, v2) -> {
+                // 当前语言的默认发音人排在最前面
+                if (currentLangDefaultVoice != null) {
+                    if (v1.equals(currentLangDefaultVoice))
+                        return -1;
+                    if (v2.equals(currentLangDefaultVoice))
+                        return 1;
+                }
+                return v1.getName().compareTo(v2.getName());
+            });
+
+            for (Voice voice : voiceList) {
+                String name = voice.getName();
+                // 检查是否是当前语言的默认发音人
+                boolean isDefault = (currentLangDefaultVoice != null && voice.equals(currentLangDefaultVoice));
+                if (isDefault) {
+                    name += "（默认）";
+                    defaultIndex = 0; // 默认发音人现在总是在第一位
+                    System.out.println("找到当前语言默认发音人: " + name); // 调试信息
+                }
+                voiceAdapter.add(name);
+                idx++;
+            }
+            voiceAdapter.notifyDataSetChanged();
+            isVoiceSpinnerInit = true;
+            if (resetToDefault && currentLangDefaultVoice != null) {
+                spinnerVoice.setSelection(0); // 默认发音人现在总是在第一位
+                tts.setVoice(currentLangDefaultVoice);
+            } else if (!voiceList.isEmpty()) {
+                spinnerVoice.setSelection(0);
+                tts.setVoice(voiceList.get(0));
+            }
+        }
+    }
+
+    // 更新状态信息显示区域
+    private void updateStatusInfo() {
+        StringBuilder statusInfo = new StringBuilder();
+
+        if (isTtsReady) {
+            statusInfo.append(getString(R.string.status_ready));
+
+            // 如果使用的是系统默认语言，添加提示信息
+            if (defaultLocale != null && defaultLocale.equals(Locale.getDefault()) && globalDefaultVoice == null) {
+                statusInfo.append("\n\n");
+                statusInfo
+                        .append(getString(R.string.status_ready_with_system_language, defaultLocale.getDisplayName()));
+            }
+        } else {
+            statusInfo.append(getString(R.string.status_not_ready));
+        }
+
+        tvStatus.setText(statusInfo.toString());
     }
 }

@@ -28,7 +28,7 @@
     <string name="message_audio_saved">音频已保存到自定义目录</string>
     <string name="message_audio_saving">已开始保存音频，完成后请在文件管理器中查看。</string>
     <string name="message_android_version_not_support">Android 5.0及以上才支持保存为音频文件</string>
-    <string name="toast_using_system_language">正在使用系统默认语言：%s</string>
-    <string name="status_ready_with_system_language">TTS引擎已就绪（使用系统语言：%s）</string>
+    <string name="toast_using_system_language">未能获取到 TTS 引擎的默认发音人，已切换为系统默认语言：%s</string>
+    <string name="status_ready_with_system_language">未能获取到 TTS 引擎的默认发音人，已切换为系统默认语言：%s</string>
     <string name="status_info_title">状态信息</string>
 </resources>

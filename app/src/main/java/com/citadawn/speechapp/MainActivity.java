@@ -550,6 +550,9 @@ public class MainActivity extends AppCompatActivity {
         btnSpeedPlus.setOnTouchListener(scaleTouch);
         btnPitchMinus.setOnTouchListener(scaleTouch);
         btnPitchPlus.setOnTouchListener(scaleTouch);
+        btnSpeak.setOnTouchListener(scaleTouch);
+        btnStop.setOnTouchListener(scaleTouch);
+        btnSaveAudio.setOnTouchListener(scaleTouch);
     }
 
     @Override

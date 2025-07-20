@@ -18,7 +18,6 @@ public class ScrollableEditText extends AppCompatEditText {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // 让EditText在内容超出时优先消费滑动事件
         if (canScrollVertically(1) || canScrollVertically(-1)) {
             getParent().requestDisallowInterceptTouchEvent(true);
             if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {

@@ -429,6 +429,27 @@ public class MainActivity extends AppCompatActivity {
                 int result = tts.setLanguage(currentLocale);
                 tts.setSpeechRate(speechRate);
                 tts.setPitch(pitch);
+                // 设置全局朗读进度监听
+                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {
+                        if ("tts_speak".equals(utteranceId)) {
+                            runOnUiThread(() -> Toast.makeText(MainActivity.this, "朗读开始", Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                    @Override
+                    public void onDone(String utteranceId) {
+                        if ("tts_speak".equals(utteranceId)) {
+                            runOnUiThread(() -> Toast.makeText(MainActivity.this, "朗读结束", Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                    @Override
+                    public void onError(String utteranceId) {
+                        if ("tts_speak".equals(utteranceId)) {
+                            runOnUiThread(() -> Toast.makeText(MainActivity.this, "朗读出错", Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                });
                 isTtsReady = true;
                 btnSpeak.setEnabled(true);
                 btnStop.setEnabled(true);
@@ -530,7 +551,9 @@ public class MainActivity extends AppCompatActivity {
                             tts.setLanguage(currentLocale);
                             tts.setSpeechRate(speechRate);
                             tts.setPitch(pitch);
-                            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+                            Bundle params = new Bundle();
+                            params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_speak");
+                            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params, "tts_speak");
                             Toast.makeText(this, R.string.toast_please_wait, Toast.LENGTH_SHORT).show();
                         })
                         .setNegativeButton(R.string.dialog_button_cancel, (dialog, which) -> {
@@ -544,7 +567,9 @@ public class MainActivity extends AppCompatActivity {
             tts.setLanguage(currentLocale);
             tts.setSpeechRate(speechRate);
             tts.setPitch(pitch);
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+            Bundle params = new Bundle();
+            params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_speak");
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params, "tts_speak");
         });
 
         @SuppressLint("ClickableViewAccessibility")
@@ -624,11 +649,31 @@ public class MainActivity extends AppCompatActivity {
                 if (pfd != null) {
                     Bundle params = new Bundle();
                     params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f);
+                    params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_save");
                     tts.setLanguage(currentLocale);
                     tts.setSpeechRate(speechRate);
                     tts.setPitch(pitch);
-                    tts.synthesizeToFile(text, params, pfd, "tts_output");
-                    Toast.makeText(this, R.string.message_audio_saving, Toast.LENGTH_LONG).show();
+                    tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                        @Override
+                        public void onStart(String utteranceId) {
+                            if ("tts_save".equals(utteranceId)) {
+                                runOnUiThread(() -> Toast.makeText(MainActivity.this, "音频保存开始", Toast.LENGTH_SHORT).show());
+                            }
+                        }
+                        @Override
+                        public void onDone(String utteranceId) {
+                            if ("tts_save".equals(utteranceId)) {
+                                runOnUiThread(() -> Toast.makeText(MainActivity.this, "音频保存成功", Toast.LENGTH_SHORT).show());
+                            }
+                        }
+                        @Override
+                        public void onError(String utteranceId) {
+                            if ("tts_save".equals(utteranceId)) {
+                                runOnUiThread(() -> Toast.makeText(MainActivity.this, "音频保存失败", Toast.LENGTH_SHORT).show());
+                            }
+                        }
+                    });
+                    tts.synthesizeToFile(text, params, pfd, "tts_save");
                     pfd.close();
                 }
             } catch (Exception e) {
@@ -639,47 +684,33 @@ public class MainActivity extends AppCompatActivity {
             File tempWav = new File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "tts_temp.wav");
             HashMap<String, String> ttsParams = new HashMap<>();
             ttsParams.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, "1.0");
-            ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_temp");
+            ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_save");
             tts.setLanguage(currentLocale);
             tts.setSpeechRate(speechRate);
             tts.setPitch(pitch);
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
+                public void onStart(String utteranceId) {
+                    if ("tts_save".equals(utteranceId)) {
+                        runOnUiThread(() -> Toast.makeText(MainActivity.this, "音频保存开始", Toast.LENGTH_SHORT).show());
+                    }
+                }
+                @Override
+                public void onDone(String utteranceId) {
+                    if ("tts_save".equals(utteranceId)) {
+                        runOnUiThread(() -> copyFileToUri(tempWav, uri, "audio/wav"));
+                    }
+                }
+                @Override
+                public void onError(String utteranceId) {
+                    if ("tts_save".equals(utteranceId)) {
+                        runOnUiThread(() -> Toast.makeText(MainActivity.this, "音频保存失败", Toast.LENGTH_SHORT).show());
+                    }
+                    tempWav.delete();
+                }
+            });
             int result = tts.synthesizeToFile(text, ttsParams, tempWav.getAbsolutePath());
-            if (result == TextToSpeech.SUCCESS) {
-                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                    @Override
-                    public void onStart(String utteranceId) {
-                    }
-
-                    @Override
-                    public void onDone(String utteranceId) {
-                        runOnUiThread(() -> {
-                            try (FileInputStream fis = new FileInputStream(tempWav);
-                                    OutputStream os = getContentResolver().openOutputStream(uri)) {
-                                byte[] buffer = new byte[4096];
-                                int len;
-                                while ((len = fis.read(buffer)) > 0) {
-                                    os.write(buffer, 0, len);
-                                }
-                                os.flush();
-                                Toast.makeText(MainActivity.this, R.string.message_audio_saved, Toast.LENGTH_LONG)
-                                        .show();
-                            } catch (IOException e) {
-                                Toast.makeText(MainActivity.this,
-                                        getString(R.string.message_copy_audio_failed, e.getMessage()),
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                            tempWav.delete();
-                        });
-                    }
-
-                    @Override
-                    public void onError(String utteranceId) {
-                        runOnUiThread(() -> Toast.makeText(MainActivity.this, R.string.message_audio_synthesis_failed,
-                                Toast.LENGTH_SHORT).show());
-                        tempWav.delete();
-                    }
-                });
-            } else {
+            if (result != TextToSpeech.SUCCESS) {
                 Toast.makeText(this, R.string.message_audio_synthesis_failed, Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -697,7 +728,7 @@ public class MainActivity extends AppCompatActivity {
                 os.write(buffer, 0, len);
             }
             os.flush();
-            Toast.makeText(this, "音频已保存到自定义目录", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "音频保存成功", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Toast.makeText(this, getString(R.string.message_copy_audio_failed, e.getMessage()), Toast.LENGTH_SHORT)
                     .show();

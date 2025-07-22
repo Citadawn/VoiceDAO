@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- 尖朝右的水滴 -->
+    <path
+        android:fillColor="#272727"
+        android:pathData="M4,12 C4,7 9,5 13,7 C17,9 20,12 20,12 C20,12 17,15 13,17 C9,19 4,17 4,12 Z"/>
+</vector> 

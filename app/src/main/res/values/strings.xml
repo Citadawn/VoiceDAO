@@ -25,11 +25,24 @@
     <string name="message_audio_synthesis_failed">音频合成失败</string>
     <string name="message_save_failed">保存失败: %s</string>
     <string name="message_copy_audio_failed">拷贝音频失败: %s</string>
-    <string name="message_audio_saved">音频已保存到自定义目录</string>
-    <string name="message_audio_saving">已开始保存音频，完成后请在文件管理器中查看。</string>
     <string name="message_android_version_not_support">Android 5.0及以上才支持保存为音频文件</string>
-    <string name="toast_using_system_language">未能获取到 TTS 引擎的默认发音人，已切换为系统默认语言：%s</string>
     <string name="status_ready_with_system_language">未能获取到 TTS 引擎的默认发音人，已切换为系统默认语言：%s</string>
     <string name="status_info_title">状态信息</string>
     <string name="tip_reset_lang_voice">恢复默认语言和发音人</string>
+    <string name="btn_set_save_dir">设置保存目录</string>
+    <string name="btn_cancel_save">取消保存</string>
+    <string name="toast_save_dir_set_success">保存目录设置成功</string>
+    <string name="toast_save_dir_set_fail">保存目录设置失败</string>
+    <string name="toast_save_dir_permission_denied">未获得目录访问权限</string>
+    <string name="toast_no_save_dir">请先设置保存目录</string>
+    <string name="toast_cancel_save_success">保存已取消，文件已删除</string>
+    <string name="toast_cancel_save_fail">取消保存失败</string>
+    <string name="toast_saving_audio">正在保存音频，请稍候…</string>
+    <string name="toast_save_audio_success">音频保存成功</string>
+    <string name="toast_save_audio_fail">音频保存失败</string>
+    <string name="dialog_title_set_save_dir">选择音频保存目录</string>
+    <string name="dialog_message_set_save_dir">请选择一个目录作为音频文件的默认保存位置</string>
+    <string name="dialog_button_set">设置</string>
+    <string name="dialog_button_cancel_save">取消保存</string>
+    <string name="dialog_message_cancel_save">确定要取消音频保存并删除文件吗？</string>
 </resources>

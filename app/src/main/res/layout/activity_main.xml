@@ -432,42 +432,27 @@
                     android:stateListAnimator="@animator/btn_scale_animator" />
             </LinearLayout>
 
-            <!-- 保存为音频按钮，约束在朗读/停止按钮下方 -->
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSaveAudio"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="32dp"
-                android:text="保存为音频"
-                android:textColor="@color/white"
-                android:background="@drawable/btn_main_bg"
-                android:textSize="18sp"
-                android:stateListAnimator="@animator/btn_scale_animator"
-                app:layout_constraintTop_toBottomOf="@id/layoutSpeakRow"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <!-- 新增：保存目录设置与取消保存按钮区块 -->
+            <!-- 新版：保存为音频和取消保存同一行，设置保存目录在下方，状态信息再下方 -->
             <LinearLayout
-                android:id="@+id/layoutSaveDirBlock"
+                android:id="@+id/layoutSaveAudioRow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@id/btnSaveAudio"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/layoutSpeakRow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnSetSaveDir"
+                    android:id="@+id/btnSaveAudio"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_weight="2"
-                    android:text="@string/btn_set_save_dir"
+                    android:text="保存为音频"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_main_bg"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:stateListAnimator="@animator/btn_scale_animator"
                     android:layout_marginEnd="12dp" />
 
@@ -483,6 +468,20 @@
                     android:stateListAnimator="@animator/btn_scale_animator" />
             </LinearLayout>
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSetSaveDir"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:text="@string/btn_set_save_dir"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_main_bg"
+                android:textSize="16sp"
+                android:stateListAnimator="@animator/btn_scale_animator"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/layoutSaveAudioRow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <!-- 状态信息合并版：每项一行，标题加粗，内容正常 -->
             <LinearLayout
                 android:layout_width="0dp"
@@ -492,7 +491,7 @@
                 android:background="#F5F5F5"
                 android:padding="16dp"
                 android:minHeight="60dp"
-                app:layout_constraintTop_toBottomOf="@id/layoutSaveDirBlock"
+                app:layout_constraintTop_toBottomOf="@id/btnSetSaveDir"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 

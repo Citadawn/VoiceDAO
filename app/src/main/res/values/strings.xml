@@ -40,9 +40,6 @@
     <string name="toast_saving_audio">正在保存音频，请稍候…</string>
     <string name="toast_save_audio_success">音频保存成功</string>
     <string name="toast_save_audio_fail">音频保存失败</string>
-    <string name="dialog_title_set_save_dir">选择音频保存目录</string>
-    <string name="dialog_message_set_save_dir">请选择一个目录作为音频文件的默认保存位置</string>
-    <string name="dialog_button_set">设置</string>
     <string name="dialog_button_cancel_save">取消保存</string>
     <string name="dialog_message_cancel_save">确定要取消音频保存并删除文件吗？</string>
 </resources>

@@ -109,6 +109,19 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> editorLauncher;
 
+    // 测试代码：每隔1秒输出tts.isSpeaking()的值
+    private final Handler testHandler = new Handler(Looper.getMainLooper());
+    private final Runnable testIsSpeakingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (tts != null) {
+                boolean speaking = tts.isSpeaking();
+                android.util.Log.d("TTS_TEST", "isSpeaking: " + speaking);
+            }
+            testHandler.postDelayed(this, 1000); // 每隔1秒执行一次
+        }
+    };
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,11 +210,13 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.toast_saving_audio, Toast.LENGTH_SHORT).show();
                 return;
             }
+            btnSpeak.setEnabled(false);
             if (text.length() > 3500) {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.dialog_title_warning)
                         .setMessage(R.string.dialog_message_text_too_long)
                         .setPositiveButton(R.string.dialog_button_continue, (dialog, which) -> {
+                            Toast.makeText(this, "保存任务已提交，正在准备，请稍候…", Toast.LENGTH_SHORT).show();
                             startSaveAudio(text);
                         })
                         .setNegativeButton(R.string.dialog_button_cancel, (dialog, which) -> {
@@ -210,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
                         .show();
                 return;
             }
+            Toast.makeText(this, "保存任务已提交，正在准备，请稍候…", Toast.LENGTH_SHORT).show();
             startSaveAudio(text);
         });
         btnSetSaveDir = findViewById(R.id.btnSetSaveDir);
@@ -242,20 +258,20 @@ public class MainActivity extends AppCompatActivity {
         ttsStatusRunnable = new Runnable() {
             @Override
             public void run() {
-                // 优先级：朗读 > 保存音频 > 空闲
-                if (ttsWorkState == TtsWorkState.SPEAKING) {
+                boolean speaking = tts != null && tts.isSpeaking();
+                if (speaking) {
                     tvTtsSpeakStatus.setText("正在朗读");
-                    tvTtsSpeakStatus
-                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_dark));
-                } else if (ttsWorkState == TtsWorkState.SAVING) {
+                    tvTtsSpeakStatus.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_dark));
+                } else if (ttsWorkState == TtsWorkState.SAVING || isSavingAudio) {
                     tvTtsSpeakStatus.setText("正在保存音频");
-                    tvTtsSpeakStatus
-                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_blue_dark));
+                    tvTtsSpeakStatus.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_blue_dark));
                 } else {
                     tvTtsSpeakStatus.setText("空闲");
-                    tvTtsSpeakStatus
-                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                    tvTtsSpeakStatus.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
                 }
+                // 新增：没有朗读任务时禁用停止朗读按钮
+                btnStop.setEnabled(speaking);
+                updateSpeakAndSaveButtons();
                 ttsStatusHandler.postDelayed(this, 300);
             }
         };
@@ -489,10 +505,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onStart(String utteranceId) {
                         if ("tts_speak".equals(utteranceId)) {
                             ttsWorkState = TtsWorkState.SPEAKING;
-                            runOnUiThread(() -> Toast.makeText(MainActivity.this, "朗读开始", Toast.LENGTH_SHORT).show());
+                            // 移除Toast提示
                         } else if ("tts_save".equals(utteranceId)) {
                             ttsWorkState = TtsWorkState.SAVING;
-                            runOnUiThread(() -> Toast.makeText(MainActivity.this, "音频保存开始", Toast.LENGTH_SHORT).show());
+                            // 移除Toast提示
                         }
                     }
 
@@ -500,7 +516,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onDone(String utteranceId) {
                         if ("tts_speak".equals(utteranceId)) {
                             ttsWorkState = TtsWorkState.IDLE;
-                            runOnUiThread(() -> Toast.makeText(MainActivity.this, "朗读结束", Toast.LENGTH_SHORT).show());
+                            runOnUiThread(() -> {
+                                Toast.makeText(MainActivity.this, "朗读结束", Toast.LENGTH_SHORT).show();
+                                updateSpeakAndSaveButtons(); // 新增
+                            });
                         } else if ("tts_save".equals(utteranceId)) {
                             runOnUiThread(() -> {
                                 if (saveDirUri != null && tempAudioFile != null && tempAudioFile.exists()) {
@@ -517,6 +536,7 @@ public class MainActivity extends AppCompatActivity {
                                 isSavingAudio = false;
                                 btnSaveAudio.setEnabled(true);
                                 btnCancelSave.setEnabled(false);
+                                updateSpeakAndSaveButtons(); // 新增
                             });
                             ttsWorkState = TtsWorkState.IDLE;
                         }
@@ -526,7 +546,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onError(String utteranceId) {
                         ttsWorkState = TtsWorkState.IDLE;
                         if ("tts_speak".equals(utteranceId)) {
-                            runOnUiThread(() -> Toast.makeText(MainActivity.this, "朗读出错", Toast.LENGTH_SHORT).show());
+                            runOnUiThread(() -> {
+                                Toast.makeText(MainActivity.this, "朗读出错", Toast.LENGTH_SHORT).show();
+                                updateSpeakAndSaveButtons(); // 新增
+                            });
                         } else if ("tts_save".equals(utteranceId)) {
                             runOnUiThread(() -> {
                                 if (tempAudioFile != null && tempAudioFile.exists())
@@ -536,6 +559,7 @@ public class MainActivity extends AppCompatActivity {
                                 isSavingAudio = false;
                                 btnSaveAudio.setEnabled(true);
                                 btnCancelSave.setEnabled(false);
+                                updateSpeakAndSaveButtons(); // 新增
                             });
                         }
                     }
@@ -635,18 +659,19 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.hint_input_text, Toast.LENGTH_SHORT).show();
                 return;
             }
+            btnSaveAudio.setEnabled(false);
             if (text.length() > 3500) {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.dialog_title_warning)
                         .setMessage(R.string.dialog_message_text_too_long)
                         .setPositiveButton(R.string.dialog_button_continue, (dialog, which) -> {
+                            Toast.makeText(this, "朗读任务已提交，正在准备，请稍候…", Toast.LENGTH_SHORT).show();
                             tts.setLanguage(currentLocale);
                             tts.setSpeechRate(speechRate);
                             tts.setPitch(pitch);
                             Bundle params = new Bundle();
                             params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_speak");
                             tts.speak(text, TextToSpeech.QUEUE_FLUSH, params, "tts_speak");
-                            Toast.makeText(this, R.string.toast_please_wait, Toast.LENGTH_SHORT).show();
                         })
                         .setNegativeButton(R.string.dialog_button_cancel, (dialog, which) -> {
                             if (tts != null && isTtsReady)
@@ -656,6 +681,7 @@ public class MainActivity extends AppCompatActivity {
                         .show();
                 return;
             }
+            Toast.makeText(this, "朗读任务已提交，正在准备，请稍候…", Toast.LENGTH_SHORT).show();
             tts.setLanguage(currentLocale);
             tts.setSpeechRate(speechRate);
             tts.setPitch(pitch);
@@ -700,11 +726,15 @@ public class MainActivity extends AppCompatActivity {
         btnClear.setEnabled(editText.getText().toString().length() > 0);
         // 初始化时也调用一次
         updateResetButtons();
+        // 启动测试定时器
+        testHandler.post(testIsSpeakingRunnable);
     }
 
     @Override
     protected void onDestroy() {
         ttsStatusHandler.removeCallbacksAndMessages(null);
+        // 移除测试定时器回调，防止泄漏
+        testHandler.removeCallbacksAndMessages(null);
         if (tts != null) {
             tts.stop();
             tts.shutdown();
@@ -792,7 +822,7 @@ public class MainActivity extends AppCompatActivity {
                 os.write(buffer, 0, len);
             }
             os.flush();
-            Toast.makeText(this, "音频保存成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "成功保存音频", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Toast.makeText(this, getString(R.string.message_copy_audio_failed, e.getMessage()), Toast.LENGTH_SHORT)
                     .show();
@@ -945,7 +975,6 @@ public class MainActivity extends AppCompatActivity {
         isSavingAudio = true;
         btnSaveAudio.setEnabled(false);
         btnCancelSave.setEnabled(true);
-        Toast.makeText(this, R.string.toast_saving_audio, Toast.LENGTH_SHORT).show();
         tempAudioFile = new File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), TEMP_FILE_NAME);
         HashMap<String, String> ttsParams = new HashMap<>();
         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, "1.0");
@@ -1009,6 +1038,7 @@ public class MainActivity extends AppCompatActivity {
             isSavingAudio = false;
             btnSaveAudio.setEnabled(true);
             btnCancelSave.setEnabled(false);
+            updateSpeakAndSaveButtons(); // 新增
             Toast.makeText(this, R.string.toast_cancel_save_success, Toast.LENGTH_SHORT).show();
             ttsWorkState = TtsWorkState.IDLE;
             updateStatusInfo();
@@ -1030,5 +1060,19 @@ public class MainActivity extends AppCompatActivity {
         Voice defaultVoice = languageDefaultVoices.get(currentLocale);
         boolean isVoiceDefault = (currentVoice != null && currentVoice.equals(defaultVoice));
         btnLangVoiceReset.setEnabled(!(isLangDefault && isVoiceDefault));
+    }
+
+    // 新增：根据TTS状态和isSavingAudio更新朗读和保存按钮的可用性
+    private void updateSpeakAndSaveButtons() {
+        if (ttsWorkState == TtsWorkState.SPEAKING) {
+            btnSaveAudio.setEnabled(false);
+            btnSpeak.setEnabled(true);
+        } else if (ttsWorkState == TtsWorkState.SAVING || isSavingAudio) {
+            btnSpeak.setEnabled(false);
+            btnSaveAudio.setEnabled(false); // 正在保存音频时始终禁用
+        } else {
+            btnSpeak.setEnabled(isTtsReady);
+            btnSaveAudio.setEnabled(isTtsReady);
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.util.TypedValue;
@@ -14,6 +15,8 @@ public class TextEditorActivity extends AppCompatActivity {
     public static final String EXTRA_TEXT = "extra_text";
     private EditText editorEditText;
     private Button btnEditorClear, btnEditorOk;
+    private TextView tvEditorCharCount;
+    private int maxCharCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class TextEditorActivity extends AppCompatActivity {
         editorEditText = findViewById(R.id.editorEditText);
         btnEditorClear = findViewById(R.id.btnEditorClear);
         btnEditorOk = findViewById(R.id.btnEditorOk);
+        tvEditorCharCount = findViewById(R.id.tvEditorCharCount);
 
         // 打开时显示传入内容
         String text = getIntent().getStringExtra(EXTRA_TEXT);
@@ -43,6 +47,8 @@ public class TextEditorActivity extends AppCompatActivity {
 
         // 根据内容动态启用/禁用清空按钮和确定按钮
         btnEditorClear.setEnabled(editorEditText.getText().toString().length() > 0);
+        maxCharCount = android.speech.tts.TextToSpeech.getMaxSpeechInputLength();
+        updateCharCount();
         editorEditText.addTextChangedListener(new android.text.TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -50,6 +56,7 @@ public class TextEditorActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 btnEditorClear.setEnabled(s.length() > 0);
                 btnEditorOk.setEnabled(!s.toString().equals(originalText));
+                updateCharCount();
             }
             @Override
             public void afterTextChanged(android.text.Editable s) {}
@@ -70,10 +77,26 @@ public class TextEditorActivity extends AppCompatActivity {
 
         findViewById(R.id.btnEditorInfo).setOnClickListener(v -> {
             new androidx.appcompat.app.AlertDialog.Builder(TextEditorActivity.this)
-                .setTitle("使用说明")
-                .setMessage("1. 可在此编辑、粘贴、整理大段文本，便于朗读或保存。\n2. “确定”按钮仅在内容被修改后可用，点击后将内容带回主界面。\n3. “清空”按钮需连续两次点击才会真正清空内容，防止误操作。\n4. 支持多行滚动、复制、粘贴等常用编辑操作。\n5. 返回按钮不保存内容，直接退出编辑器。")
-                .setPositiveButton("知道了", null)
+                .setTitle(R.string.dialog_title_editor_info)
+                .setMessage(R.string.dialog_message_editor_info)
+                .setPositiveButton(R.string.dialog_button_editor_info_ok, null)
                 .show();
         });
+    }
+
+    private void updateCharCount() {
+        int current = editorEditText.getText().length();
+        String text = "字数：" + current + "/" + maxCharCount;
+        if (current > maxCharCount) {
+            // 只将当前字数部分标红
+            int start = 3; // "字数："长度
+            int end = start + String.valueOf(current).length();
+            android.text.SpannableString ss = new android.text.SpannableString(text);
+            ss.setSpan(new android.text.style.ForegroundColorSpan(android.graphics.Color.RED), start, end, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvEditorCharCount.setText(ss);
+        } else {
+            tvEditorCharCount.setText(text);
+            tvEditorCharCount.setTextColor(android.graphics.Color.parseColor("#666666"));
+        }
     }
 } 

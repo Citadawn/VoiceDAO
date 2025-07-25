@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -77,7 +78,7 @@
                     android:id="@+id/btnClear"
                     android:layout_width="44dp"
                     android:layout_height="28dp"
-                    android:text="清空"
+                    android:text="@string/btn_clear"
                     android:textSize="12sp"
                     android:background="@drawable/btn_main_bg"
                     android:textColor="@color/white"
@@ -88,7 +89,7 @@
                     android:id="@+id/btnOpenEditor"
                     android:layout_width="44dp"
                     android:layout_height="28dp"
-                    android:text="编辑器"
+                    android:text="@string/btn_open_editor"
                     android:textSize="12sp"
                     android:background="@drawable/btn_main_bg"
                     android:textColor="@color/white"
@@ -119,7 +120,7 @@
                         android:id="@+id/tvSpeedLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="语速"
+                        android:text="@string/label_speed"
                         android:textSize="16sp"
                         android:textColor="#272727"
                         android:layout_marginEnd="0dp" />
@@ -148,7 +149,7 @@
                         android:id="@+id/btnSpeedReset"
                         android:layout_width="44dp"
                         android:layout_height="28dp"
-                        android:text="重置"
+                        android:text="@string/btn_reset"
                         android:textSize="12sp"
                         android:background="@drawable/btn_main_bg"
                         android:textColor="@color/white"
@@ -229,7 +230,7 @@
                         android:id="@+id/tvPitchLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="音调"
+                        android:text="@string/label_pitch"
                         android:textSize="16sp"
                         android:textColor="#272727"
                         android:layout_marginEnd="0dp" />
@@ -258,7 +259,7 @@
                         android:id="@+id/btnPitchReset"
                         android:layout_width="44dp"
                         android:layout_height="28dp"
-                        android:text="重置"
+                        android:text="@string/btn_reset"
                         android:textSize="12sp"
                         android:background="@drawable/btn_main_bg"
                         android:textColor="@color/white"
@@ -340,7 +341,7 @@
                         android:id="@+id/tvLangLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="语言"
+                        android:text="@string/label_language"
                         android:textSize="16sp"
                         android:textColor="#333"
                         android:layout_marginEnd="8dp" />
@@ -366,7 +367,7 @@
                         android:id="@+id/tvVoiceLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="发音人"
+                        android:text="@string/label_voice"
                         android:textSize="16sp"
                         android:textColor="#333"
                         android:layout_marginEnd="8dp" />
@@ -389,11 +390,12 @@
                     android:layout_gravity="end"
                     android:background="@drawable/btn_main_bg"
                     android:gravity="center"
-                    android:text="重置"
+                    android:text="@string/btn_reset"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:tooltipText="@string/tip_reset_lang_voice"
-                    android:stateListAnimator="@animator/btn_scale_animator" />
+                    android:stateListAnimator="@animator/btn_scale_animator"
+                    tools:targetApi="26" />
             </LinearLayout>
 
             <!-- 朗读/停止按钮横向排列，约束在语言发音人区块下方 -->
@@ -413,7 +415,7 @@
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_weight="2"
-                    android:text="朗读"
+                    android:text="@string/btn_speak"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_main_bg"
                     android:textSize="18sp"
@@ -425,7 +427,7 @@
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:text="停止朗读"
+                    android:text="@string/btn_stop_speak"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_main_bg"
                     android:textSize="18sp"
@@ -449,7 +451,7 @@
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_weight="2"
-                    android:text="保存为音频"
+                    android:text="@string/btn_save_audio"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_main_bg"
                     android:textSize="18sp"
@@ -499,7 +501,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="状态信息"
+                    android:text="@string/status_info_title"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#333333"
@@ -513,7 +515,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TTS引擎状态："
+                        android:text="@string/label_tts_engine_status"
                         android:textStyle="bold"
                         android:textColor="#333333"
                         android:textSize="13sp" />
@@ -533,7 +535,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="音频保存目录："
+                        android:text="@string/label_audio_save_dir"
                         android:textStyle="bold"
                         android:textColor="#333333"
                         android:textSize="13sp" />
@@ -553,7 +555,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="语音合成状态："
+                        android:text="@string/label_tts_speak_status"
                         android:textStyle="bold"
                         android:textColor="#333333"
                         android:textSize="13sp" />

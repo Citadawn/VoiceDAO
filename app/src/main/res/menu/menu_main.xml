@@ -1,5 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_tts_settings" android:title="设置系统 TTS"/>
-    <item android:id="@+id/action_info" android:title="说明"/>
-    <item android:id="@+id/action_about" android:title="关于"/>
+    <item
+        android:id="@+id/action_tts_settings"
+        android:title="@string/menu_tts_settings"
+    />
+    <item
+        android:id="@+id/action_info"
+        android:title="@string/menu_info"
+    />
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/menu_about"
+    />
 </menu> 

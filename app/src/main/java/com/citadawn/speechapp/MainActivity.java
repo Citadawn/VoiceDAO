@@ -27,6 +27,8 @@ import android.speech.tts.Voice;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import android.content.SharedPreferences;
 import androidx.documentfile.provider.DocumentFile;
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnSetSaveDir, btnCancelSave;
     private boolean isSavingAudio = false;
     private File tempAudioFile = null;
+    private String currentAudioFileName = "tts_output.wav";
 
     // 当前TTS状态
     private enum TtsWorkState {
@@ -107,20 +110,16 @@ public class MainActivity extends AppCompatActivity {
 
     private volatile TtsWorkState ttsWorkState = TtsWorkState.IDLE;
 
+    // 新增：TTS任务准备状态
+    private enum PendingTtsAction {
+        NONE, PENDING_SPEAK, PENDING_SAVE
+    }
+
+    private volatile PendingTtsAction pendingTtsAction = PendingTtsAction.NONE;
+
     private ActivityResultLauncher<Intent> editorLauncher;
 
-    // 测试代码：每隔1秒输出tts.isSpeaking()的值
-    private final Handler testHandler = new Handler(Looper.getMainLooper());
-    private final Runnable testIsSpeakingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (tts != null) {
-                boolean speaking = tts.isSpeaking();
-                android.util.Log.d("TTS_TEST", "isSpeaking: " + speaking);
-            }
-            testHandler.postDelayed(this, 1000); // 每隔1秒执行一次
-        }
-    };
+    // 删除：testHandler和testIsSpeakingRunnable相关的所有测试代码
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -216,8 +215,7 @@ public class MainActivity extends AppCompatActivity {
                         .setTitle(R.string.dialog_title_warning)
                         .setMessage(R.string.dialog_message_text_too_long)
                         .setPositiveButton(R.string.dialog_button_continue, (dialog, which) -> {
-                            Toast.makeText(this, "保存任务已提交，正在准备，请稍候…", Toast.LENGTH_SHORT).show();
-                            startSaveAudio(text);
+                            showFileNameInputDialogAndSave(text);
                         })
                         .setNegativeButton(R.string.dialog_button_cancel, (dialog, which) -> {
                             Toast.makeText(this, R.string.toast_reduce_text, Toast.LENGTH_SHORT).show();
@@ -225,8 +223,7 @@ public class MainActivity extends AppCompatActivity {
                         .show();
                 return;
             }
-            Toast.makeText(this, "保存任务已提交，正在准备，请稍候…", Toast.LENGTH_SHORT).show();
-            startSaveAudio(text);
+            showFileNameInputDialogAndSave(text);
         });
         btnSetSaveDir = findViewById(R.id.btnSetSaveDir);
         btnCancelSave = findViewById(R.id.btnCancelSave);
@@ -258,19 +255,29 @@ public class MainActivity extends AppCompatActivity {
         ttsStatusRunnable = new Runnable() {
             @Override
             public void run() {
-                boolean speaking = tts != null && tts.isSpeaking();
-                if (speaking) {
+                // 优先显示准备状态
+                if (pendingTtsAction == PendingTtsAction.PENDING_SPEAK) {
+                    tvTtsSpeakStatus.setText("准备开始朗读……");
+                    tvTtsSpeakStatus
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_orange_dark));
+                } else if (pendingTtsAction == PendingTtsAction.PENDING_SAVE) {
+                    tvTtsSpeakStatus.setText("准备开始保存音频……");
+                    tvTtsSpeakStatus
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_orange_dark));
+                } else if (ttsWorkState == TtsWorkState.SPEAKING) {
                     tvTtsSpeakStatus.setText("正在朗读");
-                    tvTtsSpeakStatus.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_dark));
-                } else if (ttsWorkState == TtsWorkState.SAVING || isSavingAudio) {
+                    tvTtsSpeakStatus
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_dark));
+                } else if (ttsWorkState == TtsWorkState.SAVING) {
                     tvTtsSpeakStatus.setText("正在保存音频");
-                    tvTtsSpeakStatus.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_blue_dark));
+                    tvTtsSpeakStatus
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_blue_dark));
                 } else {
                     tvTtsSpeakStatus.setText("空闲");
-                    tvTtsSpeakStatus.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                    tvTtsSpeakStatus
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
                 }
-                // 新增：没有朗读任务时禁用停止朗读按钮
-                btnStop.setEnabled(speaking);
+                btnStop.setEnabled(ttsWorkState == TtsWorkState.SPEAKING);
                 updateSpeakAndSaveButtons();
                 ttsStatusHandler.postDelayed(this, 300);
             }
@@ -499,16 +506,16 @@ public class MainActivity extends AppCompatActivity {
                 int result = tts.setLanguage(currentLocale);
                 tts.setSpeechRate(speechRate);
                 tts.setPitch(pitch);
-                // 设置全局朗读进度监听
+                // 设置TTS任务进度监听（包括朗读和音频保存）
                 tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                     @Override
                     public void onStart(String utteranceId) {
                         if ("tts_speak".equals(utteranceId)) {
                             ttsWorkState = TtsWorkState.SPEAKING;
-                            // 移除Toast提示
+                            pendingTtsAction = PendingTtsAction.NONE;
                         } else if ("tts_save".equals(utteranceId)) {
                             ttsWorkState = TtsWorkState.SAVING;
-                            // 移除Toast提示
+                            pendingTtsAction = PendingTtsAction.NONE;
                         }
                     }
 
@@ -517,8 +524,9 @@ public class MainActivity extends AppCompatActivity {
                         if ("tts_speak".equals(utteranceId)) {
                             ttsWorkState = TtsWorkState.IDLE;
                             runOnUiThread(() -> {
-                                Toast.makeText(MainActivity.this, "朗读结束", Toast.LENGTH_SHORT).show();
-                                updateSpeakAndSaveButtons(); // 新增
+                                Toast.makeText(MainActivity.this, R.string.toast_tts_speak_done, Toast.LENGTH_SHORT)
+                                        .show();
+                                updateSpeakAndSaveButtons();
                             });
                         } else if ("tts_save".equals(utteranceId)) {
                             runOnUiThread(() -> {
@@ -528,7 +536,7 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, R.string.toast_save_audio_success,
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(MainActivity.this, R.string.toast_save_audio_fail,
+                                        Toast.makeText(MainActivity.this, R.string.toast_save_audio_write_fail,
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                     tempAudioFile.delete();
@@ -536,7 +544,7 @@ public class MainActivity extends AppCompatActivity {
                                 isSavingAudio = false;
                                 btnSaveAudio.setEnabled(true);
                                 btnCancelSave.setEnabled(false);
-                                updateSpeakAndSaveButtons(); // 新增
+                                updateSpeakAndSaveButtons();
                             });
                             ttsWorkState = TtsWorkState.IDLE;
                         }
@@ -545,21 +553,23 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(String utteranceId) {
                         ttsWorkState = TtsWorkState.IDLE;
+                        pendingTtsAction = PendingTtsAction.NONE;
                         if ("tts_speak".equals(utteranceId)) {
                             runOnUiThread(() -> {
-                                Toast.makeText(MainActivity.this, "朗读出错", Toast.LENGTH_SHORT).show();
-                                updateSpeakAndSaveButtons(); // 新增
+                                Toast.makeText(MainActivity.this, R.string.toast_tts_speak_error, Toast.LENGTH_SHORT)
+                                        .show();
+                                updateSpeakAndSaveButtons();
                             });
                         } else if ("tts_save".equals(utteranceId)) {
                             runOnUiThread(() -> {
                                 if (tempAudioFile != null && tempAudioFile.exists())
                                     tempAudioFile.delete();
-                                Toast.makeText(MainActivity.this, R.string.toast_save_audio_fail, Toast.LENGTH_SHORT)
-                                        .show();
+                                Toast.makeText(MainActivity.this, R.string.toast_save_audio_synth_fail,
+                                        Toast.LENGTH_SHORT).show();
                                 isSavingAudio = false;
                                 btnSaveAudio.setEnabled(true);
                                 btnCancelSave.setEnabled(false);
-                                updateSpeakAndSaveButtons(); // 新增
+                                updateSpeakAndSaveButtons();
                             });
                         }
                     }
@@ -665,7 +675,8 @@ public class MainActivity extends AppCompatActivity {
                         .setTitle(R.string.dialog_title_warning)
                         .setMessage(R.string.dialog_message_text_too_long)
                         .setPositiveButton(R.string.dialog_button_continue, (dialog, which) -> {
-                            Toast.makeText(this, "朗读任务已提交，正在准备，请稍候…", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, R.string.toast_read_task_submitted, Toast.LENGTH_SHORT).show();
+                            pendingTtsAction = PendingTtsAction.PENDING_SPEAK;
                             tts.setLanguage(currentLocale);
                             tts.setSpeechRate(speechRate);
                             tts.setPitch(pitch);
@@ -681,7 +692,8 @@ public class MainActivity extends AppCompatActivity {
                         .show();
                 return;
             }
-            Toast.makeText(this, "朗读任务已提交，正在准备，请稍候…", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_read_task_submitted, Toast.LENGTH_SHORT).show();
+            pendingTtsAction = PendingTtsAction.PENDING_SPEAK;
             tts.setLanguage(currentLocale);
             tts.setSpeechRate(speechRate);
             tts.setPitch(pitch);
@@ -726,15 +738,14 @@ public class MainActivity extends AppCompatActivity {
         btnClear.setEnabled(editText.getText().toString().length() > 0);
         // 初始化时也调用一次
         updateResetButtons();
-        // 启动测试定时器
-        testHandler.post(testIsSpeakingRunnable);
+        // 删除：testHandler.post(testIsSpeakingRunnable);
     }
 
     @Override
     protected void onDestroy() {
         ttsStatusHandler.removeCallbacksAndMessages(null);
         // 移除测试定时器回调，防止泄漏
-        testHandler.removeCallbacksAndMessages(null);
+        // testHandler.removeCallbacksAndMessages(null); // 删除
         if (tts != null) {
             tts.stop();
             tts.shutdown();
@@ -779,6 +790,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 合成到指定uri
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private void synthesizeTextToUri(String text, Uri uri) {
         pendingAudioUri = uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10+
@@ -822,7 +834,7 @@ public class MainActivity extends AppCompatActivity {
                 os.write(buffer, 0, len);
             }
             os.flush();
-            Toast.makeText(this, "成功保存音频", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_save_audio_success, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Toast.makeText(this, getString(R.string.message_copy_audio_failed, e.getMessage()), Toast.LENGTH_SHORT)
                     .show();
@@ -933,7 +945,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // 音频保存目录
         if (saveDirUri != null) {
-            tvAudioSaveDir.setText(saveDirUri.toString());
+            tvAudioSaveDir.setText(getReadablePathFromUri(saveDirUri));
         } else {
             tvAudioSaveDir.setText("未设置");
         }
@@ -971,11 +983,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void showFileNameInputDialogAndSave(String text) {
+        // 自动生成默认文件名
+        String defaultName = "tts_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
+        final EditText input = new EditText(this);
+        input.setText(defaultName);
+        input.setSelection(defaultName.length());
+        new AlertDialog.Builder(this)
+                .setTitle("输入音频文件名")
+                .setView(input)
+                .setPositiveButton("保存", (dialog, which) -> {
+                    String name = input.getText().toString().trim();
+                    if (name.isEmpty())
+                        name = defaultName;
+                    if (!name.endsWith(".wav"))
+                        name += ".wav";
+                    currentAudioFileName = name;
+                    Toast.makeText(this, R.string.toast_save_task_submitted, Toast.LENGTH_SHORT).show();
+                    pendingTtsAction = PendingTtsAction.PENDING_SAVE;
+                    startSaveAudio(text);
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
     private void startSaveAudio(String text) {
         isSavingAudio = true;
         btnSaveAudio.setEnabled(false);
         btnCancelSave.setEnabled(true);
-        tempAudioFile = new File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), TEMP_FILE_NAME);
+        tempAudioFile = new File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), currentAudioFileName);
         HashMap<String, String> ttsParams = new HashMap<>();
         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, "1.0");
         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_save");
@@ -992,10 +1028,10 @@ public class MainActivity extends AppCompatActivity {
             if (dir == null || !dir.canWrite())
                 return false;
             // 先删除同名文件
-            DocumentFile old = dir.findFile(AUDIO_FILE_NAME);
+            DocumentFile old = dir.findFile(currentAudioFileName);
             if (old != null)
                 old.delete();
-            DocumentFile newFile = dir.createFile("audio/wav", AUDIO_FILE_NAME);
+            DocumentFile newFile = dir.createFile("audio/wav", currentAudioFileName);
             if (newFile == null)
                 return false;
             try (OutputStream os = getContentResolver().openOutputStream(newFile.getUri());
@@ -1030,7 +1066,7 @@ public class MainActivity extends AppCompatActivity {
             if (saveDirUri != null) {
                 DocumentFile dir = DocumentFile.fromTreeUri(this, saveDirUri);
                 if (dir != null) {
-                    DocumentFile file = dir.findFile(AUDIO_FILE_NAME);
+                    DocumentFile file = dir.findFile(currentAudioFileName);
                     if (file != null)
                         file.delete();
                 }
@@ -1038,7 +1074,7 @@ public class MainActivity extends AppCompatActivity {
             isSavingAudio = false;
             btnSaveAudio.setEnabled(true);
             btnCancelSave.setEnabled(false);
-            updateSpeakAndSaveButtons(); // 新增
+            updateSpeakAndSaveButtons();
             Toast.makeText(this, R.string.toast_cancel_save_success, Toast.LENGTH_SHORT).show();
             ttsWorkState = TtsWorkState.IDLE;
             updateStatusInfo();
@@ -1074,5 +1110,17 @@ public class MainActivity extends AppCompatActivity {
             btnSpeak.setEnabled(isTtsReady);
             btnSaveAudio.setEnabled(isTtsReady);
         }
+    }
+
+    // 将SAF Uri转为可读路径，仅主存储primary支持
+    private String getReadablePathFromUri(Uri uri) {
+        if (uri == null)
+            return "";
+        String uriStr = uri.toString();
+        if (uriStr.startsWith("content://com.android.externalstorage.documents/tree/primary%3A")) {
+            String subPath = uriStr.substring(uriStr.indexOf("%3A") + 3);
+            return "/storage/emulated/0/" + subPath.replace("%2F", "/");
+        }
+        return uriStr;
     }
 }

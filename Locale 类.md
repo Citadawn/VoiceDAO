@@ -923,13 +923,18 @@ public String getScript()
       Locale locale = new Locale.Builder().setLanguage("zh").setScript("Hans").setRegion("CN").build();
       String script = locale.getScript(); // "Hans"
   ```
-
+  
         Locale noScript = new Locale("en", "US");
         String script4 = noScript.getScript(); // 结果：""
+  
     }
-    ```
+  
+  ```
+  
+  ```
 
 - **注意事项**：
+  
   - 该方法仅在 Java 7/Android 4.4 及以上版本可用。
   - 返回值为 BCP 47 标准的四字母脚本代码。
   - 如果 Locale 没有脚本部分，返回空字符串。

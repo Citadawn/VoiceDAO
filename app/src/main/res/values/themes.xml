@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- 自定义Toolbar样式，适配所有版本 -->
     <style name="AppToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/main_dark</item>

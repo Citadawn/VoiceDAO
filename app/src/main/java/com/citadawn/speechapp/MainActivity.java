@@ -2,61 +2,54 @@ package com.citadawn.speechapp;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.speech.tts.Voice;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Spinner;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
-import android.speech.tts.Voice;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.TextView;
-
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-import android.content.SharedPreferences;
-import androidx.documentfile.provider.DocumentFile;
-import android.view.inputmethod.InputMethodManager;
-import android.content.Context;
-import android.view.WindowInsets;
-
-import java.util.ArrayList;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.text.Collator;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private TextToSpeech tts;
@@ -70,10 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnClear;
     private Button btnStop;
     private Button btnSaveAudio;
-    private ActivityResultLauncher<Intent> createFileLauncher;
     private String pendingAudioText = null;
     private TextView textSpeechRateValue, textPitchValue;
-    private TextView btnSpeedMinus, btnSpeedPlus, btnPitchMinus, btnPitchPlus;
     private Button btnSpeedReset, btnPitchReset;
     private TextView tvSpeedSetResult, tvPitchSetResult;
     private Spinner spinnerLanguage, spinnerVoice;
@@ -89,14 +80,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean isVoiceSpinnerInit = false;
     private TextView tvTtsEngineStatus, tvAudioSaveDir, tvTtsSpeakStatus;
     private final Handler ttsStatusHandler = new Handler(Looper.getMainLooper());
-    private Runnable ttsStatusRunnable;
-    private Uri pendingAudioUri = null;
     private static final String PREFS_NAME = "tts_prefs";
     private static final String KEY_SAVE_DIR_URI = "save_dir_uri";
-    private static final String AUDIO_FILE_NAME = "tts_output.wav";
-    private static final String TEMP_FILE_NAME = "tts_temp.wav";
     private Uri saveDirUri = null;
-    private Button btnSetSaveDir, btnCancelSave;
+    private Button btnCancelSave;
     private boolean isSavingAudio = false;
     private File tempAudioFile = null;
     private String currentAudioFileName = "tts_output.wav";
@@ -180,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnSaveAudio = findViewById(R.id.btnSaveAudio);
         // SAF文件选择器回调
-        createFileLauncher = registerForActivityResult(
+        registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -214,18 +201,14 @@ public class MainActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.dialog_title_warning)
                         .setMessage(R.string.dialog_message_text_too_long)
-                        .setPositiveButton(R.string.dialog_button_continue, (dialog, which) -> {
-                            showFileNameInputDialogAndSave(text);
-                        })
-                        .setNegativeButton(R.string.dialog_button_cancel, (dialog, which) -> {
-                            Toast.makeText(this, R.string.toast_reduce_text, Toast.LENGTH_SHORT).show();
-                        })
+                        .setPositiveButton(R.string.dialog_button_continue, (dialog, which) -> showFileNameInputDialogAndSave(text))
+                        .setNegativeButton(R.string.dialog_button_cancel, (dialog, which) -> Toast.makeText(this, R.string.toast_reduce_text, Toast.LENGTH_SHORT).show())
                         .show();
                 return;
             }
             showFileNameInputDialogAndSave(text);
         });
-        btnSetSaveDir = findViewById(R.id.btnSetSaveDir);
+        Button btnSetSaveDir = findViewById(R.id.btnSetSaveDir);
         btnCancelSave = findViewById(R.id.btnCancelSave);
         btnCancelSave.setEnabled(false);
         // 读取保存目录Uri
@@ -234,15 +217,21 @@ public class MainActivity extends AppCompatActivity {
         if (uriStr != null) {
             saveDirUri = Uri.parse(uriStr);
         }
-        btnSetSaveDir.setOnClickListener(v -> openSaveDirPicker());
+        btnSetSaveDir.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                    | Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            openDirLauncher.launch(intent);
+        });
         btnCancelSave.setOnClickListener(v -> confirmCancelSave());
 
         textSpeechRateValue = findViewById(R.id.textSpeechRateValue);
         textPitchValue = findViewById(R.id.textPitchValue);
-        btnSpeedMinus = findViewById(R.id.btnSpeedMinus);
-        btnSpeedPlus = findViewById(R.id.btnSpeedPlus);
-        btnPitchMinus = findViewById(R.id.btnPitchMinus);
-        btnPitchPlus = findViewById(R.id.btnPitchPlus);
+        TextView btnSpeedMinus = findViewById(R.id.btnSpeedMinus);
+        TextView btnSpeedPlus = findViewById(R.id.btnSpeedPlus);
+        TextView btnPitchMinus = findViewById(R.id.btnPitchMinus);
+        TextView btnPitchPlus = findViewById(R.id.btnPitchPlus);
         btnSpeedReset = findViewById(R.id.btnSpeedReset);
         btnPitchReset = findViewById(R.id.btnPitchReset);
         tvSpeedSetResult = findViewById(R.id.tvSpeedSetResult);
@@ -252,7 +241,8 @@ public class MainActivity extends AppCompatActivity {
         spinnerVoice = findViewById(R.id.spinnerVoice);
         btnLangVoiceReset = findViewById(R.id.btnLangVoiceReset);
         // 启动定时任务，定期检查TTS状态
-        ttsStatusRunnable = new Runnable() {
+        // 优先显示准备状态
+        Runnable ttsStatusRunnable = new Runnable() {
             @Override
             public void run() {
                 // 优先显示准备状态
@@ -300,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float value = 0.5f + progress * 0.1f;
                 value = Math.round(value * 10f) / 10f; // 保留一位小数
-                textSpeechRateValue.setText(String.format("%.2f", value));
+                textSpeechRateValue.setText(String.format(Locale.US, "%.2f", value));
                 speechRate = value;
                 updateResetButtons();
             }
@@ -319,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
             if (value < 0.5f)
                 value = 0.5f;
             value = Math.round(value * 100f) / 100f; // 保留两位小数
-            textSpeechRateValue.setText(String.format("%.2f", value));
+            textSpeechRateValue.setText(String.format(Locale.US, "%.2f", value));
             speechRate = value;
             int progress = Math.round((value - 0.5f) / 0.1f);
             seekBarSpeed.setProgress(progress);
@@ -338,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
             if (value > 2.0f)
                 value = 2.0f;
             value = Math.round(value * 100f) / 100f;
-            textSpeechRateValue.setText(String.format("%.2f", value));
+            textSpeechRateValue.setText(String.format(Locale.US, "%.2f", value));
             speechRate = value;
             int progress = Math.round((value - 0.5f) / 0.1f);
             seekBarSpeed.setProgress(progress);
@@ -353,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
         });
         btnSpeedReset.setOnClickListener(v -> {
             seekBarSpeed.setProgress(5);
-            textSpeechRateValue.setText("1.00");
+            textSpeechRateValue.setText(getString(R.string.default_speed_value));
             speechRate = 1.0f;
             if (tts != null && isTtsReady) {
                 int result = tts.setSpeechRate(speechRate);
@@ -374,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float value = 0.5f + progress * 0.1f;
                 value = Math.round(value * 10f) / 10f; // 保留一位小数
-                textPitchValue.setText(String.format("%.2f", value));
+                textPitchValue.setText(String.format(Locale.US, "%.2f", value));
                 pitch = value;
                 updateResetButtons();
             }
@@ -393,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
             if (value < 0.5f)
                 value = 0.5f;
             value = Math.round(value * 100f) / 100f;
-            textPitchValue.setText(String.format("%.2f", value));
+            textPitchValue.setText(String.format(Locale.US, "%.2f", value));
             pitch = value;
             int progress = Math.round((value - 0.5f) / 0.1f);
             seekBarPitch.setProgress(progress);
@@ -412,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
             if (value > 2.0f)
                 value = 2.0f;
             value = Math.round(value * 100f) / 100f;
-            textPitchValue.setText(String.format("%.2f", value));
+            textPitchValue.setText(String.format(Locale.US, "%.2f", value));
             pitch = value;
             int progress = Math.round((value - 0.5f) / 0.1f);
             seekBarPitch.setProgress(progress);
@@ -427,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
         });
         btnPitchReset.setOnClickListener(v -> {
             seekBarPitch.setProgress(5);
-            textPitchValue.setText("1.00");
+            textPitchValue.setText(getString(R.string.default_pitch_value));
             pitch = 1.0f;
             if (tts != null && isTtsReady) {
                 int result = tts.setPitch(pitch);
@@ -485,25 +475,18 @@ public class MainActivity extends AppCompatActivity {
 
             if (status == TextToSpeech.SUCCESS) {
                 // 获取默认语言和全局默认发音人
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    // API 21+ 使用 getDefaultVoice().getLocale() 获取默认语言
-                    Voice defaultVoice = tts.getDefaultVoice();
-                    if (defaultVoice != null) {
-                        defaultLocale = defaultVoice.getLocale();
-                        this.globalDefaultVoice = defaultVoice;
-                        currentLocale = defaultLocale; // 使用默认语言作为当前语言
-                    } else {
-                        // 如果获取不到默认发音人，使用系统默认语言
-                        defaultLocale = Locale.getDefault();
-                        currentLocale = defaultLocale;
-                    }
+                // API 21+ 使用 getDefaultVoice().getLocale() 获取默认语言
+                Voice defaultVoice = tts.getDefaultVoice();
+                if (defaultVoice != null) {
+                    defaultLocale = defaultVoice.getLocale();
+                    this.globalDefaultVoice = defaultVoice;
                 } else {
-                    // API 21 以下使用已废弃的 getDefaultLanguage()
-                    defaultLocale = tts.getDefaultLanguage();
-                    currentLocale = defaultLocale;
+                    // 如果获取不到默认发音人，使用系统默认语言
+                    defaultLocale = Locale.getDefault();
                 }
+                currentLocale = defaultLocale; // 使用默认语言作为当前语言
 
-                int result = tts.setLanguage(currentLocale);
+                tts.setLanguage(currentLocale);
                 tts.setSpeechRate(speechRate);
                 tts.setPitch(pitch);
                 // 设置TTS任务进度监听（包括朗读和音频保存）
@@ -539,7 +522,9 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, R.string.toast_save_audio_write_fail,
                                                 Toast.LENGTH_SHORT).show();
                                     }
-                                    tempAudioFile.delete();
+                                    if (!tempAudioFile.delete()) {
+                                        Log.w("MainActivity", "临时音频文件删除失败: " + tempAudioFile.getAbsolutePath());
+                                    }
                                 }
                                 isSavingAudio = false;
                                 btnSaveAudio.setEnabled(true);
@@ -562,8 +547,12 @@ public class MainActivity extends AppCompatActivity {
                             });
                         } else if ("tts_save".equals(utteranceId)) {
                             runOnUiThread(() -> {
-                                if (tempAudioFile != null && tempAudioFile.exists())
-                                    tempAudioFile.delete();
+                                if (tempAudioFile != null && tempAudioFile.exists()) {
+                                    boolean deleted = tempAudioFile.delete();
+                                    if (!deleted) {
+                                        Log.w("MainActivity", "临时音频文件删除失败: " + tempAudioFile.getAbsolutePath());
+                                    }
+                                }
                                 Toast.makeText(MainActivity.this, R.string.toast_save_audio_synth_fail,
                                         Toast.LENGTH_SHORT).show();
                                 isSavingAudio = false;
@@ -583,14 +572,12 @@ public class MainActivity extends AppCompatActivity {
                 updateStatusInfo();
 
                 // 获取可用语言
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                {
                     Set<Locale> locales = tts.getAvailableLanguages();
                     localeList.clear();
                     langAdapter.clear();
-                    int defaultIndex = 0, idx = 0;
-                    for (Locale locale : locales) {
-                        localeList.add(locale);
-                    }
+                    int defaultIndex = 0;  // 默认语言现在总是在第一位
+                    localeList.addAll(locales);
                     // 按语言名称排序（默认语言排在最前面）
                     Collator collator = Collator.getInstance(Locale.CHINESE);
                     localeList.sort((l1, l2) -> {
@@ -611,10 +598,8 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 name += "（默认）";
                             }
-                            defaultIndex = 0; // 默认语言现在总是在第一位
                         }
                         langAdapter.add(name);
-                        idx++;
                     }
                     langAdapter.notifyDataSetChanged();
                     isLangSpinnerInit = true;
@@ -626,30 +611,28 @@ public class MainActivity extends AppCompatActivity {
                 updateVoiceList(currentLocale, true);
 
                 // 输出语言列表和默认发音人
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Set<Locale> locales = tts.getAvailableLanguages();
-                    ArrayList<Locale> sortedLocales = new ArrayList<>(locales);
-                    // 默认语言排在最前面，其余按拼音/本地化排序
-                    Collator collator = Collator.getInstance(Locale.CHINESE);
-                    sortedLocales.sort((l1, l2) -> {
-                        if (l1.equals(defaultLocale))
-                            return -1;
-                        if (l2.equals(defaultLocale))
-                            return 1;
-                        return collator.compare(l1.getDisplayName(), l2.getDisplayName());
-                    });
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("语言列表：\n");
-                    for (Locale locale : sortedLocales) {
-                        String display = locale.getDisplayName() + " (" + locale.toLanguageTag() + ")";
-                        Voice defVoice = languageDefaultVoices.get(locale);
-                        if (locale.equals(defaultLocale)) {
-                            sb.append(display).append("  默认发音人: ");
-                        } else {
-                            sb.append(display).append(" 的默认发音人: ");
-                        }
-                        sb.append(defVoice != null ? defVoice.getName() : "无").append("\n");
+                Set<Locale> locales = tts.getAvailableLanguages();
+                ArrayList<Locale> sortedLocales = new ArrayList<>(locales);
+                // 默认语言排在最前面，其余按拼音/本地化排序
+                Collator collator = Collator.getInstance(Locale.CHINESE);
+                sortedLocales.sort((l1, l2) -> {
+                    if (l1.equals(defaultLocale))
+                        return -1;
+                    if (l2.equals(defaultLocale))
+                        return 1;
+                    return collator.compare(l1.getDisplayName(), l2.getDisplayName());
+                });
+                StringBuilder sb = new StringBuilder();
+                sb.append("语言列表：\n");
+                for (Locale locale : sortedLocales) {
+                    String display = locale.getDisplayName() + " (" + locale.toLanguageTag() + ")";
+                    Voice defVoice = languageDefaultVoices.get(locale);
+                    if (locale.equals(defaultLocale)) {
+                        sb.append(display).append("  默认发音人: ");
+                    } else {
+                        sb.append(display).append(" 的默认发音人: ");
                     }
+                    sb.append(defVoice != null ? defVoice.getName() : "无").append("\n");
                 }
             } else {
                 btnSpeak.setEnabled(false);
@@ -727,7 +710,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                btnClear.setEnabled(s.length() > 0);
+                btnClear.setEnabled(!s.toString().isEmpty());
             }
 
             @Override
@@ -735,7 +718,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // 初始化时也判断一次
-        btnClear.setEnabled(editText.getText().toString().length() > 0);
+        btnClear.setEnabled(!editText.getText().toString().isEmpty());
         // 初始化时也调用一次
         updateResetButtons();
         // 删除：testHandler.post(testIsSpeakingRunnable);
@@ -790,10 +773,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 合成到指定uri
-    @RequiresApi(api = Build.VERSION_CODES.R)
     private void synthesizeTextToUri(String text, Uri uri) {
-        pendingAudioUri = uri;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // Android 11+
             try {
                 ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "w");
                 if (pfd != null) {
@@ -807,131 +788,107 @@ public class MainActivity extends AppCompatActivity {
                     pfd.close();
                 }
             } catch (Exception e) {
+                Log.e("MainActivity", "Exception", e);
                 Toast.makeText(this, getString(R.string.message_save_failed, e.getMessage()), Toast.LENGTH_SHORT)
                         .show();
             }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // Android 5.0~9.0
+        } else {
             File tempWav = new File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "tts_temp.wav");
-            HashMap<String, String> ttsParams = new HashMap<>();
-            ttsParams.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, "1.0");
-            ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_save");
+            Bundle ttsParams = new Bundle();
+            ttsParams.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f);
+            ttsParams.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_save");
             tts.setLanguage(currentLocale);
             tts.setSpeechRate(speechRate);
             tts.setPitch(pitch);
-            tts.synthesizeToFile(text, ttsParams, tempWav.getAbsolutePath());
-        } else {
-            Toast.makeText(this, R.string.message_android_version_not_support, Toast.LENGTH_SHORT).show();
+            tts.synthesizeToFile(text, ttsParams, tempWav, "tts_save");
         }
-    }
-
-    // 拷贝文件到SAF Uri
-    private void copyFileToUri(File src, Uri uri, String mimeType) {
-        try (FileInputStream fis = new FileInputStream(src);
-                OutputStream os = getContentResolver().openOutputStream(uri)) {
-            byte[] buffer = new byte[4096];
-            int len;
-            while ((len = fis.read(buffer)) > 0) {
-                os.write(buffer, 0, len);
-            }
-            os.flush();
-            Toast.makeText(this, R.string.toast_save_audio_success, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Toast.makeText(this, getString(R.string.message_copy_audio_failed, e.getMessage()), Toast.LENGTH_SHORT)
-                    .show();
-        }
-        src.delete();
     }
 
     // 初始化每个语言的默认发音人
     private void initializeLanguageDefaultVoices() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Set<Voice> voices = tts.getVoices();
-            languageDefaultVoices.clear();
+        Set<Voice> voices = tts.getVoices();
+        languageDefaultVoices.clear();
 
-            // 按语言分组，为每个语言确定默认发音人
-            HashMap<Locale, ArrayList<Voice>> voicesByLanguage = new HashMap<>();
+        // 按语言分组，为每个语言确定默认发音人
+        HashMap<Locale, ArrayList<Voice>> voicesByLanguage = new HashMap<>();
 
-            for (Voice voice : voices) {
-                Locale locale = voice.getLocale();
-                if (!voicesByLanguage.containsKey(locale)) {
-                    voicesByLanguage.put(locale, new ArrayList<>());
-                }
-                voicesByLanguage.get(locale).add(voice);
+        for (Voice voice : voices) {
+            Locale locale = voice.getLocale();
+            if (!voicesByLanguage.containsKey(locale)) {
+                voicesByLanguage.put(locale, new ArrayList<>());
             }
+            voicesByLanguage.computeIfAbsent(locale, k -> new ArrayList<>()).add(voice);
+        }
 
-            // 为每个语言确定默认发音人（通常是第一个）
-            for (Map.Entry<Locale, ArrayList<Voice>> entry : voicesByLanguage.entrySet()) {
-                Locale locale = entry.getKey();
-                ArrayList<Voice> voiceList = entry.getValue();
+        // 为每个语言确定默认发音人（通常是第一个）
+        for (Map.Entry<Locale, ArrayList<Voice>> entry : voicesByLanguage.entrySet()) {
+            Locale locale = entry.getKey();
+            ArrayList<Voice> voiceList = entry.getValue();
 
-                if (!voiceList.isEmpty()) {
-                    // 如果全局默认发音人是这个语言的，优先使用它
-                    Voice defaultVoice = null;
-                    if (globalDefaultVoice != null && globalDefaultVoice.getLocale().equals(locale)) {
-                        defaultVoice = globalDefaultVoice;
-                    } else {
-                        // 否则使用该语言的第一个发音人
-                        defaultVoice = voiceList.get(0);
-                    }
-
-                    languageDefaultVoices.put(locale, defaultVoice);
+            if (!voiceList.isEmpty()) {
+                // 如果全局默认发音人是这个语言的，优先使用它
+                Voice defaultVoice;
+                if (globalDefaultVoice != null && globalDefaultVoice.getLocale().equals(locale)) {
+                    defaultVoice = globalDefaultVoice;
+                } else {
+                    // 否则使用该语言的第一个发音人
+                    defaultVoice = voiceList.get(0);
                 }
+
+                languageDefaultVoices.put(locale, defaultVoice);
             }
         }
     }
 
     // 更新发音人列表
     private void updateVoiceList(Locale locale, boolean resetToDefault) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Set<Voice> voices = tts.getVoices();
-            voiceList.clear();
-            voiceAdapter.clear();
-            int defaultIndex = 0, idx = 0;
+        Set<Voice> voices = tts.getVoices();
+        voiceList.clear();
+        voiceAdapter.clear();
+        int idx = 0;
 
-            // 先收集所有匹配语言的发音人
-            for (Voice voice : voices) {
-                if (voice.getLocale().equals(locale)) {
-                    voiceList.add(voice);
-                }
+        // 先收集所有匹配语言的发音人
+        for (Voice voice : voices) {
+            if (voice.getLocale().equals(locale)) {
+                voiceList.add(voice);
             }
+        }
 
-            // 获取当前语言的默认发音人
-            Voice currentLangDefaultVoice = languageDefaultVoices.get(locale);
+        // 获取当前语言的默认发音人
+        Voice currentLangDefaultVoice = languageDefaultVoices.get(locale);
 
-            // 默认发音人排在最前面
-            voiceList.sort((v1, v2) -> {
-                // 当前语言的默认发音人排在最前面
-                if (currentLangDefaultVoice != null) {
-                    if (v1.equals(currentLangDefaultVoice))
-                        return -1;
-                    if (v2.equals(currentLangDefaultVoice))
-                        return 1;
-                }
-                return v1.getName().compareTo(v2.getName());
-            });
-
-            for (Voice voice : voiceList) {
-                String name = voice.getName();
-                // 去除下划线及后缀数字
-                name = name.replaceAll("_[0-9]+$", "");
-                // 检查是否是当前语言的默认发音人
-                boolean isDefault = (voice.equals(currentLangDefaultVoice));
-                if (isDefault) {
-                    name += "（默认）";
-                    defaultIndex = 0; // 默认发音人现在总是在第一位
-                }
-                voiceAdapter.add(name);
-                idx++;
+        // 默认发音人排在最前面
+        voiceList.sort((v1, v2) -> {
+            // 当前语言的默认发音人排在最前面
+            if (currentLangDefaultVoice != null) {
+                if (v1.equals(currentLangDefaultVoice))
+                    return -1;
+                if (v2.equals(currentLangDefaultVoice))
+                    return 1;
             }
-            voiceAdapter.notifyDataSetChanged();
-            isVoiceSpinnerInit = true;
-            if (resetToDefault && currentLangDefaultVoice != null) {
-                spinnerVoice.setSelection(0); // 默认发音人现在总是在第一位
-                tts.setVoice(currentLangDefaultVoice);
-            } else if (!voiceList.isEmpty()) {
-                spinnerVoice.setSelection(0);
-                tts.setVoice(voiceList.get(0));
+            return v1.getName().compareTo(v2.getName());
+        });
+
+        for (Voice voice : voiceList) {
+            String name = voice.getName();
+            // 去除下划线及后缀数字
+            name = name.replaceAll("_[0-9]+$", "");
+            // 检查是否是当前语言的默认发音人
+            boolean isDefault = (voice.equals(currentLangDefaultVoice));
+            if (isDefault) {
+                name += "（默认）";
             }
+            voiceAdapter.add(name);
+            idx++;
+        }
+        voiceAdapter.notifyDataSetChanged();
+        isVoiceSpinnerInit = true;
+        if (resetToDefault && currentLangDefaultVoice != null) {
+            spinnerVoice.setSelection(0); // 默认发音人现在总是在第一位
+            tts.setVoice(currentLangDefaultVoice);
+        } else if (!voiceList.isEmpty()) {
+            spinnerVoice.setSelection(0);
+            tts.setVoice(voiceList.get(0));
         }
     }
 
@@ -953,39 +910,33 @@ public class MainActivity extends AppCompatActivity {
         // tvTtsSpeakStatus.setText("空闲"); // 由其它逻辑动态设置
     }
 
-    private void openSaveDirPicker() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION
-                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        startActivityForResult(intent, 1001);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1001 && resultCode == RESULT_OK && data != null) {
-            Uri uri = data.getData();
-            if (uri != null) {
-                final int takeFlags = data.getFlags()
-                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                try {
-                    getContentResolver().takePersistableUriPermission(uri, takeFlags);
-                    saveDirUri = uri;
-                    SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putString(KEY_SAVE_DIR_URI, uri.toString());
-                    editor.apply();
-                    Toast.makeText(this, R.string.toast_save_dir_set_success, Toast.LENGTH_SHORT).show();
-                    updateStatusInfo();
-                } catch (Exception e) {
-                    Toast.makeText(this, R.string.toast_save_dir_set_fail, Toast.LENGTH_SHORT).show();
+    // 替换设置保存目录为registerForActivityResult
+    @SuppressLint("WrongConstant")
+    private final ActivityResultLauncher<Intent> openDirLauncher =
+        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                Uri uri = result.getData().getData();
+                if (uri != null) {
+                    final int takeFlags = result.getData().getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    try {
+                        getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                        saveDirUri = uri;
+                        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+                        editor.putString(KEY_SAVE_DIR_URI, uri.toString());
+                        editor.apply();
+                        Toast.makeText(this, R.string.toast_save_dir_set_success, Toast.LENGTH_SHORT).show();
+                        updateStatusInfo();
+                    } catch (Exception e) {
+                        Log.e("MainActivity", "Exception", e);
+                        Toast.makeText(this, R.string.toast_save_dir_set_fail, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-        }
-    }
+        });
 
     private void showFileNameInputDialogAndSave(String text) {
         // 自动生成默认文件名
-        String defaultName = "tts_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
+        String defaultName = "tts_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new java.util.Date());
         final EditText input = new EditText(this);
         input.setText(defaultName);
         input.setSelection(defaultName.length());
@@ -1012,13 +963,13 @@ public class MainActivity extends AppCompatActivity {
         btnSaveAudio.setEnabled(false);
         btnCancelSave.setEnabled(true);
         tempAudioFile = new File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), currentAudioFileName);
-        HashMap<String, String> ttsParams = new HashMap<>();
-        ttsParams.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, "1.0");
-        ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_save");
+        Bundle ttsParams = new Bundle();
+        ttsParams.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f);
+        ttsParams.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_save");
         tts.setLanguage(currentLocale);
         tts.setSpeechRate(speechRate);
         tts.setPitch(pitch);
-        tts.synthesizeToFile(text, ttsParams, tempAudioFile.getAbsolutePath());
+        tts.synthesizeToFile(text, ttsParams, tempAudioFile, "tts_save");
     }
 
     // 在TTS合成完成回调onDone/onError中处理拷贝和清理
@@ -1029,13 +980,20 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             // 先删除同名文件
             DocumentFile old = dir.findFile(currentAudioFileName);
-            if (old != null)
-                old.delete();
+            if (old != null) {
+                boolean deleted = old.delete();
+                if (!deleted) {
+                    Log.w("MainActivity", "旧音频文件删除失败: " + old.getUri());
+                }
+            }
             DocumentFile newFile = dir.createFile("audio/wav", currentAudioFileName);
             if (newFile == null)
                 return false;
             try (OutputStream os = getContentResolver().openOutputStream(newFile.getUri());
                     FileInputStream fis = new FileInputStream(tempAudioFile)) {
+                if (os == null) {
+                    return false;
+                }
                 byte[] buf = new byte[4096];
                 int len;
                 while ((len = fis.read(buf)) > 0)
@@ -1061,14 +1019,22 @@ public class MainActivity extends AppCompatActivity {
         if (isSavingAudio) {
             if (tts != null)
                 tts.stop();
-            if (tempAudioFile != null && tempAudioFile.exists())
-                tempAudioFile.delete();
+            if (tempAudioFile != null && tempAudioFile.exists()) {
+                boolean deleted = tempAudioFile.delete();
+                if (!deleted) {
+                    Log.w("MainActivity", "临时音频文件删除失败: " + tempAudioFile.getAbsolutePath());
+                }
+            }
             if (saveDirUri != null) {
                 DocumentFile dir = DocumentFile.fromTreeUri(this, saveDirUri);
                 if (dir != null) {
                     DocumentFile file = dir.findFile(currentAudioFileName);
-                    if (file != null)
-                        file.delete();
+                    if (file != null) {
+                        boolean deleted = file.delete();
+                        if (!deleted) {
+                            Log.w("MainActivity", "音频文件删除失败: " + file.getUri());
+                        }
+                    }
                 }
             }
             isSavingAudio = false;
@@ -1089,9 +1055,11 @@ public class MainActivity extends AppCompatActivity {
         btnPitchReset.setEnabled(Math.abs(pitch - 1.0f) > 0.001f);
         // 语言/发音人
         boolean isLangDefault = currentLocale != null && currentLocale.equals(defaultLocale);
-        Voice currentVoice = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && tts != null) {
+        Voice currentVoice;
+        if (tts != null) {
             currentVoice = tts.getVoice();
+        } else {
+            currentVoice = null; // 确保在tts为null时也能正确处理
         }
         Voice defaultVoice = languageDefaultVoices.get(currentLocale);
         boolean isVoiceDefault = (currentVoice != null && currentVoice.equals(defaultVoice));

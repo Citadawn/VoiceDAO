@@ -2,14 +2,12 @@ package com.citadawn.speechapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.util.TypedValue;
-import android.graphics.Paint;
 
 public class TextEditorActivity extends AppCompatActivity {
     public static final String EXTRA_TEXT = "extra_text";
@@ -46,7 +44,7 @@ public class TextEditorActivity extends AppCompatActivity {
         btnEditorOk.setEnabled(false); // 初始禁用
 
         // 根据内容动态启用/禁用清空按钮和确定按钮
-        btnEditorClear.setEnabled(editorEditText.getText().toString().length() > 0);
+        btnEditorClear.setEnabled(!editorEditText.getText().toString().isEmpty());
         maxCharCount = android.speech.tts.TextToSpeech.getMaxSpeechInputLength();
         updateCharCount();
         editorEditText.addTextChangedListener(new android.text.TextWatcher() {
@@ -65,37 +63,33 @@ public class TextEditorActivity extends AppCompatActivity {
         // 设置清空按钮逻辑（复用工具类）
         ClearButtonHelper.setupClearButton(btnEditorClear, editorEditText);
 
-        btnEditorOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent data = new Intent();
-                data.putExtra(EXTRA_TEXT, editorEditText.getText().toString());
-                setResult(RESULT_OK, data);
-                finish();
-            }
+        btnEditorOk.setOnClickListener(v -> {
+            Intent data = new Intent();
+            data.putExtra(EXTRA_TEXT, editorEditText.getText().toString());
+            setResult(RESULT_OK, data);
+            finish();
         });
 
-        findViewById(R.id.btnEditorInfo).setOnClickListener(v -> {
-            new androidx.appcompat.app.AlertDialog.Builder(TextEditorActivity.this)
-                .setTitle(R.string.dialog_title_editor_info)
-                .setMessage(R.string.dialog_message_editor_info)
-                .setPositiveButton(R.string.dialog_button_editor_info_ok, null)
-                .show();
-        });
+        findViewById(R.id.btnEditorInfo).setOnClickListener(v -> new androidx.appcompat.app.AlertDialog.Builder(TextEditorActivity.this)
+            .setTitle(R.string.dialog_title_editor_info)
+            .setMessage(R.string.dialog_message_editor_info)
+            .setPositiveButton(R.string.dialog_button_editor_info_ok, null)
+            .show());
     }
 
     private void updateCharCount() {
         int current = editorEditText.getText().length();
-        String text = "字数：" + current + "/" + maxCharCount;
+        String baseText = getString(R.string.char_count, current, maxCharCount);
         if (current > maxCharCount) {
             // 只将当前字数部分标红
-            int start = 3; // "字数："长度
-            int end = start + String.valueOf(current).length();
-            android.text.SpannableString ss = new android.text.SpannableString(text);
+            String currentStr = String.valueOf(current);
+            int start = baseText.indexOf(currentStr);
+            int end = start + currentStr.length();
+            android.text.SpannableString ss = new android.text.SpannableString(baseText);
             ss.setSpan(new android.text.style.ForegroundColorSpan(android.graphics.Color.RED), start, end, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvEditorCharCount.setText(ss);
         } else {
-            tvEditorCharCount.setText(text);
+            tvEditorCharCount.setText(baseText);
             tvEditorCharCount.setTextColor(android.graphics.Color.parseColor("#666666"));
         }
     }

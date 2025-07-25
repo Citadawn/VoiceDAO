@@ -32,7 +32,6 @@
         android:padding="8dp" />
 
     <ScrollView
-        android:id="@+id/editorScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -61,7 +60,8 @@
             android:textSelectHandleLeft="@drawable/handle_main_dark_left"
             android:textSelectHandleRight="@drawable/handle_main_dark_right"
             android:textSelectHandle="@drawable/handle_main_dark_center"
-            android:textColorHighlight="#33272727" />
+            android:textColorHighlight="#33272727"
+            android:autofillHints="" />
     </ScrollView>
 
     <!-- 底部按钮栏：清空、字数统计、确定，三者水平居中对齐 -->
@@ -92,7 +92,7 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="字数：0/3999"
+            android:text="@string/char_count"
             android:textSize="14sp"
             android:gravity="center"
             android:textColor="#666" />

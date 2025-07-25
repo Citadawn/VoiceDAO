@@ -19,7 +19,6 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -51,7 +50,8 @@
                 android:maxLines="10"
                 android:inputType="textMultiLine"
                 android:windowSoftInputMode="stateHidden"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                android:autofillHints=""
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/layoutEditButtons"
                 android:background="@drawable/edittext_bg"
@@ -117,7 +117,6 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/tvSpeedLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_speed"
@@ -127,7 +126,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="："
+                        android:text="@string/colon"
                         android:textSize="16sp"
                         android:textColor="#272727"
                         android:layout_marginStart="2dp"
@@ -136,7 +135,7 @@
                         android:id="@+id/textSpeechRateValue"
                         android:layout_width="32dp"
                         android:layout_height="wrap_content"
-                        android:text="1.00"
+                        android:text="@string/default_speed_value"
                         android:gravity="center"
                         android:textSize="16sp"
                         android:textColor="#272727"
@@ -169,7 +168,7 @@
                         android:id="@+id/btnSpeedMinus"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:text="-"
+                        android:text="@string/minus"
                         android:textSize="22sp"
                         android:gravity="center|center_vertical"
                         android:textColor="#272727"
@@ -190,7 +189,7 @@
                         android:id="@+id/btnSpeedPlus"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:text="+"
+                        android:text="@string/plus"
                         android:textSize="22sp"
                         android:gravity="center|center_vertical"
                         android:textColor="#272727"
@@ -227,7 +226,6 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
                     <TextView
-                        android:id="@+id/tvPitchLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_pitch"
@@ -237,7 +235,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="："
+                        android:text="@string/colon"
                         android:textSize="16sp"
                         android:textColor="#272727"
                         android:layout_marginStart="2dp"
@@ -246,7 +244,7 @@
                         android:id="@+id/textPitchValue"
                         android:layout_width="32dp"
                         android:layout_height="wrap_content"
-                        android:text="1.00"
+                        android:text="@string/default_pitch_value"
                         android:gravity="center"
                         android:textSize="16sp"
                         android:textColor="#272727"
@@ -279,7 +277,7 @@
                         android:id="@+id/btnPitchMinus"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:text="-"
+                        android:text="@string/minus"
                         android:textSize="22sp"
                         android:gravity="center|center_vertical"
                         android:textColor="#272727"
@@ -300,7 +298,7 @@
                         android:id="@+id/btnPitchPlus"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:text="+"
+                        android:text="@string/plus"
                         android:textSize="22sp"
                         android:gravity="center|center_vertical"
                         android:textColor="#272727"
@@ -338,7 +336,6 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="8dp">
                     <TextView
-                        android:id="@+id/tvLangLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_language"
@@ -364,7 +361,6 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="8dp">
                     <TextView
-                        android:id="@+id/tvVoiceLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_voice"
@@ -563,7 +559,7 @@
                         android:id="@+id/tvTtsSpeakStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="空闲"
+                        android:text="@string/tts_idle"
                         android:textColor="#4CAF50"
                         android:textSize="13sp" />
                 </LinearLayout>

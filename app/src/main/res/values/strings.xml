@@ -1,70 +1,73 @@
-<resources>
-    <string name="app_name">文本转语音</string>
-    <string name="hint_input_text">请输入要朗读的文本</string>
-    <string name="label_speed">语速</string>
-    <string name="label_pitch">音调</string>
-    <string name="btn_speak">朗读</string>
-    <string name="status_ready">TTS引擎已就绪</string>
-    <string name="status_not_ready">TTS引擎未初始化完成，请稍后再试</string>
-    <string name="desc_tts_info">本软件的朗读语言由系统TTS引擎决定。如需切换语言，请在所用TTS引擎（如 MultiTTS、TTS-Server-Android 等）或系统TTS设置中更改语言。</string>
-    <string name="desc_tts_length_limit">单次朗读最大支持约3500字符（含标点、空格），超长文本请分段朗读。Android TTS API 单次最大3999字节，超出部分将被截断或报错。</string>
-    <string name="hint_input_save_text">请输入要保存的文本</string>
-    <string name="dialog_title_warning">提示</string>
-    <string name="dialog_message_text_too_long">建议每次朗读不超过 3500 字符（含标点、空格），是否继续朗读？</string>
-    <string name="dialog_button_continue">继续</string>
-    <string name="dialog_button_cancel">退出</string>
-    <string name="toast_please_wait">请耐心等待</string>
-    <string name="toast_reduce_text">请缩减文本后继续</string>
-    <string name="toast_cannot_open_tts_settings">无法打开系统TTS设置界面</string>
-    <string name="dialog_title_info">说明</string>
-    <string name="dialog_title_about">关于</string>
-    <string name="dialog_message_about">（内容待补充）</string>
-    <string name="dialog_button_ok">确定</string>
-    <string name="message_speed_set_failed">语速设置失败</string>
-    <string name="message_pitch_set_failed">音调设置失败</string>
-    <string name="message_audio_synthesis_failed">音频合成失败</string>
-    <string name="message_save_failed">保存失败: %s</string>
-    <string name="message_copy_audio_failed">拷贝音频失败: %s</string>
-    <string name="message_android_version_not_support">Android 5.0及以上才支持保存为音频文件</string>
-    <string name="status_ready_with_system_language">未能获取到 TTS 引擎的默认发音人，已切换为系统默认语言：%s</string>
-    <string name="status_info_title">状态信息</string>
-    <string name="tip_reset_lang_voice">恢复默认语言和发音人</string>
-    <string name="btn_set_save_dir">设置保存目录</string>
-    <string name="btn_cancel_save">取消保存</string>
-    <string name="toast_save_dir_set_success">保存目录设置成功</string>
-    <string name="toast_save_dir_set_fail">保存目录设置失败</string>
-    <string name="toast_save_dir_permission_denied">未获得目录访问权限</string>
-    <string name="toast_no_save_dir">请先设置保存目录</string>
-    <string name="toast_cancel_save_success">保存已取消，文件已删除</string>
-    <string name="toast_cancel_save_fail">取消保存失败</string>
-    <string name="toast_saving_audio">正在保存音频，请稍候…</string>
-    <string name="toast_save_audio_success">音频保存成功</string>
-    <string name="toast_save_audio_fail">音频保存失败</string>
-    <string name="toast_tts_speak_done">朗读结束</string>
-    <string name="toast_tts_speak_error">朗读出错</string>
-    <string name="toast_save_audio_write_fail">音频保存失败：文件写入错误</string>
-    <string name="toast_save_audio_synth_fail">音频保存失败：合成出错</string>
-    <string name="toast_read_task_submitted">朗读任务已提交，正在准备，请稍候…</string>
-    <string name="toast_save_task_submitted">保存任务已提交，正在准备，请稍候…</string>
-    <string name="dialog_button_cancel_save">取消保存</string>
-    <string name="dialog_message_cancel_save">确定要取消音频保存并删除文件吗？</string>
-    <string name="dialog_title_editor_info">使用说明</string>
-    <string name="dialog_message_editor_info">1. 可在此编辑、粘贴、整理大段文本，便于朗读或保存。\n2. “确定”按钮仅在内容被修改后可用，点击后将内容带回主界面。\n3. “清空”按钮需连续两次点击才会真正清空内容，防止误操作。\n4. 支持多行滚动、复制、粘贴等常用编辑操作。\n5. 返回按钮不保存内容，直接退出编辑器。</string>
-    <string name="dialog_button_editor_info_ok">知道了</string>
-    <string name="btn_clear">清空</string>
-    <string name="btn_open_editor">编辑器</string>
-    <string name="btn_reset">重置</string>
-    <string name="label_language">语言</string>
-    <string name="label_voice">发音人</string>
-    <string name="btn_stop_speak">停止朗读</string>
-    <string name="btn_save_audio">保存为音频</string>
-    <string name="label_tts_engine_status">TTS引擎状态：</string>
-    <string name="label_audio_save_dir">音频保存目录：</string>
-    <string name="label_tts_speak_status">语音合成状态：</string>
-    <string name="title_text_editor">文本编辑器</string>
-    <string name="hint_input_editor">请输入或粘贴要编辑的大段文本……</string>
-    <string name="btn_ok">确定</string>
-    <string name="menu_tts_settings">TTS设置</string>
-    <string name="menu_info">说明</string>
-    <string name="menu_about">关于</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="MissingTranslation">Text to Speech</string>
+    <string name="hint_input_text" tools:ignore="MissingTranslation">Please enter the text to read aloud</string>
+    <string name="label_speed" tools:ignore="MissingTranslation">Speed</string>
+    <string name="label_pitch" tools:ignore="MissingTranslation">Pitch</string>
+    <string name="btn_speak" tools:ignore="MissingTranslation">Speak</string>
+    <string name="status_ready" tools:ignore="MissingTranslation">TTS engine is ready</string>
+    <string name="status_not_ready" tools:ignore="MissingTranslation">TTS engine is not initialized yet, please try again later</string>
+    <string name="desc_tts_info" tools:ignore="MissingTranslation">The reading language of this app is determined by the system TTS engine. To switch languages, please change the language in your TTS engine (such as MultiTTS, TTS-Server-Android, etc.) or in the system TTS settings.</string>
+    <string name="desc_tts_length_limit" tools:ignore="MissingTranslation">Each reading supports up to about 3500 characters (including punctuation and spaces). For long texts, please read in segments. Android TTS API supports a maximum of 3999 bytes per call; excess will be truncated or cause errors.</string>
+    <string name="hint_input_save_text" tools:ignore="MissingTranslation">Please enter the text to save</string>
+    <string name="dialog_title_warning" tools:ignore="MissingTranslation">Warning</string>
+    <string name="dialog_message_text_too_long" tools:ignore="MissingTranslation">It is recommended to read no more than 3500 characters (including punctuation and spaces) at a time. Continue reading?</string>
+    <string name="dialog_button_continue" tools:ignore="MissingTranslation">Continue</string>
+    <string name="dialog_button_cancel" tools:ignore="MissingTranslation">Exit</string>
+    <string name="toast_reduce_text" tools:ignore="MissingTranslation">Please reduce the text and try again</string>
+    <string name="toast_cannot_open_tts_settings" tools:ignore="MissingTranslation">Unable to open system TTS settings</string>
+    <string name="dialog_title_info" tools:ignore="MissingTranslation">Info</string>
+    <string name="dialog_title_about" tools:ignore="MissingTranslation">About</string>
+    <string name="dialog_message_about" tools:ignore="MissingTranslation">(Content to be added)</string>
+    <string name="dialog_button_ok" tools:ignore="MissingTranslation">OK</string>
+    <string name="message_speed_set_failed" tools:ignore="MissingTranslation">Failed to set speed</string>
+    <string name="message_pitch_set_failed" tools:ignore="MissingTranslation">Failed to set pitch</string>
+    <string name="message_save_failed" tools:ignore="MissingTranslation">Save failed: %s</string>
+    <string name="status_info_title" tools:ignore="MissingTranslation">Status Info</string>
+    <string name="tip_reset_lang_voice" tools:ignore="MissingTranslation">Restore default language and voice</string>
+    <string name="btn_set_save_dir" tools:ignore="MissingTranslation">Set Save Directory</string>
+    <string name="btn_cancel_save" tools:ignore="MissingTranslation">Cancel Save</string>
+    <string name="toast_save_dir_set_success" tools:ignore="MissingTranslation">Save directory set successfully</string>
+    <string name="toast_save_dir_set_fail" tools:ignore="MissingTranslation">Failed to set save directory</string>
+    <string name="toast_no_save_dir" tools:ignore="MissingTranslation">Please set the save directory first</string>
+    <string name="toast_cancel_save_success" tools:ignore="MissingTranslation">Save cancelled, file deleted</string>
+    <string name="toast_saving_audio" tools:ignore="MissingTranslation">Saving audio, please wait…</string>
+    <string name="toast_save_audio_success" tools:ignore="MissingTranslation">Audio saved successfully</string>
+    <string name="toast_tts_speak_done" tools:ignore="MissingTranslation">Speech finished</string>
+    <string name="toast_tts_speak_error" tools:ignore="MissingTranslation">Speech error</string>
+    <string name="toast_save_audio_write_fail" tools:ignore="MissingTranslation">Audio save failed: file write error</string>
+    <string name="toast_save_audio_synth_fail" tools:ignore="MissingTranslation">Audio save failed: synthesis error</string>
+    <string name="toast_read_task_submitted" tools:ignore="MissingTranslation">Speech task submitted, preparing, please wait…</string>
+    <string name="toast_save_task_submitted" tools:ignore="MissingTranslation">Save task submitted, preparing, please wait…</string>
+    <string name="dialog_button_cancel_save" tools:ignore="MissingTranslation">Cancel Save</string>
+    <string name="dialog_message_cancel_save" tools:ignore="MissingTranslation">Are you sure you want to cancel audio saving and delete the file?</string>
+    <string name="dialog_title_editor_info" tools:ignore="MissingTranslation">Instructions</string>
+    <string name="dialog_message_editor_info" tools:ignore="MissingTranslation">1. You can edit, paste, and organize large texts here for reading or saving.
+2. The "OK" button is only available after the content is modified, and clicking it will return the content to the main screen.
+3. The "Clear" button requires two consecutive clicks to actually clear the content, to prevent misoperation.
+4. Supports multi-line scrolling, copy, paste, and other common editing operations.
+5. The back button does not save content and exits the editor directly.</string>
+    <string name="dialog_button_editor_info_ok" tools:ignore="MissingTranslation">Got it</string>
+    <string name="btn_clear" tools:ignore="MissingTranslation">Clear</string>
+    <string name="btn_open_editor" tools:ignore="MissingTranslation">Editor</string>
+    <string name="btn_reset" tools:ignore="MissingTranslation">Reset</string>
+    <string name="label_language" tools:ignore="MissingTranslation">Language</string>
+    <string name="label_voice" tools:ignore="MissingTranslation">Voice</string>
+    <string name="btn_stop_speak" tools:ignore="MissingTranslation">Stop Speech</string>
+    <string name="btn_save_audio" tools:ignore="MissingTranslation">Save as Audio</string>
+    <string name="label_tts_engine_status" tools:ignore="MissingTranslation">TTS Engine Status:</string>
+    <string name="label_audio_save_dir" tools:ignore="MissingTranslation">Audio Save Directory:</string>
+    <string name="label_tts_speak_status" tools:ignore="MissingTranslation">Speech Synthesis Status:</string>
+    <string name="title_text_editor" tools:ignore="MissingTranslation">Text Editor</string>
+    <string name="hint_input_editor" tools:ignore="MissingTranslation">Please enter or paste the large text to edit…</string>
+    <string name="btn_ok" tools:ignore="MissingTranslation">OK</string>
+    <string name="menu_tts_settings" tools:ignore="MissingTranslation">TTS Settings</string>
+    <string name="menu_info" tools:ignore="MissingTranslation">Info</string>
+    <string name="menu_about" tools:ignore="MissingTranslation">About</string>
+    <string name="default_speed_value" tools:ignore="MissingTranslation">1.00</string>
+    <string name="default_pitch_value" tools:ignore="MissingTranslation">1.00</string>
+    <string name="colon" tools:ignore="MissingTranslation">:</string>
+    <string name="minus" tools:ignore="MissingTranslation">-</string>
+    <string name="plus" tools:ignore="MissingTranslation">+</string>
+    <string name="tts_idle" tools:ignore="MissingTranslation">Idle</string>
+    <string name="char_count" tools:ignore="MissingTranslation">Char count: %1$d/%2$d</string>
 </resources>

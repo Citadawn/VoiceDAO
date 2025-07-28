@@ -18,5 +18,7 @@
         <item name="toolbarStyle">@style/AppToolbar</item>
         <!-- 状态栏颜色 -->
         <item name="android:statusBarColor">@color/main_dark</item>
+        <!-- 状态栏文字颜色为白色（适配深色背景） -->
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

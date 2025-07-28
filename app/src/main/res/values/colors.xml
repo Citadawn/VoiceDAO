@@ -2,4 +2,15 @@
 <resources>
     <color name="main_dark">#272727</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_666">#666666</color>
+    <color name="hint_gray">#9CA3AF</color>
+    <color name="text_primary">#1F2937</color>
+    <color name="focus_border">#272727</color>
+    <color name="tts_support_full">#4CAF50</color> <!-- 绿色 -->
+    <color name="tts_support_variant">#2196F3</color> <!-- 蓝色 -->
+    <color name="tts_support_partial">#9C27B0</color> <!-- 紫色 -->
+    <color name="tts_support_missing_data">#FFEB3B</color> <!-- 黄色 -->
+    <color name="tts_support_none">#BDBDBD</color> <!-- 灰色 -->
+    <color name="tts_spinner_selected_bg">#FFDDDDDD</color> <!-- 深灰高亮 -->
+    <color name="tts_spinner_normal_bg">#00FFFFFF</color> <!-- 透明 -->
 </resources>

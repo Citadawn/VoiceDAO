@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace 'com.citadawn.speechapp'
-    compileSdk 36
+    namespace = 'com.citadawn.speechapp'
+    compileSdk = 36
 
     defaultConfig {
-        applicationId "com.citadawn.speechapp"
-        minSdk 24
-        targetSdk 36
+        applicationId = "com.citadawn.speechapp"
+        minSdk = 24
+        targetSdk = 36
         versionCode 1
         versionName "1.0"
 

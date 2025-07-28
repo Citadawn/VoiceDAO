@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <CheckBox
+            android:id="@+id/cbTestCase"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+        android:text="Test Case Name"
+            android:textSize="14sp"
+        android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/btnToggleDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icon_expand"
+            android:textSize="12sp"
+            android:textColor="@color/main_dark"
+            android:padding="8dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvTestCaseDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test case description"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:lineSpacingExtra="2dp"
+        android:gravity="center_vertical"
+        android:visibility="gone" />
+</LinearLayout> 

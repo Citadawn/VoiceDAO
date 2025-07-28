@@ -1,20 +1,32 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="MissingTranslation">Text to Speech</string>
-    <string name="hint_input_text" tools:ignore="MissingTranslation">Please enter the text to read aloud</string>
+    <string name="hint_input_text" tools:ignore="MissingTranslation">Please enter the text to read
+        aloud</string>
     <string name="label_speed" tools:ignore="MissingTranslation">Speed</string>
     <string name="label_pitch" tools:ignore="MissingTranslation">Pitch</string>
     <string name="btn_speak" tools:ignore="MissingTranslation">Speak</string>
     <string name="status_ready" tools:ignore="MissingTranslation">TTS engine is ready</string>
-    <string name="status_not_ready" tools:ignore="MissingTranslation">TTS engine is not initialized yet, please try again later</string>
-    <string name="desc_tts_info" tools:ignore="MissingTranslation">The reading language of this app is determined by the system TTS engine. To switch languages, please change the language in your TTS engine (such as MultiTTS, TTS-Server-Android, etc.) or in the system TTS settings.</string>
-    <string name="desc_tts_length_limit" tools:ignore="MissingTranslation">Each reading supports up to about 3500 characters (including punctuation and spaces). For long texts, please read in segments. Android TTS API supports a maximum of 3999 bytes per call; excess will be truncated or cause errors.</string>
-    <string name="hint_input_save_text" tools:ignore="MissingTranslation">Please enter the text to save</string>
+    <string name="status_not_ready" tools:ignore="MissingTranslation">TTS engine is not initialized
+        yet, please try again later</string>
+    <string name="desc_tts_info" tools:ignore="MissingTranslation">The reading language of this app
+        is determined by the system TTS engine. To switch languages, please change the language in
+        your TTS engine (such as MultiTTS, TTS-Server-Android, etc.) or in the system TTS settings.</string>
+    <string name="desc_tts_length_limit" tools:ignore="MissingTranslation">Each reading supports up
+        to about 3500 characters (including punctuation and spaces). For long texts, please read in
+        segments. Android TTS API supports a maximum of 3999 bytes per call; excess will be
+        truncated or cause errors.</string>
+    <string name="hint_input_save_text" tools:ignore="MissingTranslation">Please enter the text to
+        save</string>
     <string name="dialog_title_warning" tools:ignore="MissingTranslation">Warning</string>
-    <string name="dialog_message_text_too_long" tools:ignore="MissingTranslation">It is recommended to read no more than 3500 characters (including punctuation and spaces) at a time. Continue reading?</string>
+    <string name="dialog_message_text_too_long" tools:ignore="MissingTranslation">It is recommended
+        to read no more than %1$d characters (including punctuation and spaces) at a time. Continue
+        reading?</string>
     <string name="dialog_button_continue" tools:ignore="MissingTranslation">Continue</string>
     <string name="dialog_button_cancel" tools:ignore="MissingTranslation">Exit</string>
-    <string name="toast_reduce_text" tools:ignore="MissingTranslation">Please reduce the text and try again</string>
-    <string name="toast_cannot_open_tts_settings" tools:ignore="MissingTranslation">Unable to open system TTS settings</string>
+    <string name="toast_reduce_text" tools:ignore="MissingTranslation">Please reduce the text and
+        try again</string>
+    <string name="toast_cannot_open_tts_settings" tools:ignore="MissingTranslation">Unable to open
+        system TTS settings</string>
     <string name="dialog_title_info" tools:ignore="MissingTranslation">Info</string>
     <string name="dialog_title_about" tools:ignore="MissingTranslation">About</string>
     <string name="dialog_message_about" tools:ignore="MissingTranslation">(Content to be added)</string>
@@ -23,30 +35,47 @@
     <string name="message_pitch_set_failed" tools:ignore="MissingTranslation">Failed to set pitch</string>
     <string name="message_save_failed" tools:ignore="MissingTranslation">Save failed: %s</string>
     <string name="status_info_title" tools:ignore="MissingTranslation">Status Info</string>
-    <string name="tip_reset_lang_voice" tools:ignore="MissingTranslation">Restore default language and voice</string>
+    <string name="tip_reset_lang_voice" tools:ignore="MissingTranslation">Restore default language
+        and voice</string>
     <string name="btn_set_save_dir" tools:ignore="MissingTranslation">Set Save Directory</string>
     <string name="btn_cancel_save" tools:ignore="MissingTranslation">Cancel Save</string>
-    <string name="toast_save_dir_set_success" tools:ignore="MissingTranslation">Save directory set successfully</string>
-    <string name="toast_save_dir_set_fail" tools:ignore="MissingTranslation">Failed to set save directory</string>
-    <string name="toast_no_save_dir" tools:ignore="MissingTranslation">Please set the save directory first</string>
-    <string name="toast_cancel_save_success" tools:ignore="MissingTranslation">Save cancelled, file deleted</string>
+    <string name="toast_save_dir_set_success" tools:ignore="MissingTranslation">Save directory set
+        successfully</string>
+    <string name="toast_save_dir_set_fail" tools:ignore="MissingTranslation">Failed to set save
+        directory</string>
+    <string name="toast_no_save_dir" tools:ignore="MissingTranslation">Please set the save directory
+        first</string>
+    <string name="toast_cancel_save_success" tools:ignore="MissingTranslation">Save cancelled, file
+        deleted</string>
     <string name="toast_saving_audio" tools:ignore="MissingTranslation">Saving audio, please wait…</string>
-    <string name="toast_save_audio_success" tools:ignore="MissingTranslation">Audio saved successfully</string>
+    <string name="toast_save_audio_success" tools:ignore="MissingTranslation">Audio saved
+        successfully</string>
     <string name="toast_tts_speak_done" tools:ignore="MissingTranslation">Speech finished</string>
     <string name="toast_tts_speak_error" tools:ignore="MissingTranslation">Speech error</string>
-    <string name="toast_save_audio_write_fail" tools:ignore="MissingTranslation">Audio save failed: file write error</string>
-    <string name="toast_save_audio_synth_fail" tools:ignore="MissingTranslation">Audio save failed: synthesis error</string>
-    <string name="toast_read_task_submitted" tools:ignore="MissingTranslation">Speech task submitted, preparing, please wait…</string>
-    <string name="toast_save_task_submitted" tools:ignore="MissingTranslation">Save task submitted, preparing, please wait…</string>
+    <string name="toast_save_audio_write_fail" tools:ignore="MissingTranslation">Audio save failed:
+        file write error</string>
+    <string name="toast_save_audio_synth_fail" tools:ignore="MissingTranslation">Audio save failed:
+        synthesis error</string>
+    <string name="toast_read_task_submitted" tools:ignore="MissingTranslation">Speech task
+        submitted, preparing, please wait…</string>
+    <string name="toast_save_task_submitted" tools:ignore="MissingTranslation">Save task submitted,
+        preparing, please wait…</string>
     <string name="dialog_button_cancel_save" tools:ignore="MissingTranslation">Cancel Save</string>
-    <string name="dialog_message_cancel_save" tools:ignore="MissingTranslation">Are you sure you want to cancel audio saving and delete the file?</string>
+    <string name="dialog_message_cancel_save" tools:ignore="MissingTranslation">Are you sure you
+        want to cancel audio saving and delete the file?</string>
     <string name="dialog_title_editor_info" tools:ignore="MissingTranslation">Instructions</string>
-    <string name="dialog_message_editor_info" tools:ignore="MissingTranslation">1. You can edit, paste, and organize large texts here for reading or saving.
-2. The "OK" button is only available after the content is modified, and clicking it will return the content to the main screen.
-3. The "Clear" button requires two consecutive clicks to actually clear the content, to prevent misoperation.
-4. Supports multi-line scrolling, copy, paste, and other common editing operations.
-5. The back button does not save content and exits the editor directly.</string>
-    <string name="dialog_button_editor_info_ok" tools:ignore="MissingTranslation">Got it</string>
+    <string name="dialog_message_editor_info" tools:ignore="MissingTranslation"><![CDATA[<b>📝 Text Editing Features</b><br/><br/>
+• Edit, paste, and organize large texts<br/>
+• Convenient for reading or saving audio files<br/>
+• Supports multi-line scrolling, copy, paste, and other operations<br/><br/>
+
+<b>🔘 Button Instructions</b><br/><br/>
+• <b>OK</b>: Only available after content is modified, returns content to main screen<br/>
+• <b>Clear</b>: Requires two consecutive clicks to actually clear, prevents accidental operation<br/>
+• <b>Back</b>: Does not save content, exits editor directly<br/><br/>
+
+<b>💡 Usage Tips</b><br/><br/>
+It is recommended to organize your text content in this editor before returning to the main screen for reading or saving operations.]]></string>
     <string name="btn_clear" tools:ignore="MissingTranslation">Clear</string>
     <string name="btn_open_editor" tools:ignore="MissingTranslation">Editor</string>
     <string name="btn_reset" tools:ignore="MissingTranslation">Reset</string>
@@ -58,11 +87,18 @@
     <string name="label_audio_save_dir" tools:ignore="MissingTranslation">Audio Save Directory:</string>
     <string name="label_tts_speak_status" tools:ignore="MissingTranslation">Speech Synthesis Status:</string>
     <string name="title_text_editor" tools:ignore="MissingTranslation">Text Editor</string>
-    <string name="hint_input_editor" tools:ignore="MissingTranslation">Please enter or paste the large text to edit…</string>
+    <string name="hint_input_editor" tools:ignore="MissingTranslation">Please enter or paste the
+        large text to edit…</string>
     <string name="btn_ok" tools:ignore="MissingTranslation">OK</string>
     <string name="menu_tts_settings" tools:ignore="MissingTranslation">TTS Settings</string>
     <string name="menu_info" tools:ignore="MissingTranslation">Info</string>
     <string name="menu_about" tools:ignore="MissingTranslation">About</string>
+    <string name="menu_language" tools:ignore="MissingTranslation">Language</string>
+    <string name="dialog_title_language" tools:ignore="MissingTranslation">Select Language</string>
+    <string name="language_follow_system" tools:ignore="MissingTranslation">Follow System</string>
+    <string name="language_chinese" tools:ignore="MissingTranslation">Chinese (Simplified)</string>
+    <string name="language_english" tools:ignore="MissingTranslation">English</string>
+    <string name="toast_language_changed" tools:ignore="MissingTranslation">Language changed successfully</string>
     <string name="default_speed_value" tools:ignore="MissingTranslation">1.00</string>
     <string name="default_pitch_value" tools:ignore="MissingTranslation">1.00</string>
     <string name="colon" tools:ignore="MissingTranslation">:</string>
@@ -70,4 +106,120 @@
     <string name="plus" tools:ignore="MissingTranslation">+</string>
     <string name="tts_idle" tools:ignore="MissingTranslation">Idle</string>
     <string name="char_count" tools:ignore="MissingTranslation">Char count: %1$d/%2$d</string>
+    <string name="clear">Clear</string>
+    <string name="clear_again">Click again to clear</string>
+    <string name="tts_prepare_read">Preparing to start reading…</string>
+    <string name="tts_prepare_save">Preparing to start saving audio…</string>
+    <string name="tts_reading">Reading</string>
+    <string name="tts_saving">Saving audio</string>
+    <string name="not_set">Not set</string>
+    <string name="input_audio_filename">Input audio file name</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="default_value">(Default)</string>
+    <string name="language_list">Language list:</string>
+    <string name="default_voice">Default voice: </string>
+    <string name="default_voice_of">Default voice of: </string>
+    <string name="none">None</string>
+    <string name="tts_support_full" tools:ignore="MissingTranslation">Fully supported</string>
+    <string name="tts_support_partial" tools:ignore="MissingTranslation">Partially supported</string>
+    <string name="tts_support_variant" tools:ignore="MissingTranslation">Variant supported</string>
+    <string name="tts_support_missing_data" tools:ignore="MissingTranslation">Missing data</string>
+    <string name="tts_support_none" tools:ignore="MissingTranslation">Not supported</string>
+    <string name="tts_support_info_title" tools:ignore="MissingTranslation">Language Instructions</string>
+    <string name="tts_support_info_content" tools:ignore="MissingTranslation"><![CDATA[
+        Language selection allows you to choose different languages for text-to-speech.<br/><br/>
+        <b>Selection Process:</b><br/>
+        • Each TTS engine has a default language configured in system TTS settings<br/>
+        • Deep background indicates the currently selected language<br/>
+        • Color bars on the left indicate TTS engine support level for each language<br/><br/>
+        <b>Support Levels:</b><br/>
+        <font color="#4CAF50">🟢 Green</font>: Fully supported language and region<br/>
+        <font color="#9C27B0">🟣 Purple</font>: Supported language and country, but not necessarily specific regions<br/>
+        <font color="#2196F3">🔵 Blue</font>: Supported language, country and variants<br/>
+        <font color="#FFEB3B">🟡 Yellow</font>: Missing language data package (needs download)<br/>
+        <font color="#BDBDBD">⚪ Gray</font>: Unsupported language<br/><br/>
+    ]]></string>
+    <string name="tts_support_info_button" tools:ignore="MissingTranslation">OK</string>
+    <string name="menu_test_mode" tools:ignore="MissingTranslation">Test Mode</string>
+    <string name="test_mode_title" tools:ignore="MissingTranslation">Test Mode</string>
+    <string name="test_mode_dialog_title" tools:ignore="MissingTranslation">Select Test Items</string>
+    <string name="test_mode_btn_start" tools:ignore="MissingTranslation">Test</string>
+    <string name="test_mode_btn_cancel" tools:ignore="MissingTranslation">Cancel</string>
+    <string name="test_mode_selected" tools:ignore="MissingTranslation">Selected test items: %1$s</string>
+    <string name="test_mode_toolbar_suffix" tools:ignore="MissingTranslation">(Test Mode)</string>
+    <string name="test_mode_exit" tools:ignore="MissingTranslation">Exit Test Mode</string>
+    <string name="test_mode_exit_toast" tools:ignore="MissingTranslation">Exited test mode</string>
+    <string name="test_mode_btn_expand_all_desc" tools:ignore="MissingTranslation">Expand All Descriptions</string>
+    <string name="test_mode_btn_collapse_all_desc" tools:ignore="MissingTranslation">Collapse All Descriptions</string>
+    <string name="test_mode_btn_expand_all_desc_tooltip" tools:ignore="MissingTranslation">Expand all test case descriptions</string>
+    <string name="test_mode_btn_collapse_all_desc_tooltip" tools:ignore="MissingTranslation">Collapse all test case descriptions</string>
+    
+    <!-- 测试模式 - 语速音调设置失败测试 -->
+    <string name="test_case_speed_pitch_failure" tools:ignore="MissingTranslation">Speed/Pitch Setting Failure Test</string>
+    <string name="test_case_speed_pitch_failure_desc" tools:ignore="MissingTranslation">Test: Simulate speed/pitch setting failure scenarios to verify warning display functionality. Tests include invalid parameter values and TTS engine error responses. Logs are recorded in Logcat with tag "TTS_TEST" for debugging.</string>
+    
+    <!-- 测试模式 - 发音人信息 -->
+    <string name="test_case_log_tts_voices" tools:ignore="MissingTranslation">Log TTS Engine Voices</string>
+    <string name="test_case_log_tts_voices_desc" tools:ignore="MissingTranslation">When enabled, every time you click "Speak", all supported languages and voices of the TTS engine will be printed to logcat, with default language, default voice, and the current TTS instance\'s voice marked.</string>
+    
+    <!-- 测试模式信息 -->
+    <string name="test_mode_info_title" tools:ignore="MissingTranslation">Test Mode Instructions</string>
+    <string name="test_mode_info_content" tools:ignore="MissingTranslation"><![CDATA[
+        Test Mode allows developers to test specific functionality of the application.<br/><br/>
+        <b>Usage Process:</b><br/>
+        • Select one or more test items by checking the checkboxes<br/>
+        • The test button shows the number of selected items<br/>
+        • Click "Test" to start the selected tests<br/>
+        • The interface will change to indicate test mode is active<br/><br/>
+        <b>Test Features:</b><br/>
+        • Tests simulate specific scenarios to verify functionality<br/>
+        • Test logs are recorded in Logcat with tag "TTS_TEST"<br/>
+        • You can exit test mode anytime from the menu<br/>
+        • Test mode does not affect normal app functionality
+    ]]></string>
+    
+    <!-- 语速和音调信息 -->
+    <string name="speed_info_title" tools:ignore="MissingTranslation">Speed Instructions</string>
+    <string name="speed_info_content" tools:ignore="MissingTranslation"><![CDATA[
+        Speed controls how fast the text is read.<br/><br/>
+        <b>Range:</b> 0.5x - 2.0x<br/>
+        <b>Default:</b> 1.0x (normal speed)<br/><br/>
+        <b>Usage Tips:</b><br/>
+        • 0.5x-0.8x: Slow reading, suitable for learning<br/>
+        • 1.0x: Normal speed, daily use<br/>
+        • 1.2x-2.0x: Fast reading, time-saving
+    ]]></string>
+    
+    <string name="pitch_info_title" tools:ignore="MissingTranslation">Pitch Instructions</string>
+    <string name="pitch_info_content" tools:ignore="MissingTranslation"><![CDATA[
+        Pitch controls the highness or lowness of the voice.<br/><br/>
+        <b>Range:</b> 0.5x - 2.0x<br/>
+        <b>Default:</b> 1.0x (normal pitch)<br/><br/>
+        <b>Usage Tips:</b><br/>
+        • 0.5x-0.8x: Low pitch, deep voice<br/>
+        • 1.0x: Normal pitch, natural voice<br/>
+        • 1.2x-2.0x: High pitch, sharp voice
+    ]]></string>
+    
+    <!-- 发音人信息 -->
+    <string name="voice_info_title" tools:ignore="MissingTranslation">Voice Instructions</string>
+    <string name="voice_info_content" tools:ignore="MissingTranslation"><![CDATA[
+        Voice selection allows you to choose different speakers for text-to-speech.<br/><br/>
+        <b>Selection Process:</b><br/>
+        • First select a language, then choose a voice<br/>
+        • Each language has one or more available voices<br/>
+        • Only one voice per language is marked as "(Default)"<br/><br/>
+        <b>Voice Features:</b><br/>
+        • Voice features are displayed below the name in [brackets], but not all voices have features<br/>
+        • Features show voice capabilities and characteristics<br/>
+        • Deep background indicates the currently selected voice
+    ]]></string>
+
+    <string name="icon_expand" tools:ignore="MissingTranslation">▼</string>
+    <string name="icon_collapse" tools:ignore="MissingTranslation">▲</string>
+    <string name="label_selected_test_cases" tools:ignore="MissingTranslation">Selected Test Cases: </string>
+    <string name="language_selection_info_title" tools:ignore="MissingTranslation">Language Selection Info</string>
+    <string name="language_selection_info_message" tools:ignore="MissingTranslation">When Chinese (Simplified) or English matches the system language, that option will be disabled. You can still choose "Follow System" to use the system language.</string>
+    <string name="toast_double_back_exit" tools:ignore="MissingTranslation">Press back again to exit</string>
 </resources>

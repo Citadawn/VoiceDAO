@@ -22,21 +22,20 @@
         android:id="@+id/btnEditorInfo"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_info_white_24dp"
+        android:src="@drawable/ic_info_white_20dp"
         android:contentDescription="@string/dialog_title_editor_info"
         android:scaleType="center"
         app:layout_constraintTop_toTopOf="@id/editorToolbar"
         app:layout_constraintBottom_toBottomOf="@id/editorToolbar"
         app:layout_constraintEnd_toEndOf="@id/editorToolbar"
-        android:padding="8dp" />
+        android:padding="@dimen/dp_8" />
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
         android:clipToPadding="false"
-        android:paddingBottom="64dp"
+        android:paddingBottom="@dimen/dp_64"
         app:layout_constraintTop_toBottomOf="@id/editorToolbar"
         app:layout_constraintBottom_toTopOf="@id/layoutEditorBottomBar"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,20 +46,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_input_editor"
-            android:textSize="16sp"
+            android:textSize="@dimen/sp_16"
             android:gravity="top|start"
             android:minLines="10"
             android:maxLines="100"
             android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
-            android:background="@android:color/transparent"
-            android:padding="12dp"
-            android:paddingBottom="64dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="80dp"
             android:scrollbars="vertical"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/hint_gray"
             android:textCursorDrawable="@drawable/cursor_main_dark"
             android:textSelectHandleLeft="@drawable/handle_main_dark_left"
             android:textSelectHandleRight="@drawable/handle_main_dark_right"
             android:textSelectHandle="@drawable/handle_main_dark_center"
-            android:textColorHighlight="#33272727"
+            android:textColorHighlight="#1A272727"
             android:autofillHints="" />
     </ScrollView>
 
@@ -74,17 +76,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="24dp">
+        android:layout_margin="@dimen/dp_24">
 
-    <Button
-        android:id="@+id/btnEditorClear"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
+        <Button
+            android:id="@+id/btnEditorClear"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:text="@string/btn_clear"
-        android:textSize="16sp"
-        android:background="@drawable/btn_main_bg"
-        android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:background="@drawable/btn_main_bg"
+            android:textColor="@color/white"
             android:stateListAnimator="@animator/btn_scale_animator" />
 
         <TextView
@@ -93,19 +95,19 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:text="@string/char_count"
-            android:textSize="14sp"
+            android:textSize="@dimen/sp_14"
             android:gravity="center"
-            android:textColor="#666" />
+            android:textColor="@color/gray_666" />
 
-    <Button
-        android:id="@+id/btnEditorOk"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
+        <Button
+            android:id="@+id/btnEditorOk"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:text="@string/btn_ok"
-        android:textSize="16sp"
-        android:background="@drawable/btn_main_bg"
-        android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:background="@drawable/btn_main_bg"
+            android:textColor="@color/white"
             android:stateListAnimator="@animator/btn_scale_animator" />
     </LinearLayout>
 

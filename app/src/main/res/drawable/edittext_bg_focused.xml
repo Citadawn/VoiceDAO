@@ -3,9 +3,9 @@
     <!-- 阴影层 -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#1A000000"/>
+            <solid android:color="#33000000"/>
             <corners android:radius="12dp"/>
-            <padding android:bottom="2dp" android:right="2dp"/>
+            <padding android:bottom="3dp" android:right="3dp"/>
         </shape>
     </item>
     
@@ -14,12 +14,12 @@
         <shape android:shape="rectangle">
             <gradient
                 android:startColor="#FFFFFF"
-                android:endColor="#F8F9FA"
+                android:endColor="#F0F4F8"
                 android:angle="270"/>
             <corners android:radius="12dp"/>
             <stroke 
-                android:width="1.5dp" 
-                android:color="#E1E5E9"/>
+                android:width="2dp" 
+                android:color="@color/focus_border"/>
         </shape>
     </item>
 </layer-list> 

@@ -1,4 +1,4 @@
-package com.citadawn.speechapp;
+package com.citadawn.speechapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,16 +8,33 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
+import com.citadawn.speechapp.R;
+import com.citadawn.speechapp.util.ButtonTextHelper;
+import com.citadawn.speechapp.util.ClearButtonHelper;
+import com.citadawn.speechapp.util.DialogHelper;
+import com.citadawn.speechapp.util.LocaleHelper;
+
+/**
+ * 文本编辑器活动
+ * 提供大文本编辑功能，支持清空、字数统计等
+ */
 public class TextEditorActivity extends AppCompatActivity {
+    // region 成员变量
     public static final String EXTRA_TEXT = "extra_text";
     private EditText editorEditText;
     private Button btnEditorClear, btnEditorOk;
     private TextView tvEditorCharCount;
     private int maxCharCount;
 
+    // endregion
+    // region 生命周期
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 应用用户选择的语言设置 Apply user selected language setting
+        LocaleHelper.setLocale(this, LocaleHelper.getCurrentLocale(this));
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_editor);
 
@@ -49,19 +66,27 @@ public class TextEditorActivity extends AppCompatActivity {
         updateCharCount();
         editorEditText.addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 btnEditorClear.setEnabled(s.length() > 0);
                 btnEditorOk.setEnabled(!s.toString().equals(originalText));
                 updateCharCount();
             }
+
             @Override
-            public void afterTextChanged(android.text.Editable s) {}
+            public void afterTextChanged(android.text.Editable s) {
+            }
         });
 
         // 设置清空按钮逻辑（复用工具类）
         ClearButtonHelper.setupClearButton(btnEditorClear, editorEditText);
+        
+        // 为编辑器按钮设置自动文本大小调整
+        ButtonTextHelper.setupAutoTextSize(btnEditorOk);
+        ButtonTextHelper.setupAutoTextSize(btnEditorClear);
 
         btnEditorOk.setOnClickListener(v -> {
             Intent data = new Intent();
@@ -70,13 +95,15 @@ public class TextEditorActivity extends AppCompatActivity {
             finish();
         });
 
-        findViewById(R.id.btnEditorInfo).setOnClickListener(v -> new androidx.appcompat.app.AlertDialog.Builder(TextEditorActivity.this)
-            .setTitle(R.string.dialog_title_editor_info)
-            .setMessage(R.string.dialog_message_editor_info)
-            .setPositiveButton(R.string.dialog_button_editor_info_ok, null)
-            .show());
+        findViewById(R.id.btnEditorInfo)
+                .setOnClickListener(v -> DialogHelper.showInfoDialog(TextEditorActivity.this, 
+                        R.string.dialog_title_editor_info, R.string.dialog_message_editor_info));
     }
 
+    // endregion
+    // region 公开方法
+    // endregion
+    // region 私有方法
     private void updateCharCount() {
         int current = editorEditText.getText().length();
         String baseText = getString(R.string.char_count, current, maxCharCount);
@@ -86,11 +113,13 @@ public class TextEditorActivity extends AppCompatActivity {
             int start = baseText.indexOf(currentStr);
             int end = start + currentStr.length();
             android.text.SpannableString ss = new android.text.SpannableString(baseText);
-            ss.setSpan(new android.text.style.ForegroundColorSpan(android.graphics.Color.RED), start, end, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new android.text.style.ForegroundColorSpan(android.graphics.Color.RED), start, end,
+                    android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvEditorCharCount.setText(ss);
         } else {
             tvEditorCharCount.setText(baseText);
-            tvEditorCharCount.setTextColor(android.graphics.Color.parseColor("#666666"));
+            tvEditorCharCount.setTextColor(ContextCompat.getColor(this, R.color.gray_666));
         }
     }
-} 
+    // endregion
+}

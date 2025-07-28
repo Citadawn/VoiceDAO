@@ -32,35 +32,42 @@
             android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="32dp"
-            android:paddingEnd="32dp"
-            android:paddingTop="32dp"
-            android:paddingBottom="16dp">
+            android:paddingStart="@dimen/dp_32"
+            android:paddingEnd="@dimen/dp_32"
+            android:paddingTop="@dimen/dp_32"
+            android:paddingBottom="@dimen/dp_16">
             <!-- 你的页面内容（EditText等）全部放在这里，去掉Toolbar本身和外层NestedScrollView -->
 
+            <!-- 文本编辑器：用于输入和编辑朗读文本。参见术语表TextEditor -->
             <EditText
                 android:id="@+id/editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:minHeight="64dp"
+                android:minHeight="80dp"
                 android:hint="@string/hint_input_text"
                 android:textSize="16sp"
-                android:gravity="center"
-                android:minLines="3"
-                android:maxLines="10"
-                android:inputType="textMultiLine"
+                android:gravity="top|start"
+                android:minLines="4"
+                android:maxLines="12"
+                android:inputType="textMultiLine|textCapSentences"
                 android:windowSoftInputMode="stateHidden"
                 android:autofillHints=""
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/layoutEditButtons"
-                android:background="@drawable/edittext_bg"
-                android:textColor="@color/main_dark"
+                android:background="@drawable/edittext_selector"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/hint_gray"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 android:textCursorDrawable="@drawable/cursor_main_dark"
                 android:textSelectHandleLeft="@drawable/handle_main_dark_left"
                 android:textSelectHandleRight="@drawable/handle_main_dark_right"
                 android:textSelectHandle="@drawable/handle_main_dark_center"
-                android:textColorHighlight="#33272727" />
+                android:textColorHighlight="#1A272727"
+                android:elevation="2dp" />
 
             <LinearLayout
                 android:id="@+id/layoutEditButtons"
@@ -72,14 +79,14 @@
                 app:layout_constraintBottom_toBottomOf="@id/editText"
                 app:layout_constraintStart_toEndOf="@id/editText"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="8dp">
+                android:layout_marginStart="@dimen/dp_8">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnClear"
                     android:layout_width="44dp"
                     android:layout_height="28dp"
                     android:text="@string/btn_clear"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/sp_12"
                     android:background="@drawable/btn_main_bg"
                     android:textColor="@color/white"
                     android:gravity="center"
@@ -90,21 +97,21 @@
                     android:layout_width="44dp"
                     android:layout_height="28dp"
                     android:text="@string/btn_open_editor"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/sp_12"
                     android:background="@drawable/btn_main_bg"
                     android:textColor="@color/white"
                     android:gravity="center"
                     android:stateListAnimator="@animator/btn_scale_animator"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="@dimen/dp_8" />
             </LinearLayout>
 
-            <!-- 语速调节区块 两行结构 -->
+            <!-- 语速调节区块：用于调节语音朗读速度。参见术语表SpeedBlock -->
             <LinearLayout
                 android:id="@+id/layoutSpeedBlock"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/dp_24"
                 app:layout_constraintTop_toBottomOf="@id/editText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -116,30 +123,46 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_speed"
-                        android:textSize="16sp"
-                        android:textColor="#272727"
-                        android:layout_marginEnd="0dp" />
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_speed"
+                            android:textSize="@dimen/sp_16"
+                            android:textColor="@color/main_dark" />
+
+                        <ImageView
+                            android:id="@+id/ivSpeedInfo"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="2dp"
+                            android:src="@drawable/ic_info_white_20dp"
+                            android:contentDescription="@string/speed_info_title"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/colon"
-                        android:textSize="16sp"
-                        android:textColor="#272727"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginEnd="2dp" />
+                        android:textSize="@dimen/sp_16"
+                        android:textColor="@color/main_dark"
+                        android:layout_marginStart="@dimen/dp_2"
+                        android:layout_marginEnd="@dimen/dp_2" />
                     <TextView
                         android:id="@+id/textSpeechRateValue"
                         android:layout_width="32dp"
                         android:layout_height="wrap_content"
                         android:text="@string/default_speed_value"
                         android:gravity="center"
-                        android:textSize="16sp"
-                        android:textColor="#272727"
-                        android:layout_marginEnd="8dp" />
+                        android:textSize="@dimen/sp_16"
+                        android:textColor="@color/main_dark"
+                        android:layout_marginEnd="@dimen/dp_8" />
                     <View
                         android:layout_width="0dp"
                         android:layout_height="0dp"
@@ -149,7 +172,7 @@
                         android:layout_width="44dp"
                         android:layout_height="28dp"
                         android:text="@string/btn_reset"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/sp_12"
                         android:background="@drawable/btn_main_bg"
                         android:textColor="@color/white"
                         android:gravity="center"
@@ -162,17 +185,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="2dp">
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:layout_marginBottom="@dimen/dp_2">
                     <TextView
                         android:id="@+id/btnSpeedMinus"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:text="@string/minus"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/sp_22"
                         android:gravity="center|center_vertical"
-                        android:textColor="#272727"
-                        android:background="@android:color/transparent" />
+                        android:textColor="@color/main_dark" />
                     <SeekBar
                         android:id="@+id/seekBarSpeed"
                         android:layout_width="0dp"
@@ -190,10 +212,9 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:text="@string/plus"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/sp_22"
                         android:gravity="center|center_vertical"
-                        android:textColor="#272727"
-                        android:background="@android:color/transparent" />
+                        android:textColor="@color/main_dark" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -202,19 +223,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="12sp"
+                android:textSize="@dimen/sp_12"
                 android:textColor="#FF5722"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="@dimen/dp_4"
                 app:layout_constraintTop_toBottomOf="@id/layoutSpeedBlock"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <!-- 音调调节区块 两行结构 -->
+            <!-- 音调调节区块：用于调节语音朗读音调。参见术语表PitchBlock -->
             <LinearLayout
                 android:id="@+id/layoutPitchBlock"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/dp_8"
                 app:layout_constraintTop_toBottomOf="@id/tvSpeedSetResult"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -225,30 +246,46 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_pitch"
-                        android:textSize="16sp"
-                        android:textColor="#272727"
-                        android:layout_marginEnd="0dp" />
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_pitch"
+                            android:textSize="@dimen/sp_16"
+                            android:textColor="@color/main_dark" />
+
+                        <ImageView
+                            android:id="@+id/ivPitchInfo"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="2dp"
+                            android:src="@drawable/ic_info_white_20dp"
+                            android:contentDescription="@string/test_mode_info_title"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/colon"
-                        android:textSize="16sp"
-                        android:textColor="#272727"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginEnd="2dp" />
+                        android:textSize="@dimen/sp_16"
+                        android:textColor="@color/main_dark"
+                        android:layout_marginStart="@dimen/dp_2"
+                        android:layout_marginEnd="@dimen/dp_2" />
                     <TextView
                         android:id="@+id/textPitchValue"
                         android:layout_width="32dp"
                         android:layout_height="wrap_content"
                         android:text="@string/default_pitch_value"
                         android:gravity="center"
-                        android:textSize="16sp"
-                        android:textColor="#272727"
-                        android:layout_marginEnd="8dp" />
+                        android:textSize="@dimen/sp_16"
+                        android:textColor="@color/main_dark"
+                        android:layout_marginEnd="@dimen/dp_8" />
                     <View
                         android:layout_width="0dp"
                         android:layout_height="0dp"
@@ -258,7 +295,7 @@
                         android:layout_width="44dp"
                         android:layout_height="28dp"
                         android:text="@string/btn_reset"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/sp_12"
                         android:background="@drawable/btn_main_bg"
                         android:textColor="@color/white"
                         android:gravity="center"
@@ -271,17 +308,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="2dp">
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_2">
                     <TextView
                         android:id="@+id/btnPitchMinus"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:text="@string/minus"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/sp_22"
                         android:gravity="center|center_vertical"
-                        android:textColor="#272727"
-                        android:background="@android:color/transparent" />
+                        android:textColor="@color/main_dark" />
                     <SeekBar
                         android:id="@+id/seekBarPitch"
                         android:layout_width="0dp"
@@ -299,10 +335,9 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:text="@string/plus"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/sp_22"
                         android:gravity="center|center_vertical"
-                        android:textColor="#272727"
-                        android:background="@android:color/transparent" />
+                        android:textColor="@color/main_dark" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -311,19 +346,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="12sp"
+                android:textSize="@dimen/sp_12"
                 android:textColor="#FF5722"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="@dimen/dp_4"
                 app:layout_constraintTop_toBottomOf="@id/layoutPitchBlock"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <!-- 语言和发音人选择区块（纵向结构，每项独占一行） -->
+            <!-- 语言选择区块：用于选择朗读语言。参见术语表LanguageBlock -->
+            <!-- 发音人选择区块：用于选择朗读发音人。参见术语表VoiceBlock -->
             <LinearLayout
                 android:id="@+id/layoutLangVoiceBlock"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/dp_8"
                 app:layout_constraintTop_toBottomOf="@id/tvPitchSetResult"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -334,14 +370,28 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView
+                    android:layout_marginBottom="@dimen/dp_8">
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_language"
-                        android:textSize="16sp"
-                        android:textColor="#333"
-                        android:layout_marginEnd="8dp" />
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_language"
+                            android:textSize="@dimen/sp_16"
+                            android:textColor="@color/main_dark" />
+                        <ImageView
+                            android:id="@+id/ivLangSupportInfo"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="2dp"
+                            android:src="@drawable/ic_info_white_20dp"
+                            android:contentDescription="@string/tts_support_info_title"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
                     <Spinner
                         android:id="@+id/spinnerLanguage"
                         android:layout_width="0dp"
@@ -359,14 +409,28 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView
+                    android:layout_marginBottom="@dimen/dp_8">
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_voice"
-                        android:textSize="16sp"
-                        android:textColor="#333"
-                        android:layout_marginEnd="8dp" />
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_voice"
+                            android:textSize="@dimen/sp_16"
+                            android:textColor="@color/main_dark" />
+                        <ImageView
+                            android:id="@+id/ivVoiceSupportInfo"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="2dp"
+                            android:src="@drawable/ic_info_white_20dp"
+                            android:contentDescription="@string/tts_support_info_title"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
                     <Spinner
                         android:id="@+id/spinnerVoice"
                         android:layout_width="0dp"
@@ -388,7 +452,7 @@
                     android:gravity="center"
                     android:text="@string/btn_reset"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/sp_12"
                     android:tooltipText="@string/tip_reset_lang_voice"
                     android:stateListAnimator="@animator/btn_scale_animator"
                     tools:targetApi="26" />
@@ -401,7 +465,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="@dimen/dp_32"
                 app:layout_constraintTop_toBottomOf="@id/layoutLangVoiceBlock"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -414,8 +478,8 @@
                     android:text="@string/btn_speak"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_main_bg"
-                    android:textSize="18sp"
-                    android:layout_marginEnd="12dp"
+                    android:textSize="@dimen/sp_18"
+                    android:layout_marginEnd="@dimen/dp_12"
                     android:stateListAnimator="@animator/btn_scale_animator" />
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -426,18 +490,18 @@
                     android:text="@string/btn_stop_speak"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_main_bg"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/sp_18"
                     android:stateListAnimator="@animator/btn_scale_animator" />
             </LinearLayout>
 
-            <!-- 新版：保存为音频和取消保存同一行，设置保存目录在下方，状态信息再下方 -->
+            <!-- 保存音频区块：用于保存朗读音频。参见术语表SaveAudioBlock -->
             <LinearLayout
                 android:id="@+id/layoutSaveAudioRow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="@dimen/dp_32"
                 app:layout_constraintTop_toBottomOf="@id/layoutSpeakRow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -450,9 +514,9 @@
                     android:text="@string/btn_save_audio"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_main_bg"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/sp_18"
                     android:stateListAnimator="@animator/btn_scale_animator"
-                    android:layout_marginEnd="12dp" />
+                    android:layout_marginEnd="@dimen/dp_12" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnCancelSave"
@@ -462,7 +526,7 @@
                     android:text="@string/btn_cancel_save"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_main_bg"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/sp_16"
                     android:stateListAnimator="@animator/btn_scale_animator" />
             </LinearLayout>
 
@@ -473,21 +537,21 @@
                 android:text="@string/btn_set_save_dir"
                 android:textColor="@color/white"
                 android:background="@drawable/btn_main_bg"
-                android:textSize="16sp"
+                android:textSize="@dimen/sp_16"
                 android:stateListAnimator="@animator/btn_scale_animator"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/dp_16"
                 app:layout_constraintTop_toBottomOf="@id/layoutSaveAudioRow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- 状态信息合并版：每项一行，标题加粗，内容正常 -->
+            <!-- 状态信息区块：展示TTS引擎状态、音频保存目录、朗读状态等信息。参见术语表StatusInfoBlock -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/dp_24"
                 android:background="#F5F5F5"
-                android:padding="16dp"
+                android:padding="@dimen/dp_16"
                 android:minHeight="60dp"
                 app:layout_constraintTop_toBottomOf="@id/btnSetSaveDir"
                 app:layout_constraintStart_toStartOf="parent"
@@ -498,51 +562,51 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/status_info_title"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/sp_16"
                     android:textStyle="bold"
                     android:textColor="#333333"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginBottom="@dimen/dp_12" />
                 <!-- 状态信息合并版：每项一行，标题加粗，内容正常 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="@dimen/dp_8">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_tts_engine_status"
                         android:textStyle="bold"
                         android:textColor="#333333"
-                        android:textSize="13sp" />
+                        android:textSize="@dimen/sp_13" />
                     <TextView
                         android:id="@+id/tvTtsEngineStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#666666"
-                        android:textSize="13sp" />
+                        android:textColor="@color/gray_666"
+                        android:textSize="@dimen/sp_13" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="@dimen/dp_8">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_audio_save_dir"
                         android:textStyle="bold"
                         android:textColor="#333333"
-                        android:textSize="13sp" />
+                        android:textSize="@dimen/sp_13" />
                     <TextView
                         android:id="@+id/tvAudioSaveDir"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text=""
-                        android:textColor="#666666"
-                        android:textSize="13sp" />
+                        android:textColor="@color/gray_666"
+                        android:textSize="@dimen/sp_13" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -554,14 +618,36 @@
                         android:text="@string/label_tts_speak_status"
                         android:textStyle="bold"
                         android:textColor="#333333"
-                        android:textSize="13sp" />
+                        android:textSize="@dimen/sp_13" />
                     <TextView
                         android:id="@+id/tvTtsSpeakStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tts_idle"
                         android:textColor="#4CAF50"
-                        android:textSize="13sp" />
+                        android:textSize="@dimen/sp_13" />
+                </LinearLayout>
+                <!-- 新增：当前选择的测试项 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/dp_8">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_selected_test_cases"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_13" />
+                    <TextView
+                        android:id="@+id/tvSelectedTestCases"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:textColor="@color/gray_666"
+                        android:textSize="@dimen/sp_13" />
                 </LinearLayout>
 
             </LinearLayout>

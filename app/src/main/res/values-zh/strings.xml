@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">文本转语音</string>
-    <string name="hint_input_text">请输入要朗读的文本</string>
+    <string name="hint_input_text">输入要朗读或保存为音频的文本</string>
     <string name="label_speed">语速</string>
     <string name="label_pitch">音调</string>
     <string name="btn_speak">朗读</string>
@@ -11,12 +11,13 @@
         等）或系统TTS设置中更改语言。</string>
     <string name="desc_tts_length_limit">单次朗读最大支持约3500字符（含标点、空格），超长文本请分段朗读。Android TTS API
         单次最大3999字节，超出部分将被截断或报错。</string>
-    <string name="hint_input_save_text">请输入要保存的文本</string>
+
     <string name="dialog_title_warning">提示</string>
-    <string name="dialog_message_text_too_long">建议每次朗读不超过 %1$d 字符（含标点、空格），是否继续朗读？</string>
-    <string name="dialog_button_continue">继续</string>
+
+
     <string name="dialog_button_cancel">退出</string>
-    <string name="toast_reduce_text">请缩减文本后继续</string>
+
+    <string name="toast_text_exceeds_limit">文本过长，请删减至 %1$d 字符以内</string>
     <string name="toast_cannot_open_tts_settings">无法打开系统TTS设置界面</string>
     <string name="dialog_title_info">说明</string>
     <string name="dialog_title_about">关于</string>
@@ -100,11 +101,6 @@
     <string name="default_voice">默认发音人: </string>
     <string name="default_voice_of">的默认发音人: </string>
     <string name="none">无</string>
-    <string name="tts_support_full">完全支持</string>
-    <string name="tts_support_partial">部分支持</string>
-    <string name="tts_support_variant">变体支持</string>
-    <string name="tts_support_missing_data">缺少数据</string>
-    <string name="tts_support_none">不支持</string>
     <string name="tts_support_info_title">语言说明</string>
     <string name="tts_support_info_content"><![CDATA[
         语言选择允许您为文本转语音选择不同的语言。<br/><br/>
@@ -125,7 +121,6 @@
     <string name="test_mode_dialog_title">选择测试项</string>
     <string name="test_mode_btn_start">测试</string>
     <string name="test_mode_btn_cancel">取消</string>
-    <string name="test_mode_selected">已选测试项：%1$s</string>
     <string name="test_mode_toolbar_suffix">（测试模式）</string>
     <string name="test_mode_exit">退出测试模式</string>
     <string name="test_mode_exit_toast">已退出测试模式</string>
@@ -133,15 +128,17 @@
     <string name="test_mode_btn_collapse_all_desc">收起全部描述</string>
     <string name="test_mode_btn_expand_all_desc_tooltip">展开全部测试项描述</string>
     <string name="test_mode_btn_collapse_all_desc_tooltip">收起全部测试项描述</string>
-    
+
     <!-- 测试模式 - 语速音调设置失败测试 -->
     <string name="test_case_speed_pitch_failure">语速音调设置失败测试</string>
-    <string name="test_case_speed_pitch_failure_desc">测试：模拟语速和音调设置失败场景，验证警告显示功能。测试包括无效参数值和TTS引擎错误响应。测试日志记录在Logcat中，标签为"TTS_TEST"，便于调试。</string>
-    
+    <string name="test_case_speed_pitch_failure_desc">
+        测试：模拟语速和音调设置失败场景，验证警告显示功能。测试包括无效参数值和TTS引擎错误响应。测试日志记录在Logcat中，标签为"TTS_TEST"，便于调试。</string>
+
     <!-- 测试模式 - 输出TTS引擎语言和发音人 -->
     <string name="test_case_log_tts_voices">输出TTS引擎语言和发音人</string>
-    <string name="test_case_log_tts_voices_desc">启用后，每次点击“朗读”按钮时，会在logcat中输出TTS引擎支持的所有语言及其发音人，并标注默认语言、默认发音人和当前TTS实例的voice对象。</string>
-    
+    <string name="test_case_log_tts_voices_desc">
+        启用后，每次点击“朗读”按钮时，会在logcat中输出TTS引擎支持的所有语言及其发音人，并标注默认语言、默认发音人和当前TTS实例的voice对象。</string>
+
     <!-- 测试模式信息 -->
     <string name="test_mode_info_title">测试模式说明</string>
     <string name="test_mode_info_content"><![CDATA[
@@ -157,7 +154,7 @@
         • 您可以随时从菜单退出测试模式<br/>
         • 测试模式不影响正常的应用程序功能
     ]]></string>
-    
+
     <!-- 语速和音调信息 -->
     <string name="speed_info_title">语速说明</string>
     <string name="speed_info_content"><![CDATA[
@@ -169,7 +166,7 @@
         • 1.0x：正常速度，日常使用<br/>
         • 1.2x-2.0x：快速朗读，节省时间
     ]]></string>
-    
+
     <string name="pitch_info_title">音调说明</string>
     <string name="pitch_info_content"><![CDATA[
         音调控制朗读声音的高低。<br/><br/>
@@ -180,7 +177,7 @@
         • 1.0x：正常音调，自然声音<br/>
         • 1.2x-2.0x：高音调，声音尖锐
     ]]></string>
-    
+
     <!-- 发音人信息 -->
     <string name="voice_info_title">发音人说明</string>
     <string name="voice_info_content"><![CDATA[
@@ -198,6 +195,9 @@
     <string name="icon_collapse">▲</string>
     <string name="label_selected_test_cases">当前选择的测试项：</string>
     <string name="language_selection_info_title">语言选择说明</string>
-    <string name="language_selection_info_message">当中文（简体）或English与系统语言相同时，该选项将被禁用。您仍可选择"跟随系统"来使用系统语言。</string>
+    <string name="language_selection_info_message">
+        当中文（简体）或English与系统语言相同时，该选项将被禁用。您仍可选择"跟随系统"来使用系统语言。</string>
     <string name="toast_double_back_exit">再按一次返回键退出应用</string>
+    <string name="test_case_name">测试项名称</string>
+    <string name="test_case_description">测试项描述</string>
 </resources> 

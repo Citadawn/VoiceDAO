@@ -1,7 +1,7 @@
 package com.citadawn.speechapp.ui.test;
 
 public class TestCase {
-    public String id;
+    public final String id;
     public String name;
     public String description;
     public boolean selected;

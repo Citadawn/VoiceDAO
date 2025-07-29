@@ -18,18 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageButton
-        android:id="@+id/btnEditorInfo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_info_white_20dp"
-        android:contentDescription="@string/dialog_title_editor_info"
-        android:scaleType="center"
-        app:layout_constraintTop_toTopOf="@id/editorToolbar"
-        app:layout_constraintBottom_toBottomOf="@id/editorToolbar"
-        app:layout_constraintEnd_toEndOf="@id/editorToolbar"
-        android:padding="@dimen/dp_8" />
-
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -56,6 +44,7 @@
             android:paddingTop="16dp"
             android:paddingBottom="80dp"
             android:scrollbars="vertical"
+            android:background="@null"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/hint_gray"
             android:textCursorDrawable="@drawable/cursor_main_dark"

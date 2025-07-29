@@ -14,6 +14,10 @@
         android:title="@string/menu_info"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_about"
+        android:title="@string/menu_about"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_test_mode"
         android:title="@string/menu_test_mode"
         app:showAsAction="never" />

@@ -2,6 +2,8 @@ package com.citadawn.speechapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import com.citadawn.speechapp.util.ButtonTextHelper;
 import com.citadawn.speechapp.util.ClearButtonHelper;
 import com.citadawn.speechapp.util.DialogHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
+import com.citadawn.speechapp.util.TextLengthHelper;
 
 /**
  * 文本编辑器活动
@@ -62,7 +65,7 @@ public class TextEditorActivity extends AppCompatActivity {
 
         // 根据内容动态启用/禁用清空按钮和确定按钮
         btnEditorClear.setEnabled(!editorEditText.getText().toString().isEmpty());
-        maxCharCount = android.speech.tts.TextToSpeech.getMaxSpeechInputLength();
+        maxCharCount = TextLengthHelper.getMaxTextLength();
         updateCharCount();
         editorEditText.addTextChangedListener(new android.text.TextWatcher() {
             @Override
@@ -94,14 +97,27 @@ public class TextEditorActivity extends AppCompatActivity {
             setResult(RESULT_OK, data);
             finish();
         });
-
-        findViewById(R.id.btnEditorInfo)
-                .setOnClickListener(v -> DialogHelper.showInfoDialog(TextEditorActivity.this, 
-                        R.string.dialog_title_editor_info, R.string.dialog_message_editor_info));
     }
 
     // endregion
     // region 公开方法
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_text_editor, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_editor_info) {
+            DialogHelper.showInfoDialog(this, 
+                    R.string.dialog_title_editor_info, R.string.dialog_message_editor_info);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     // endregion
     // region 私有方法
     private void updateCharCount() {

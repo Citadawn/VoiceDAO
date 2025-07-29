@@ -2,50 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/cbTestCase"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-        android:text="Test Case Name"
-            android:textSize="14sp"
-        android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:text="@string/test_case_name"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/btnToggleDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/icon_expand"
-            android:textSize="12sp"
-            android:textColor="@color/main_dark"
-            android:padding="8dp"
-            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:background="?android:attr/selectableItemBackground" />
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/icon_expand"
+            android:textColor="@color/main_dark"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvTestCaseDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Test case description"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="12sp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
-        android:lineSpacingExtra="2dp"
         android:gravity="center_vertical"
+        android:lineSpacingExtra="2dp"
+        android:text="@string/test_case_description"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp"
         android:visibility="gone" />
 </LinearLayout> 

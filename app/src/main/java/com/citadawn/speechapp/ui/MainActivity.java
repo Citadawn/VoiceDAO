@@ -1,7 +1,6 @@
 package com.citadawn.speechapp.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,25 +15,27 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import java.util.List;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
@@ -43,10 +44,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.core.text.HtmlCompat;
 
 import com.citadawn.speechapp.R;
 import com.citadawn.speechapp.ui.test.TestCase;
+import com.citadawn.speechapp.ui.test.TestManager;
 import com.citadawn.speechapp.ui.test.TestModeDialog;
 import com.citadawn.speechapp.util.ButtonTextHelper;
 import com.citadawn.speechapp.util.ClearButtonHelper;
@@ -56,10 +57,10 @@ import com.citadawn.speechapp.util.DialogHelper;
 import com.citadawn.speechapp.util.InfoIconHelper;
 import com.citadawn.speechapp.util.InfoIconPositionHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
-import com.citadawn.speechapp.util.TextLengthHelper;
-import com.citadawn.speechapp.util.ViewHelper;
 import com.citadawn.speechapp.util.SeekBarHelper;
+import com.citadawn.speechapp.util.TextLengthHelper;
 import com.citadawn.speechapp.util.ToastHelper;
+import com.citadawn.speechapp.util.ViewHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,15 +68,10 @@ import java.io.OutputStream;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import java.util.stream.Collectors;
-
-import com.citadawn.speechapp.ui.test.TestManager;
 
 // 自定义Adapter用于语言下拉列表，左侧竖条区分支持度
 class LanguageAdapter extends BaseAdapter {
@@ -84,33 +80,41 @@ class LanguageAdapter extends BaseAdapter {
     private final TextToSpeech tts;
     private final Context context;
     private final Locale defaultLocale;
-    private final Voice globalDefaultVoice;
     private int selectedPosition = 0; // 保存当前选中位置
-    
-    public LanguageAdapter(Context context, List<Locale> locales, TextToSpeech tts, Locale defaultLocale, Voice globalDefaultVoice) {
+
+    public LanguageAdapter(Context context, List<Locale> locales, TextToSpeech tts, Locale defaultLocale) {
         this.context = context;
         this.locales = locales;
         this.inflater = LayoutInflater.from(context);
         this.tts = tts;
         this.defaultLocale = defaultLocale;
-        this.globalDefaultVoice = globalDefaultVoice;
     }
-    
+
     public void setSelectedPosition(int position) {
         this.selectedPosition = position;
         notifyDataSetChanged();
     }
-    
+
     @Override
-    public int getCount() { return locales.size(); }
+    public int getCount() {
+        return locales.size();
+    }
+
     @Override
-    public Object getItem(int position) { return locales.get(position); }
+    public Object getItem(int position) {
+        return locales.get(position);
+    }
+
     @Override
-    public long getItemId(int position) { return position; }
+    public long getItemId(int position) {
+        return position;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return createView(position, convertView, parent, false);
     }
+
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         View view = createView(position, convertView, parent, true);
@@ -122,6 +126,21 @@ class LanguageAdapter extends BaseAdapter {
         }
         return view;
     }
+
+    private int getSupportColorRes(int support) {
+        if (support == TextToSpeech.LANG_AVAILABLE) {
+            return R.color.tts_support_full;
+        } else if (support == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+            return R.color.tts_support_partial;
+        } else if (support == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
+            return R.color.tts_support_variant;
+        } else if (support == TextToSpeech.LANG_MISSING_DATA) {
+            return R.color.tts_support_missing_data;
+        } else {
+            return R.color.tts_support_none;
+        }
+    }
+
     private View createView(int position, View convertView, ViewGroup parent, boolean isDropdown) {
         View view = convertView;
         if (view == null) {
@@ -136,24 +155,13 @@ class LanguageAdapter extends BaseAdapter {
         }
         tv.setText(name);
         int support = tts.isLanguageAvailable(locale);
-        int colorRes;
-        if (support == TextToSpeech.LANG_AVAILABLE) {
-            colorRes = R.color.tts_support_full;
-        } else if (support == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-            colorRes = R.color.tts_support_partial;
-        } else if (support == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
-            colorRes = R.color.tts_support_variant;
-        } else if (support == TextToSpeech.LANG_MISSING_DATA) {
-            colorRes = R.color.tts_support_missing_data;
-        } else {
-            colorRes = R.color.tts_support_none;
-        }
+        int colorRes = getSupportColorRes(support);
         bar.setBackgroundResource(colorRes);
         // 可选：下拉项背景色区分
         if (isDropdown) {
-            view.setBackgroundColor(context.getResources().getColor(android.R.color.white));
+            view.setBackgroundColor(ContextCompat.getColor(context, android.R.color.white));
         } else {
-            view.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
+            view.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
         }
         return view;
     }
@@ -166,34 +174,42 @@ class VoiceAdapter extends BaseAdapter {
     private final Context context;
     private final Voice defaultVoice;
     private int selectedPosition = 0;
-    
+
     public VoiceAdapter(Context context, List<Voice> voices, Voice defaultVoice) {
         this.context = context;
         this.voices = voices;
         this.defaultVoice = defaultVoice;
         this.inflater = LayoutInflater.from(context);
     }
-    
+
     public void setSelectedPosition(int position) {
         this.selectedPosition = position;
         notifyDataSetChanged();
     }
-    
+
     @Override
-    public int getCount() { return voices.size(); }
+    public int getCount() {
+        return voices.size();
+    }
+
     @Override
-    public Object getItem(int position) { return voices.get(position); }
+    public Object getItem(int position) {
+        return voices.get(position);
+    }
+
     @Override
-    public long getItemId(int position) { return position; }
-    
+    public long getItemId(int position) {
+        return position;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return createView(position, convertView, parent, false);
+        return createView(position, convertView, parent);
     }
-    
+
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View view = createView(position, convertView, parent, true);
+        View view = createView(position, convertView, parent);
         LinearLayout layoutRoot = view.findViewById(R.id.layoutRoot);
         if (position == selectedPosition) {
             layoutRoot.setBackgroundResource(R.color.tts_spinner_selected_bg);
@@ -202,52 +218,58 @@ class VoiceAdapter extends BaseAdapter {
         }
         return view;
     }
-    
+
     private boolean isMeaninglessFeature(String feature) {
         // 纯英文单词
-        if (feature.matches("^[A-Za-z]+$")) return true;
+        if (feature.matches("^[A-Za-z]+$"))
+            return true;
         // 纯数字
-        if (feature.matches("^\\d+$")) return true;
+        if (feature.matches("^\\d+$"))
+            return true;
         // 全大写或全小写且长度大于20
-        if ((feature.equals(feature.toUpperCase()) || feature.equals(feature.toLowerCase())) && feature.length() > 20) return true;
+        if ((feature.equals(feature.toUpperCase()) || feature.equals(feature.toLowerCase())) && feature.length() > 20)
+            return true;
         // 全为16进制且长度大于16
-        if (feature.matches("^[0-9A-Fa-f]+$") && feature.length() > 16) return true;
+        if (feature.matches("^[0-9A-Fa-f]+$") && feature.length() > 16)
+            return true;
         // 单字符
-        if (feature.length() == 1) return true;
+        if (feature.length() == 1)
+            return true;
         // UUID
-        if (feature.matches("^[0-9a-fA-F-]{32,}$")) return true;
-        return false;
+        return feature.matches("^[0-9a-fA-F-]{32,}$");
     }
 
     private boolean shouldShowFeatures(Set<String> features) {
-        if (features == null || features.isEmpty()) return false;
+        if (features == null || features.isEmpty())
+            return false;
         for (String f : features) {
-            if (!isMeaninglessFeature(f)) return true;
+            if (!isMeaninglessFeature(f))
+                return true;
         }
         return false;
     }
 
-    private View createView(int position, View convertView, ViewGroup parent, boolean isDropdown) {
+    private View createView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
             view = inflater.inflate(R.layout.spinner_item_voice, parent, false);
         }
-        
+
         Voice voice = voices.get(position);
         TextView tvVoiceName = view.findViewById(R.id.tvVoiceName);
         TextView tvVoiceFeatures = view.findViewById(R.id.tvVoiceFeatures);
-        
+
         // 设置发音人名称
         String voiceName = voice.getName();
         // 去除下划线及后缀数字
         voiceName = voiceName.replaceAll("_[0-9]+$", "");
         // 检查是否是默认发音人
-        boolean isDefault = (defaultVoice != null && voice.equals(defaultVoice));
+        boolean isDefault = (voice.equals(defaultVoice));
         if (isDefault) {
             voiceName += context.getString(R.string.default_value);
         }
         tvVoiceName.setText(voiceName);
-        
+
         // 设置 features（如果存在且有意义）
         Set<String> features = voice.getFeatures();
         if (shouldShowFeatures(features)) {
@@ -257,7 +279,7 @@ class VoiceAdapter extends BaseAdapter {
         } else {
             tvVoiceFeatures.setVisibility(View.GONE);
         }
-        
+
         return view;
     }
 }
@@ -286,8 +308,6 @@ public class MainActivity extends AppCompatActivity {
     private final HashMap<Locale, Voice> languageDefaultVoices = new HashMap<>(); // 每个语言的默认发音人
     private final ArrayList<Locale> localeList = new ArrayList<>();
     private final ArrayList<Voice> voiceList = new ArrayList<>();
-    private ArrayAdapter<String> langAdapter;
-    private ArrayAdapter<String> voiceAdapter;
     private boolean isLangSpinnerInit = false;
     private boolean isVoiceSpinnerInit = false;
     private TextView tvTtsEngineStatus, tvAudioSaveDir, tvTtsSpeakStatus, tvSelectedTestCases;
@@ -324,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
     // endregion
 
     // region 生命周期
+
     /**
      * 活动创建时初始化UI和TTS引擎
      */
@@ -334,12 +355,33 @@ public class MainActivity extends AppCompatActivity {
         TestManager.getInstance().resetAll();
         // 应用用户选择的语言设置 Apply user selected language setting
         LocaleHelper.setLocale(this, LocaleHelper.getCurrentLocale(this));
-        
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); // 始终浅色
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        
+
+        // 设置返回键处理
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // 如果有弹窗或对话框，优先让其处理返回键
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    return;
+                }
+                long now = System.currentTimeMillis();
+                if (now - lastBackPressedTime < DOUBLE_BACK_EXIT_INTERVAL) {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed(); // 退出App
+                } else {
+                    lastBackPressedTime = now;
+                    ToastHelper.showShort(MainActivity.this, R.string.toast_double_back_exit);
+                }
+            }
+        });
+
         // 初始化测试用例的国际化文本
         initializeTestCases();
 
@@ -380,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
         btnClear = findViewById(R.id.btnClear);
         // 设置主界面清空按钮逻辑（复用工具类）
         ClearButtonHelper.setupClearButton(btnClear, editText);
-        
+
         // 为所有按钮设置自动文本大小调整
         setupAllButtonsAutoTextSize();
         btnStop = findViewById(R.id.btnStop);
@@ -415,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
             // 不再输出TTS信息
             String text = editText.getText().toString().trim();
             if (text.isEmpty()) {
-                ToastHelper.showShort(this, R.string.hint_input_save_text);
+                ToastHelper.showShort(this, R.string.hint_input_text);
                 return;
             }
             if (saveDirUri == null) {
@@ -427,12 +469,10 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             btnSpeak.setEnabled(false);
-            if (TextLengthHelper.isTextTooLong(this, text)) {
+            if (TextLengthHelper.isTextTooLong(text)) {
                 int maxLength = TextLengthHelper.getMaxTextLength();
-                String message = String.format(getString(R.string.dialog_message_text_too_long), maxLength);
-                DialogHelper.showWarningDialog(this, message,
-                        () -> showFileNameInputDialogAndSave(text),
-                        () -> ToastHelper.showShort(this, R.string.toast_reduce_text));
+                String message = getString(R.string.toast_text_exceeds_limit, maxLength);
+                ToastHelper.showShort(this, message);
                 return;
             }
             showFileNameInputDialogAndSave(text);
@@ -469,10 +509,10 @@ public class MainActivity extends AppCompatActivity {
         spinnerLanguage = findViewById(R.id.spinnerLanguage);
         spinnerVoice = findViewById(R.id.spinnerVoice);
         btnLangVoiceReset = findViewById(R.id.btnLangVoiceReset);
-        
+
         // 设置信息图标
         setupInfoIcons();
-        
+
         // 设置信息图标的动态位置
         setupInfoIconPositions();
         // 启动定时任务，定期检查TTS状态
@@ -509,24 +549,22 @@ public class MainActivity extends AppCompatActivity {
         };
         ttsStatusHandler.post(ttsStatusRunnable);
         // 初始化语言和发音人Spinner
-        spinnerLanguage.setAdapter(new LanguageAdapter(this, localeList, tts, defaultLocale, globalDefaultVoice));
-                // 发音人Spinner使用自定义适配器
+        spinnerLanguage.setAdapter(new LanguageAdapter(this, localeList, tts, defaultLocale));
+        // 发音人Spinner使用自定义适配器
         spinnerVoice.setAdapter(new VoiceAdapter(this, voiceList, null));
-        
-
 
         // 语速调节
         seekBarSpeed.setMax(Constants.SEEKBAR_MAX); // 0.5~2.0，步进0.1
         seekBarSpeed.setProgress(Constants.SEEKBAR_DEFAULT_PROGRESS); // 默认1.0
         // 在语速相关变化后调用
         SeekBarHelper.setSeekBarListener(seekBarSpeed,
-                (seekBar, progress, fromUser) -> {
+                (progress) -> {
                     float value = 0.5f + progress * 0.1f;
                     value = Math.round(value * 10f) / 10f; // 保留一位小数
                     textSpeechRateValue.setText(String.format(Locale.US, "%.2f", value));
                     speechRate = value;
                     updateResetButtons();
-                    
+
                     // 测试模式下执行测试
                     testSpeedSettingFailure();
                 });
@@ -548,7 +586,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             updateResetButtons();
-            
+
             // 测试模式下执行测试
             testSpeedSettingFailure();
         });
@@ -570,7 +608,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             updateResetButtons();
-            
+
             // 测试模式下执行测试
             testSpeedSettingFailure();
         });
@@ -586,7 +624,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             updateResetButtons();
-            
+
             // 测试模式下执行测试
             testSpeedSettingFailure();
         });
@@ -596,13 +634,13 @@ public class MainActivity extends AppCompatActivity {
         seekBarPitch.setProgress(Constants.SEEKBAR_DEFAULT_PROGRESS);
         // 在音调相关变化后调用
         SeekBarHelper.setSeekBarListener(seekBarPitch,
-                (seekBar, progress, fromUser) -> {
+                (progress) -> {
                     float value = 0.5f + progress * 0.1f;
                     value = Math.round(value * 10f) / 10f; // 保留一位小数
                     textPitchValue.setText(String.format(Locale.US, "%.2f", value));
                     pitch = value;
                     updateResetButtons();
-                    
+
                     // 测试模式下执行测试
                     testPitchSettingFailure();
                 });
@@ -624,7 +662,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             updateResetButtons();
-            
+
             // 测试模式下执行测试
             testPitchSettingFailure();
         });
@@ -646,7 +684,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             updateResetButtons();
-            
+
             // 测试模式下执行测试
             testPitchSettingFailure();
         });
@@ -662,7 +700,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             updateResetButtons();
-            
+
             // 测试模式下执行测试
             testPitchSettingFailure();
         });
@@ -834,7 +872,8 @@ public class MainActivity extends AppCompatActivity {
                         // 其他语言按拼音排序
                         return collator.compare(l1.getDisplayName(), l2.getDisplayName());
                     });
-                    spinnerLanguage.setAdapter(new LanguageAdapter(this, localeList, tts, defaultLocale, globalDefaultVoice));
+                    spinnerLanguage
+                            .setAdapter(new LanguageAdapter(this, localeList, tts, defaultLocale));
                     isLangSpinnerInit = true;
                     spinnerLanguage.setSelection(0);
                 }
@@ -887,35 +926,10 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             btnSaveAudio.setEnabled(false);
-            if (TextLengthHelper.isTextTooLong(this, text)) {
+            if (TextLengthHelper.isTextTooLong(text)) {
                 int maxLength = TextLengthHelper.getMaxTextLength();
-                String message = String.format(getString(R.string.dialog_message_text_too_long), maxLength);
-                DialogHelper.showWarningDialog(this, message,
-                        () -> {
-                            // 只有在真正朗读前才输出TTS信息
-                            if (TestManager.getInstance().isTestMode()) {
-                                boolean logVoices = false;
-                                for (TestCase tc : TestManager.getInstance().getSelectedTestCases()) {
-                                    if ("log_tts_voices".equals(tc.id)) {
-                                        logVoices = true;
-                                        break;
-                                    }
-                                }
-                                if (logVoices) logTtsVoices();
-                            }
-                            ToastHelper.showShort(this, R.string.toast_read_task_submitted);
-                            pendingTtsAction = PendingTtsAction.PENDING_SPEAK;
-                            tts.setSpeechRate(speechRate);
-                            tts.setPitch(pitch);
-                            Bundle params = new Bundle();
-                            params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "tts_speak");
-                            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params, "tts_speak");
-                        },
-                        () -> {
-                            if (tts != null && isTtsReady)
-                                tts.stop();
-                            ToastHelper.showShort(this, R.string.toast_reduce_text);
-                        });
+                String message = getString(R.string.toast_text_exceeds_limit, maxLength);
+                ToastHelper.showShort(this, message);
                 return;
             }
             // 只有在真正朗读前才输出TTS信息
@@ -927,7 +941,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                if (logVoices) logTtsVoices();
+                if (logVoices)
+                    logTtsVoices();
             }
             ToastHelper.showShort(this, R.string.toast_read_task_submitted);
             pendingTtsAction = PendingTtsAction.PENDING_SPEAK;
@@ -1051,24 +1066,15 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.dialog_button_ok, null)
                     .show();
             return true;
+        } else if (id == R.id.action_about) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.dialog_title_about)
+                    .setMessage(R.string.dialog_message_about)
+                    .setPositiveButton(R.string.dialog_button_ok, null)
+                    .show();
+            return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        // 如果有弹窗或对话框，优先让其处理返回键
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            super.onBackPressed();
-            return;
-        }
-        long now = System.currentTimeMillis();
-        if (now - lastBackPressedTime < DOUBLE_BACK_EXIT_INTERVAL) {
-            super.onBackPressed(); // 退出App
-        } else {
-            lastBackPressedTime = now;
-            ToastHelper.showShort(this, R.string.toast_double_back_exit);
-        }
     }
 
     private void updateToolbarTitle() {
@@ -1085,7 +1091,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 将文本合成为音频文件并保存到指定URI
-     * 
+     *
      * @param text 要合成的文本
      * @param uri  保存音频的目标URI
      */
@@ -1160,7 +1166,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 根据选择的语言更新发音人列表
-     * 
+     *
      * @param locale         选择的语言
      * @param resetToDefault 是否重置为默认发音人
      */
@@ -1193,7 +1199,7 @@ public class MainActivity extends AppCompatActivity {
         // 重新创建适配器以更新默认发音人信息
         VoiceAdapter adapter = new VoiceAdapter(this, voiceList, currentLangDefaultVoice);
         spinnerVoice.setAdapter(adapter);
-        
+
         isVoiceSpinnerInit = true;
         if (resetToDefault && currentLangDefaultVoice != null) {
             spinnerVoice.setSelection(0); // 默认发音人现在总是在第一位
@@ -1226,9 +1232,7 @@ public class MainActivity extends AppCompatActivity {
         // 新增：显示当前选择的测试项
         if (tvSelectedTestCases != null) {
             if (TestManager.getInstance().isTestMode()) {
-                List<String> selected = TestManager.getInstance().getSelectedTestCases().stream().map(tc -> {
-                    return tc.name;
-                }).collect(java.util.stream.Collectors.toList());
+                List<String> selected = TestManager.getInstance().getSelectedTestCases().stream().map(tc -> tc.name).collect(java.util.stream.Collectors.toList());
                 if (selected.isEmpty()) {
                     tvSelectedTestCases.setText(getString(R.string.none));
                 } else {
@@ -1245,7 +1249,8 @@ public class MainActivity extends AppCompatActivity {
                     if (linearLayout.getChildCount() > 0) {
                         android.view.View titleView = linearLayout.getChildAt(0);
                         if (titleView instanceof android.widget.TextView) {
-                            ((android.widget.TextView) titleView).setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+                            ((android.widget.TextView) titleView)
+                                    .setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
                         }
                     }
                 }
@@ -1262,7 +1267,8 @@ public class MainActivity extends AppCompatActivity {
                     if (linearLayout.getChildCount() > 0) {
                         android.view.View titleView = linearLayout.getChildAt(0);
                         if (titleView instanceof android.widget.TextView) {
-                            ((android.widget.TextView) titleView).setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+                            ((android.widget.TextView) titleView)
+                                    .setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
                         }
                     }
                 }
@@ -1299,7 +1305,7 @@ public class MainActivity extends AppCompatActivity {
         // 自动生成默认文件名
         String defaultName = "tts_"
                 + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new java.util.Date());
-        
+
         DialogHelper.showInputDialog(this, R.string.input_audio_filename, defaultName,
                 name -> {
                     if (name.isEmpty())
@@ -1345,7 +1351,7 @@ public class MainActivity extends AppCompatActivity {
             if (newFile == null)
                 return false;
             try (OutputStream os = getContentResolver().openOutputStream(newFile.getUri());
-                    FileInputStream fis = new FileInputStream(tempAudioFile)) {
+                 FileInputStream fis = new FileInputStream(tempAudioFile)) {
                 if (os == null) {
                     return false;
                 }
@@ -1447,76 +1453,47 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setupAllButtonsAutoTextSize() {
         // 主功能按钮
-        if (btnSpeak != null) ButtonTextHelper.setupAutoTextSize(btnSpeak);
-        if (btnStop != null) ButtonTextHelper.setupAutoTextSize(btnStop);
-        if (btnSaveAudio != null) ButtonTextHelper.setupAutoTextSize(btnSaveAudio);
-        if (btnCancelSave != null) ButtonTextHelper.setupAutoTextSize(btnCancelSave);
+        if (btnSpeak != null)
+            ButtonTextHelper.setupAutoTextSize(btnSpeak);
+        if (btnStop != null)
+            ButtonTextHelper.setupAutoTextSize(btnStop);
+        if (btnSaveAudio != null)
+            ButtonTextHelper.setupAutoTextSize(btnSaveAudio);
+        if (btnCancelSave != null)
+            ButtonTextHelper.setupAutoTextSize(btnCancelSave);
 
         // 设置按钮
         Button btnSetSaveDir = findViewById(R.id.btnSetSaveDir);
-        if (btnSetSaveDir != null) ButtonTextHelper.setupAutoTextSize(btnSetSaveDir);
-        if (btnSpeedReset != null) ButtonTextHelper.setupAutoTextSize(btnSpeedReset);
-        if (btnPitchReset != null) ButtonTextHelper.setupAutoTextSize(btnPitchReset);
-        if (btnLangVoiceReset != null) ButtonTextHelper.setupAutoTextSize(btnLangVoiceReset);
+        if (btnSetSaveDir != null)
+            ButtonTextHelper.setupAutoTextSize(btnSetSaveDir);
+        if (btnSpeedReset != null)
+            ButtonTextHelper.setupAutoTextSize(btnSpeedReset);
+        if (btnPitchReset != null)
+            ButtonTextHelper.setupAutoTextSize(btnPitchReset);
+        if (btnLangVoiceReset != null)
+            ButtonTextHelper.setupAutoTextSize(btnLangVoiceReset);
 
         // 编辑器按钮
         Button btnOpenEditor = findViewById(R.id.btnOpenEditor);
-        if (btnOpenEditor != null) ButtonTextHelper.setupAutoTextSize(btnOpenEditor);
+        if (btnOpenEditor != null)
+            ButtonTextHelper.setupAutoTextSize(btnOpenEditor);
     }
-    
 
-    
-
-    
-    /**
-     * 将发音人质量转换为可读字符串
-     */
-    private String getVoiceQualityString(int quality) {
-        switch (quality) {
-            case Voice.QUALITY_HIGH:
-                return "高质量 (QUALITY_HIGH)";
-            case Voice.QUALITY_LOW:
-                return "低质量 (QUALITY_LOW)";
-            case Voice.QUALITY_NORMAL:
-                return "正常质量 (QUALITY_NORMAL)";
-            default:
-                return "未知质量 (" + quality + ")";
-        }
-    }
-    
-    /**
-     * 将发音人延迟转换为可读字符串
-     */
-    private String getVoiceLatencyString(int latency) {
-        switch (latency) {
-            case Voice.LATENCY_HIGH:
-                return "高延迟 (LATENCY_HIGH)";
-            case Voice.LATENCY_LOW:
-                return "低延迟 (LATENCY_LOW)";
-            case Voice.LATENCY_NORMAL:
-                return "正常延迟 (LATENCY_NORMAL)";
-            case Voice.LATENCY_VERY_HIGH:
-                return "很高延迟 (LATENCY_VERY_HIGH)";
-            case Voice.LATENCY_VERY_LOW:
-                return "很低延迟 (LATENCY_VERY_LOW)";
-            default:
-                return "未知延迟 (" + latency + ")";
-        }
-    }
-    
     /**
      * 设置所有信息图标
      */
     private void setupInfoIcons() {
         // 使用批量设置方法，更简洁高效
         InfoIconHelper.setupInfoIcons(this,
-            new Object[]{findViewById(R.id.ivLangSupportInfo), R.string.tts_support_info_title, R.string.tts_support_info_content},
-            new Object[]{findViewById(R.id.ivVoiceSupportInfo), R.string.voice_info_title, R.string.voice_info_content},
-            new Object[]{findViewById(R.id.ivSpeedInfo), R.string.speed_info_title, R.string.speed_info_content},
-            new Object[]{findViewById(R.id.ivPitchInfo), R.string.pitch_info_title, R.string.pitch_info_content}
-        );
+                new Object[]{findViewById(R.id.ivLangSupportInfo), R.string.tts_support_info_title,
+                        R.string.tts_support_info_content},
+                new Object[]{findViewById(R.id.ivVoiceSupportInfo), R.string.voice_info_title,
+                        R.string.voice_info_content},
+                new Object[]{findViewById(R.id.ivSpeedInfo), R.string.speed_info_title, R.string.speed_info_content},
+                new Object[]{findViewById(R.id.ivPitchInfo), R.string.pitch_info_title,
+                        R.string.pitch_info_content});
     }
-    
+
     /**
      * 设置信息图标的动态位置
      */
@@ -1527,36 +1504,32 @@ public class MainActivity extends AppCompatActivity {
             ImageView ivLangInfo = findViewById(R.id.ivLangSupportInfo);
             TextView tvLangLabel = ViewHelper.findTextViewByText(this, getString(R.string.label_language));
             if (ivLangInfo != null && tvLangLabel != null) {
-                InfoIconPositionHelper.setIconPosition(this, ivLangInfo, tvLangLabel);
+                InfoIconPositionHelper.setIconPosition(ivLangInfo, tvLangLabel);
             }
-            
+
             // 设置发音人信息图标位置
             ImageView ivVoiceInfo = findViewById(R.id.ivVoiceSupportInfo);
             TextView tvVoiceLabel = ViewHelper.findTextViewByText(this, getString(R.string.label_voice));
             if (ivVoiceInfo != null && tvVoiceLabel != null) {
-                InfoIconPositionHelper.setIconPosition(this, ivVoiceInfo, tvVoiceLabel);
+                InfoIconPositionHelper.setIconPosition(ivVoiceInfo, tvVoiceLabel);
             }
-            
+
             // 设置语速信息图标位置
             ImageView ivSpeedInfo = findViewById(R.id.ivSpeedInfo);
             TextView tvSpeedLabel = ViewHelper.findTextViewByText(this, getString(R.string.label_speed));
             if (ivSpeedInfo != null && tvSpeedLabel != null) {
-                InfoIconPositionHelper.setIconPosition(this, ivSpeedInfo, tvSpeedLabel);
+                InfoIconPositionHelper.setIconPosition(ivSpeedInfo, tvSpeedLabel);
             }
-            
+
             // 设置音调信息图标位置
             ImageView ivPitchInfo = findViewById(R.id.ivPitchInfo);
             TextView tvPitchLabel = ViewHelper.findTextViewByText(this, getString(R.string.label_pitch));
             if (ivPitchInfo != null && tvPitchLabel != null) {
-                InfoIconPositionHelper.setIconPosition(this, ivPitchInfo, tvPitchLabel);
+                InfoIconPositionHelper.setIconPosition(ivPitchInfo, tvPitchLabel);
             }
         });
     }
 
-    /**
-     * 显示语言选择对话框
-     * Show language selection dialog
-     */
     /**
      * 初始化测试用例的国际化文本
      */
@@ -1577,8 +1550,9 @@ public class MainActivity extends AppCompatActivity {
      * 测试语速设置失败功能
      */
     private void testSpeedSettingFailure() {
-        if (!TestManager.getInstance().isTestMode()) return;
-        
+        if (!TestManager.getInstance().isTestMode())
+            return;
+
         // 检查是否选中了相关测试项
         boolean hasSpeedPitchTest = false;
         for (TestCase tc : TestManager.getInstance().getSelectedTestCases()) {
@@ -1587,13 +1561,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-        
-        if (!hasSpeedPitchTest) return;
-        
+
+        if (!hasSpeedPitchTest)
+            return;
+
         // 模拟语速设置失败
         tvSpeedSetResult.setText(R.string.message_speed_set_failed);
         DelayedTaskHelper.clearTextDelayed(tvSpeedSetResult, Constants.TOAST_MESSAGE_DELAY);
-        
+
         // 记录测试日志
         Log.i("TTS_TEST", "=== 语速设置失败测试 ===");
         Log.i("TTS_TEST", "模拟语速设置失败，显示警告文字");
@@ -1605,8 +1580,9 @@ public class MainActivity extends AppCompatActivity {
      * 测试音调设置失败功能
      */
     private void testPitchSettingFailure() {
-        if (!TestManager.getInstance().isTestMode()) return;
-        
+        if (!TestManager.getInstance().isTestMode())
+            return;
+
         // 检查是否选中了相关测试项
         boolean hasSpeedPitchTest = false;
         for (TestCase tc : TestManager.getInstance().getSelectedTestCases()) {
@@ -1615,13 +1591,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-        
-        if (!hasSpeedPitchTest) return;
-        
+
+        if (!hasSpeedPitchTest)
+            return;
+
         // 模拟音调设置失败
         tvPitchSetResult.setText(R.string.message_pitch_set_failed);
         DelayedTaskHelper.clearTextDelayed(tvPitchSetResult, Constants.TOAST_MESSAGE_DELAY);
-        
+
         // 记录测试日志
         Log.i("TTS_TEST", "=== 音调设置失败测试 ===");
         Log.i("TTS_TEST", "模拟音调设置失败，显示警告文字");
@@ -1634,16 +1611,16 @@ public class MainActivity extends AppCompatActivity {
         Locale systemLocale = LocaleHelper.getSystemLocale();
         boolean isSystemChinese = LocaleHelper.isChinese(systemLocale);
         boolean isSystemEnglish = LocaleHelper.isEnglish(systemLocale);
-        
+
         String[] languages = {
-            getString(R.string.language_follow_system),
-            getString(R.string.language_chinese),
-            getString(R.string.language_english)
+                getString(R.string.language_follow_system),
+                getString(R.string.language_chinese),
+                getString(R.string.language_english)
         };
-        
+
         // 创建可选择的项目列表
         boolean[] enabledItems = {true, true, true};
-        
+
         // 如果系统语言是中文，禁用中文选项
         if (isSystemChinese) {
             enabledItems[1] = false;
@@ -1652,58 +1629,62 @@ public class MainActivity extends AppCompatActivity {
         if (isSystemEnglish) {
             enabledItems[2] = false;
         }
-        
+
         int currentMode = LocaleHelper.getLanguageMode(this);
-        int checkedItem = currentMode == LocaleHelper.MODE_FOLLOW_SYSTEM ? 0 : 
-                         (LocaleHelper.isChinese(LocaleHelper.getCurrentLocale(this)) ? 1 : 2);
-        
+        int checkedItem = currentMode == LocaleHelper.MODE_FOLLOW_SYSTEM ? 0
+                : (LocaleHelper.isChinese(LocaleHelper.getCurrentLocale(this)) ? 1 : 2);
+
         // 如果当前选中的项目被禁用，改为选择"跟随系统"
         if (!enabledItems[checkedItem]) {
             checkedItem = 0;
         }
-        
+
         // 创建自定义对话框布局
-        android.view.View dialogView = getLayoutInflater().inflate(R.layout.language_selection_dialog, null);
+        android.view.View dialogView = getLayoutInflater().inflate(R.layout.language_selection_dialog,
+                findViewById(android.R.id.content), false);
         android.widget.ImageView ivLanguageInfo = dialogView.findViewById(R.id.ivLanguageInfo);
         android.widget.TextView tvLanguageDialogTitle = dialogView.findViewById(R.id.tvLanguageDialogTitle);
-        
+
         // 设置信息图标点击事件和内容（用InfoIconHelper）
         com.citadawn.speechapp.util.InfoIconHelper.setupInfoIcons(this,
-            new Object[]{ivLanguageInfo, R.string.language_selection_info_title, R.string.language_selection_info_message}
-        );
+                new Object[]{ivLanguageInfo, R.string.language_selection_info_title,
+                        R.string.language_selection_info_message});
         // 动态定位信息图标（用InfoIconPositionHelper）
         dialogView.post(() -> {
             if (ivLanguageInfo != null && tvLanguageDialogTitle != null) {
-                com.citadawn.speechapp.util.InfoIconPositionHelper.setIconPosition(this, ivLanguageInfo, tvLanguageDialogTitle);
+                com.citadawn.speechapp.util.InfoIconPositionHelper.setIconPosition(ivLanguageInfo,
+                        tvLanguageDialogTitle);
             }
         });
-        
+
         // 创建自定义适配器
         android.widget.BaseAdapter adapter = new android.widget.BaseAdapter() {
             @Override
             public int getCount() {
                 return languages.length;
             }
-            
+
             @Override
             public Object getItem(int position) {
                 return languages[position];
             }
-            
+
             @Override
             public long getItemId(int position) {
                 return position;
             }
-            
+
             @Override
-            public android.view.View getView(int position, android.view.View convertView, android.view.ViewGroup parent) {
+            public android.view.View getView(int position, android.view.View convertView,
+                                             android.view.ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_single_choice, parent, false);
+                    convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_single_choice, parent,
+                            false);
                 }
-                
+
                 android.widget.TextView textView = convertView.findViewById(android.R.id.text1);
                 textView.setText(languages[position]);
-                
+
                 // 设置禁用项目的样式
                 if (!enabledItems[position]) {
                     textView.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
@@ -1712,16 +1693,16 @@ public class MainActivity extends AppCompatActivity {
                     textView.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.black));
                     textView.setEnabled(true);
                 }
-                
+
                 return convertView;
             }
-            
+
             @Override
             public boolean isEnabled(int position) {
                 return enabledItems[position];
             }
         };
-        
+
         new AlertDialog.Builder(this)
                 .setCustomTitle(dialogView)
                 .setSingleChoiceItems(adapter, checkedItem, (dialog, which) -> {
@@ -1729,10 +1710,10 @@ public class MainActivity extends AppCompatActivity {
                     if (!enabledItems[which]) {
                         return;
                     }
-                    
+
                     int newMode;
                     Locale newLocale;
-                    
+
                     switch (which) {
                         case 0: // 跟随系统 Follow system
                             newMode = LocaleHelper.MODE_FOLLOW_SYSTEM;
@@ -1749,17 +1730,17 @@ public class MainActivity extends AppCompatActivity {
                         default:
                             return;
                     }
-                    
+
                     // 检查是否需要切换语言 Check if language needs to be changed
                     Locale currentLocale = LocaleHelper.getCurrentLocale(this);
                     if (!newLocale.equals(currentLocale)) {
                         LocaleHelper.setLanguageMode(this, newMode, newLocale);
                         ToastHelper.showShort(this, R.string.toast_language_changed);
-                        
+
                         // 重新创建Activity以应用新语言 Recreate activity to apply new language
                         recreate();
                     }
-                    
+
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.dialog_button_cancel, null)
@@ -1768,21 +1749,22 @@ public class MainActivity extends AppCompatActivity {
     // endregion
 
     // 新增logTtsVoices方法
+
     /**
      * 输出TTS引擎所有语言和发音人信息到logcat，标注默认项
      */
     private void logTtsVoices() {
-        if (tts == null) return;
+        if (tts == null)
+            return;
         try {
-            Locale defaultLang = tts.getDefaultVoice() != null ? tts.getDefaultVoice().getLocale() : tts.getDefaultLanguage();
+            Locale defaultLang = tts.getDefaultVoice() != null ? tts.getDefaultVoice().getLocale() : Locale.getDefault();
             Voice defaultVoice = tts.getDefaultVoice();
             Voice currentVoice = tts.getVoice();
             Set<Voice> voices = tts.getVoices();
             Map<Locale, List<Voice>> localeVoices = new HashMap<>();
             for (Voice v : voices) {
                 Locale l = v.getLocale();
-                if (!localeVoices.containsKey(l)) localeVoices.put(l, new ArrayList<>());
-                localeVoices.get(l).add(v);
+                localeVoices.computeIfAbsent(l, k -> new ArrayList<>()).add(v);
             }
             Log.i("TTS_TEST", "==== TTS Engine Supported Languages and Voices ====");
             Log.i("TTS_TEST", "Default Language: " + (defaultLang != null ? defaultLang : "null"));
@@ -1792,16 +1774,21 @@ public class MainActivity extends AppCompatActivity {
             for (Locale locale : localeVoices.keySet()) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("[Language] ").append(locale);
-                if (locale.equals(defaultLang)) sb.append("  <== DEFAULT");
+                if (locale.equals(defaultLang))
+                    sb.append("  <== DEFAULT");
                 Log.i("TTS_TEST", sb.toString());
                 List<Voice> vlist = localeVoices.get(locale);
                 Voice langDefaultVoice = languageDefaultVoices.get(locale);
-                for (Voice v : vlist) {
-                    StringBuilder vinfo = new StringBuilder();
-                    vinfo.append("    - Voice: ").append(v.getName());
-                    if (defaultVoice != null && v.getName().equals(defaultVoice.getName())) vinfo.append("  <== DEFAULT");
-                    if (langDefaultVoice != null && v.getName().equals(langDefaultVoice.getName())) vinfo.append("  <== DEFAULT for this language");
-                    Log.i("TTS_TEST", vinfo.toString());
+                if (vlist != null) {
+                    for (Voice v : vlist) {
+                        StringBuilder vinfo = new StringBuilder();
+                        vinfo.append("    - Voice: ").append(v.getName());
+                        if (defaultVoice != null && v.getName().equals(defaultVoice.getName()))
+                            vinfo.append("  <== DEFAULT");
+                        if (langDefaultVoice != null && v.getName().equals(langDefaultVoice.getName()))
+                            vinfo.append("  <== DEFAULT for this language");
+                        Log.i("TTS_TEST", vinfo.toString());
+                    }
                 }
             }
             Log.i("TTS_TEST", "===============================================");

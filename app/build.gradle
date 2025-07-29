@@ -26,6 +26,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    
+    // 禁用语言分割，避免Play Core警告
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
 }
 
 dependencies {

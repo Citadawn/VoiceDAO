@@ -1,7 +1,5 @@
 package com.citadawn.speechapp.ui.test;
 
-import com.citadawn.speechapp.R;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.citadawn.speechapp.R;
+
+import java.util.Arrays;
 import java.util.List;
-import android.content.Context;
 
 public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHolder> {
     private final List<TestCase> testCases;
@@ -31,18 +31,14 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
 
     // 新增：外部调用收起全部描述
     public void collapseAllDesc() {
-        for (int i = 0; i < descExpanded.length; i++) {
-            descExpanded[i] = false;
-        }
-        notifyDataSetChanged();
+        Arrays.fill(descExpanded, false);
+        notifyItemRangeChanged(0, descExpanded.length);
     }
 
     // 新增：外部调用展开全部描述
     public void expandAllDesc() {
-        for (int i = 0; i < descExpanded.length; i++) {
-            descExpanded[i] = true;
-        }
-        notifyDataSetChanged();
+        Arrays.fill(descExpanded, true);
+        notifyItemRangeChanged(0, descExpanded.length);
     }
 
     public void setOnSelectionChangedListener(OnSelectionChangedListener listener) {
@@ -59,7 +55,7 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TestCase testCase = testCases.get(position);
-        Context context = holder.itemView.getContext();
+        holder.itemView.getContext();
         String name, desc;
         name = testCase.name;
         desc = testCase.description;
@@ -89,10 +85,11 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
         return testCases.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox cbTestCase;
-        TextView tvTestCaseDesc;
-        TextView btnToggleDesc;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        final CheckBox cbTestCase;
+        final TextView tvTestCaseDesc;
+        final TextView btnToggleDesc;
+
         ViewHolder(View itemView) {
             super(itemView);
             cbTestCase = itemView.findViewById(R.id.cbTestCase);

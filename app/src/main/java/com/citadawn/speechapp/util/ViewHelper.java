@@ -27,23 +27,7 @@ public class ViewHelper {
         }
         return null;
     }
-    
-    /**
-     * 根据文本内容查找TextView（重载方法，使用View作为根视图）
-     * 
-     * @param rootView 根视图
-     * @param text 要查找的文本内容
-     * @return 找到的TextView，如果没找到返回null
-     */
-    public static TextView findTextViewByText(View rootView, String text) {
-        if (rootView == null || text == null) return null;
-        
-        if (rootView instanceof ViewGroup) {
-            return findTextViewInViewGroup((ViewGroup) rootView, text);
-        }
-        return null;
-    }
-    
+
     /**
      * 在ViewGroup中递归查找指定文本的TextView
      * 

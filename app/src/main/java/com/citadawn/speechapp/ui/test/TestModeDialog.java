@@ -3,22 +3,20 @@ package com.citadawn.speechapp.ui.test;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.appcompat.app.AlertDialog;
-import com.citadawn.speechapp.util.InfoIconPositionHelper;
-import com.citadawn.speechapp.util.ViewHelper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.citadawn.speechapp.R;
+import com.citadawn.speechapp.util.InfoIconPositionHelper;
+import com.citadawn.speechapp.util.ViewHelper;
 
 import java.util.List;
 
@@ -41,31 +39,30 @@ public class TestModeDialog extends Dialog {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.test_mode_dialog, null);
-        setContentView(view);
+        setContentView(R.layout.test_mode_dialog);
 
-        RecyclerView rvTestCases = view.findViewById(R.id.rvTestCases);
-        Button btnCancel = view.findViewById(R.id.btnCancel);
-        btnStartTest = view.findViewById(R.id.btnStartTest);
-        TextView btnExpandAllDesc = view.findViewById(R.id.btnExpandAllDesc);
-        TextView btnCollapseAllDesc = view.findViewById(R.id.btnCollapseAllDesc);
-        
+        RecyclerView rvTestCases = findViewById(R.id.rvTestCases);
+        Button btnCancel = findViewById(R.id.btnCancel);
+        btnStartTest = findViewById(R.id.btnStartTest);
+        TextView btnExpandAllDesc = findViewById(R.id.btnExpandAllDesc);
+        TextView btnCollapseAllDesc = findViewById(R.id.btnCollapseAllDesc);
+
         btnExpandAllDesc.setOnClickListener(v -> {
             if (adapter != null) {
                 adapter.expandAllDesc();
             }
         });
-        
+
         btnCollapseAllDesc.setOnClickListener(v -> {
             if (adapter != null) {
                 adapter.collapseAllDesc();
             }
         });
-        
+
         // 设置信息图标点击事件
-        ImageView ivTestModeInfo = view.findViewById(R.id.ivTestModeInfo);
+        ImageView ivTestModeInfo = findViewById(R.id.ivTestModeInfo);
         ivTestModeInfo.setOnClickListener(v -> showTestModeInfo());
-        
+
         // 使用统一工具类设置信息图标位置
         setIconPosition(ivTestModeInfo);
 
@@ -75,7 +72,7 @@ public class TestModeDialog extends Dialog {
 
         // 设置选择状态监听
         adapter.setOnSelectionChangedListener(this::updateButtonState);
-        
+
         // 初始化按钮状态
         updateButtonState();
 
@@ -93,7 +90,7 @@ public class TestModeDialog extends Dialog {
      */
     private void updateButtonState() {
         if (btnStartTest == null) return;
-        
+
         // 统计选中的测试项数量
         int selectedCount = 0;
         for (TestCase testCase : testCases) {
@@ -101,11 +98,11 @@ public class TestModeDialog extends Dialog {
                 selectedCount++;
             }
         }
-        
+
         // 根据选择状态启用/禁用按钮
         boolean hasSelected = selectedCount > 0;
         btnStartTest.setEnabled(hasSelected);
-        
+
         // 更新按钮文本，显示选择数量
         String buttonText;
         if (hasSelected) {
@@ -128,21 +125,21 @@ public class TestModeDialog extends Dialog {
             TextView textView = getTextViewFromLayout();
             if (textView != null) {
                 // 使用统一工具类设置位置
-                InfoIconPositionHelper.setIconPosition(getContext(), imageView, textView);
+                InfoIconPositionHelper.setIconPosition(imageView, textView);
             }
         });
     }
-    
-                /**
-             * 从布局中获取TextView
-             */
-            private TextView getTextViewFromLayout() {
-                // 获取根视图
-                View rootView = getWindow().getDecorView();
-                String targetText = getContext().getString(R.string.test_mode_dialog_title);
-                return ViewHelper.findTextViewByTargetText(rootView, targetText);
-            }
 
+    /**
+     * 从布局中获取TextView
+     */
+    private TextView getTextViewFromLayout() {
+        // 获取根视图
+        if (getWindow() == null) return null;
+        View rootView = getWindow().getDecorView();
+        String targetText = getContext().getString(R.string.test_mode_dialog_title);
+        return ViewHelper.findTextViewByTargetText(rootView, targetText);
+    }
 
 
     /**

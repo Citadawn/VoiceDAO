@@ -26,21 +26,27 @@
 
 9. 句柄改一下
 
-10. 文本输入框的背景渐变色和主题色不搭
+10. 看看颜色代码是否需要统一放到colors.xml文件中。
 
-11. 看看颜色代码是否需要统一放到colors.xml文件中。
+11. 在状态信息中加一个当前 TTS 引擎信息
 
-12. 在状态信息中加一个当前 TTS 引擎信息
+12. 获取语言、发音人的下拉列表项的方法使用能适配界面语言Locale的方法
 
-13. 获取语言、发音人的下拉列表项的方法使用能适配界面语言Locale的方法
+13. 更多有个“关于”没掉了
 
-14. 更多有个“关于”没掉了
+14. 是否需要为所有的颜色、字符串设置统一的资源文件colors.xml/strings.xml，比如：`android:textColor="#FF5722"`
 
-15. 是否需要为所有的颜色、字符串设置统一的资源文件colors.xml/strings.xml，比如：`android:textColor="#FF5722"`
+15. cursor：CONTRIBUTING.md 文件中未提到的按Android开发标准执行
 
-16. cursor：CONTRIBUTING.md 文件中未提到的按Android开发标准执行
+16. 语言列表根据语言设置
 
-17. 清理strings.xml、colors.xml、dimens.xml文件中冗余的字符串
+17. 重构：
+    
+    1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
+       
+       格式化ctrl+shift+f
+    
+    2. 资源文件：命名是否是否贴切、删除多余资源文件
 
 ## 问题
 
@@ -74,3 +80,4 @@
 
 1. 让 Cursor 在重构代码后自动验证编译并修正错误：`请重构代码，并在重构完成后自动验证所有修改后的代码是否能正常编译，如果编译失败请自动修正错误`
 2. 如果希望在每次修改代码后自动验证编译并修正错误，可以增加这样一句话：`确保编译通过`。或者在新chat开头加上说明，chat能记住的
+3. 以后修改代码的操作自动帮我执行，另外编译命令不要加./，还有如果只修改了MarkDown文件就不需要验证编译了

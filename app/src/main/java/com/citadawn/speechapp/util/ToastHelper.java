@@ -29,5 +29,14 @@ public class ToastHelper {
         Toast.makeText(context, context.getString(messageResId, formatArgs), Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * 显示短时间 Toast 消息（字符串）
+     * @param context 上下文
+     * @param message 消息文本
+     */
+    public static void showShort(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
     // endregion
 } 

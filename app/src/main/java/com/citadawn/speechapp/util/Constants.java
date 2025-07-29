@@ -5,11 +5,7 @@ package com.citadawn.speechapp.util;
  * 统一管理项目中的魔法数字和常量值
  */
 public class Constants {
-    // region 文本长度相关常量
 
-    // 已移除 MAX_TEXT_LENGTH 常量，改用 TextLengthHelper.getMaxTextLength() 动态获取
-
-    // endregion
 
     // region 时间相关常量
 

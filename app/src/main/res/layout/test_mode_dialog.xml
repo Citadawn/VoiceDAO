@@ -1,104 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="@dimen/dp_24"
-    android:gravity="center_horizontal">
+    android:padding="@dimen/dp_24">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="12dp"
         android:gravity="bottom"
-        android:layout_marginBottom="12dp">
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/test_mode_dialog_title"
+            android:textColor="@color/main_dark"
             android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/main_dark" />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivTestModeInfo"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="4dp"
-            android:src="@drawable/ic_info_white_20dp"
-            android:contentDescription="@string/test_mode_info_title"
             android:clickable="true"
-            android:focusable="true" />
+            android:contentDescription="@string/test_mode_info_title"
+            android:focusable="true"
+            android:src="@drawable/ic_info_white_20dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="end"
         android:layout_marginTop="8dp"
         android:background="@drawable/bg_test_controls"
-        android:padding="8dp"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/btnExpandAllDesc"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:text="@string/icon_expand"
-            android:textSize="12sp"
-            android:textColor="@color/main_dark"
-            android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:focusable="true"
             android:contentDescription="@string/test_mode_btn_expand_all_desc"
-            android:tooltipText="@string/test_mode_btn_expand_all_desc_tooltip" />
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/icon_expand"
+            android:textColor="@color/main_dark"
+            android:textSize="12sp"
+            android:tooltipText="@string/test_mode_btn_expand_all_desc_tooltip"
+            tools:targetApi="26" />
 
         <TextView
             android:id="@+id/btnCollapseAllDesc"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:text="@string/icon_collapse"
-            android:textSize="12sp"
-            android:textColor="@color/main_dark"
-            android:gravity="center"
             android:layout_marginStart="8dp"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:focusable="true"
             android:contentDescription="@string/test_mode_btn_collapse_all_desc"
-            android:tooltipText="@string/test_mode_btn_collapse_all_desc_tooltip" />
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/icon_collapse"
+            android:textColor="@color/main_dark"
+            android:textSize="12sp"
+            android:tooltipText="@string/test_mode_btn_collapse_all_desc_tooltip"
+            tools:targetApi="26" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTestCases"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scrollbars="vertical"
         android:layout_marginTop="8dp"
         android:background="@drawable/bg_test_list"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:scrollbars="vertical" />
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="bottom"
+        android:orientation="horizontal"
         android:paddingTop="16dp">
 
         <Button
             android:id="@+id/btnCancel"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/test_mode_btn_cancel" />
 
         <Button
             android:id="@+id/btnStartTest"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/test_mode_btn_start"
-            android:layout_marginStart="16dp" />
+            android:layout_marginStart="16dp"
+            android:text="@string/test_mode_btn_start" />
     </LinearLayout>
 </LinearLayout> 

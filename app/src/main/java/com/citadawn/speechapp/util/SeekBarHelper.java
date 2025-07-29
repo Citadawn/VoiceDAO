@@ -11,20 +11,21 @@ public class SeekBarHelper {
 
     /**
      * 设置 SeekBar 监听器（简化版本）
-     * @param seekBar 要设置监听器的 SeekBar
-     * @param onProgressChanged 进度变化回调
+     *
+     * @param seekBar              要设置监听器的 SeekBar
+     * @param onProgressChanged    进度变化回调
      * @param onStartTrackingTouch 开始触摸回调
-     * @param onStopTrackingTouch 停止触摸回调
+     * @param onStopTrackingTouch  停止触摸回调
      */
-    public static void setSeekBarListener(SeekBar seekBar, 
-                                        OnProgressChangedListener onProgressChanged,
-                                        OnTrackingTouchListener onStartTrackingTouch,
-                                        OnTrackingTouchListener onStopTrackingTouch) {
+    public static void setSeekBarListener(SeekBar seekBar,
+                                          OnProgressChangedListener onProgressChanged,
+                                          OnTrackingTouchListener onStartTrackingTouch,
+                                          OnTrackingTouchListener onStopTrackingTouch) {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (onProgressChanged != null) {
-                    onProgressChanged.onProgressChanged(seekBar, progress, fromUser);
+                    onProgressChanged.onProgressChanged(progress);
                 }
             }
 
@@ -46,7 +47,8 @@ public class SeekBarHelper {
 
     /**
      * 设置 SeekBar 监听器（仅进度变化）
-     * @param seekBar 要设置监听器的 SeekBar
+     *
+     * @param seekBar           要设置监听器的 SeekBar
      * @param onProgressChanged 进度变化回调
      */
     public static void setSeekBarListener(SeekBar seekBar, OnProgressChangedListener onProgressChanged) {
@@ -57,7 +59,7 @@ public class SeekBarHelper {
      * 进度变化监听器接口
      */
     public interface OnProgressChangedListener {
-        void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser);
+        void onProgressChanged(int progress);
     }
 
     /**

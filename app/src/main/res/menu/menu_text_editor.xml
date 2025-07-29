@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_editor_info"
+        android:icon="@drawable/ic_info_white_20dp"
+        android:title="@string/dialog_title_editor_info"
+        android:contentDescription="@string/dialog_title_editor_info"
+        app:showAsAction="always" />
+
+</menu> 

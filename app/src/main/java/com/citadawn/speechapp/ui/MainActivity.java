@@ -151,7 +151,8 @@ class LanguageAdapter extends BaseAdapter {
         Locale locale = locales.get(position);
         TextView tv = view.findViewById(R.id.tvLanguageName);
         View bar = view.findViewById(R.id.viewSupportBar);
-        String name = locale.getDisplayName();
+        // 根据应用界面语言获取显示名称，而不是系统语言
+        String name = locale.getDisplayName(LocaleHelper.getCurrentLocale(context));
         if (locale.equals(defaultLocale)) {
             name += context.getString(R.string.default_value);
         }

@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -399,11 +400,64 @@ public class MainActivity extends AppCompatActivity {
 
         editText = findViewById(R.id.editText);
         View rootView = findViewById(R.id.main);
-        // 点击空白处收起键盘并让EditText失去焦点
+        androidx.core.widget.NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
+
+        // 设置点击空白处收起键盘并让EditText失去焦点
         rootView.setOnClickListener(v -> {
-            editText.clearFocus();
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            if (editText.hasFocus()) {
+                editText.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            }
+        });
+
+        // 添加触摸监听器到NestedScrollView，检测滑动时让输入框失去焦点
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            private float startY = 0;
+            private float startX = 0;
+            private static final float SCROLL_THRESHOLD = 15; // 滑动阈值，单位像素
+            private boolean isScrolling = false;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
+                        startX = event.getX();
+                        isScrolling = false;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float currentY = event.getY();
+                        float currentX = event.getX();
+                        float deltaY = Math.abs(currentY - startY);
+                        float deltaX = Math.abs(currentX - startX);
+
+                        // 如果滑动距离超过阈值，标记为滑动状态
+                        if (deltaY > SCROLL_THRESHOLD || deltaX > SCROLL_THRESHOLD) {
+                            isScrolling = true;
+                            // 如果输入框有焦点，让输入框失去焦点
+                            if (editText.hasFocus()) {
+                                editText.clearFocus();
+                                InputMethodManager imm = (InputMethodManager) getSystemService(
+                                        Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        // 如果不是滑动，则作为点击处理
+                        if (!isScrolling) {
+                            if (editText.hasFocus()) {
+                                editText.clearFocus();
+                                InputMethodManager imm = (InputMethodManager) getSystemService(
+                                        Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                            }
+                        }
+                        break;
+                }
+                return false; // 不消费触摸事件，让其他控件也能响应
+            }
         });
         btnSpeak = findViewById(R.id.btnSpeak);
         seekBarSpeed = findViewById(R.id.seekBarSpeed);
@@ -1232,7 +1286,8 @@ public class MainActivity extends AppCompatActivity {
         // 新增：显示当前选择的测试项
         if (tvSelectedTestCases != null) {
             if (TestManager.getInstance().isTestMode()) {
-                List<String> selected = TestManager.getInstance().getSelectedTestCases().stream().map(tc -> tc.name).collect(java.util.stream.Collectors.toList());
+                List<String> selected = TestManager.getInstance().getSelectedTestCases().stream().map(tc -> tc.name)
+                        .collect(java.util.stream.Collectors.toList());
                 if (selected.isEmpty()) {
                     tvSelectedTestCases.setText(getString(R.string.none));
                 } else {
@@ -1351,7 +1406,7 @@ public class MainActivity extends AppCompatActivity {
             if (newFile == null)
                 return false;
             try (OutputStream os = getContentResolver().openOutputStream(newFile.getUri());
-                 FileInputStream fis = new FileInputStream(tempAudioFile)) {
+                    FileInputStream fis = new FileInputStream(tempAudioFile)) {
                 if (os == null) {
                     return false;
                 }
@@ -1485,13 +1540,13 @@ public class MainActivity extends AppCompatActivity {
     private void setupInfoIcons() {
         // 使用批量设置方法，更简洁高效
         InfoIconHelper.setupInfoIcons(this,
-                new Object[]{findViewById(R.id.ivLangSupportInfo), R.string.tts_support_info_title,
-                        R.string.tts_support_info_content},
-                new Object[]{findViewById(R.id.ivVoiceSupportInfo), R.string.voice_info_title,
-                        R.string.voice_info_content},
-                new Object[]{findViewById(R.id.ivSpeedInfo), R.string.speed_info_title, R.string.speed_info_content},
-                new Object[]{findViewById(R.id.ivPitchInfo), R.string.pitch_info_title,
-                        R.string.pitch_info_content});
+                new Object[] { findViewById(R.id.ivLangSupportInfo), R.string.tts_support_info_title,
+                        R.string.tts_support_info_content },
+                new Object[] { findViewById(R.id.ivVoiceSupportInfo), R.string.voice_info_title,
+                        R.string.voice_info_content },
+                new Object[] { findViewById(R.id.ivSpeedInfo), R.string.speed_info_title, R.string.speed_info_content },
+                new Object[] { findViewById(R.id.ivPitchInfo), R.string.pitch_info_title,
+                        R.string.pitch_info_content });
     }
 
     /**
@@ -1619,7 +1674,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // 创建可选择的项目列表
-        boolean[] enabledItems = {true, true, true};
+        boolean[] enabledItems = { true, true, true };
 
         // 如果系统语言是中文，禁用中文选项
         if (isSystemChinese) {
@@ -1647,8 +1702,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 设置信息图标点击事件和内容（用InfoIconHelper）
         com.citadawn.speechapp.util.InfoIconHelper.setupInfoIcons(this,
-                new Object[]{ivLanguageInfo, R.string.language_selection_info_title,
-                        R.string.language_selection_info_message});
+                new Object[] { ivLanguageInfo, R.string.language_selection_info_title,
+                        R.string.language_selection_info_message });
         // 动态定位信息图标（用InfoIconPositionHelper）
         dialogView.post(() -> {
             if (ivLanguageInfo != null && tvLanguageDialogTitle != null) {
@@ -1676,7 +1731,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public android.view.View getView(int position, android.view.View convertView,
-                                             android.view.ViewGroup parent) {
+                    android.view.ViewGroup parent) {
                 if (convertView == null) {
                     convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_single_choice, parent,
                             false);
@@ -1757,7 +1812,8 @@ public class MainActivity extends AppCompatActivity {
         if (tts == null)
             return;
         try {
-            Locale defaultLang = tts.getDefaultVoice() != null ? tts.getDefaultVoice().getLocale() : Locale.getDefault();
+            Locale defaultLang = tts.getDefaultVoice() != null ? tts.getDefaultVoice().getLocale()
+                    : Locale.getDefault();
             Voice defaultVoice = tts.getDefaultVoice();
             Voice currentVoice = tts.getVoice();
             Set<Voice> voices = tts.getVoices();

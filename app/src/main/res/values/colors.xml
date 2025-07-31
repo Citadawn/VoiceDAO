@@ -6,6 +6,13 @@
     <color name="hint_gray">#9CA3AF</color>
     <color name="text_primary">#1F2937</color>
     <color name="focus_border">#272727</color>
+    <color name="text_selection_highlight">#E8F0F8</color>
+    
+    <!-- 主题色相关颜色 -->
+    <color name="theme_light_bg">#F8F9FA</color>
+    <color name="theme_lighter_bg">#F2F3F4</color>
+    <color name="theme_border">#E5E7EB</color>
+    
     <color name="tts_support_full">#4CAF50</color> <!-- 绿色 -->
     <color name="tts_support_variant">#2196F3</color> <!-- 蓝色 -->
     <color name="tts_support_partial">#9C27B0</color> <!-- 紫色 -->

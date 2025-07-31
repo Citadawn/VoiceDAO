@@ -19,6 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -47,8 +48,7 @@
                 android:hint="@string/hint_input_text"
                 android:textSize="16sp"
                 android:gravity="top|start"
-                android:minLines="4"
-                android:maxLines="12"
+                android:lines="3"
                 android:inputType="textMultiLine|textCapSentences"
                 android:windowSoftInputMode="stateHidden"
                 android:autofillHints=""
@@ -58,16 +58,19 @@
                 android:background="@drawable/edittext_selector"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/hint_gray"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
                 android:textCursorDrawable="@drawable/cursor_main_dark"
                 android:textSelectHandleLeft="@drawable/handle_main_dark_left"
                 android:textSelectHandleRight="@drawable/handle_main_dark_right"
                 android:textSelectHandle="@drawable/handle_main_dark_center"
-                android:textColorHighlight="#1A272727"
-                android:elevation="2dp" />
+                android:textColorHighlight="@color/text_selection_highlight"
+                android:elevation="4dp"
+                android:importantForAutofill="no"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="true" />
 
             <LinearLayout
                 android:id="@+id/layoutEditButtons"

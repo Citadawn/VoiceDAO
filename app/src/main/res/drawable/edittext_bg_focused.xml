@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 阴影层 -->
+    <!-- 单层阴影 -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#33000000"/>
-            <corners android:radius="12dp"/>
-            <padding android:bottom="3dp" android:right="3dp"/>
+            <solid android:color="#15272727" />
+            <corners android:radius="16dp" />
+            <padding
+                android:bottom="3dp"
+                android:right="3dp" />
         </shape>
     </item>
-    
+
     <!-- 主背景层 -->
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#FFFFFF"
-                android:endColor="#F0F4F8"
-                android:angle="270"/>
-            <corners android:radius="12dp"/>
-            <stroke 
-                android:width="2dp" 
-                android:color="@color/focus_border"/>
+                android:angle="270"
+                android:centerColor="@color/theme_light_bg"
+                android:endColor="@color/theme_lighter_bg"
+                android:startColor="#FFFFFF" />
+            <corners android:radius="16dp" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/focus_border" />
         </shape>
     </item>
 </layer-list> 

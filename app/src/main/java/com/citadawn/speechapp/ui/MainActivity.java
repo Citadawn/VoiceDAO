@@ -1505,6 +1505,7 @@ public class MainActivity extends AppCompatActivity {
             String subPath = uriStr.substring(uriStr.indexOf("%3A") + 3);
             try {
                 // 解码URL编码的字符，特别是中文字符
+                // 使用字符串参数而非StandardCharsets.UTF_8以保持API 24兼容性
                 String decodedPath = java.net.URLDecoder.decode(subPath, "UTF-8");
                 return "/storage/emulated/0/" + decodedPath.replace("%2F", "/");
             } catch (Exception e) {

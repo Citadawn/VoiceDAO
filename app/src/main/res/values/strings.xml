@@ -103,6 +103,10 @@ It is recommended to organize your text content in this editor before returning 
     <string name="colon" tools:ignore="MissingTranslation">:</string>
     <string name="btn_copy_path" tools:ignore="MissingTranslation">Copy Path</string>
     <string name="toast_path_copied" tools:ignore="MissingTranslation">Path copied to clipboard</string>
+    <string name="label_tts_engine_info" tools:ignore="MissingTranslation">TTS Engine:</string>
+    <string name="tts_engine_unknown" tools:ignore="MissingTranslation">Unknown</string>
+    <string name="tts_engine_icon" tools:ignore="MissingTranslation">TTS Engine Icon</string>
+
     <string name="minus" tools:ignore="MissingTranslation">-</string>
     <string name="plus" tools:ignore="MissingTranslation">+</string>
     <string name="tts_idle" tools:ignore="MissingTranslation">Idle</string>

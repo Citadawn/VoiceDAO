@@ -84,6 +84,10 @@
     <string name="colon">：</string>
     <string name="btn_copy_path">复制路径</string>
     <string name="toast_path_copied">路径已复制到剪贴板</string>
+    <string name="label_tts_engine_info">TTS引擎：</string>
+    <string name="tts_engine_unknown">未知</string>
+    <string name="tts_engine_icon">TTS引擎图标</string>
+
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="tts_idle">空闲</string>

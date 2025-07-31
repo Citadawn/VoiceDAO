@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -46,6 +48,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.citadawn.speechapp.R;
 import com.citadawn.speechapp.ui.test.TestCase;
@@ -313,7 +316,8 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<Voice> voiceList = new ArrayList<>();
     private boolean isLangSpinnerInit = false;
     private boolean isVoiceSpinnerInit = false;
-    private TextView tvTtsEngineStatus, tvAudioSaveDir, tvTtsSpeakStatus, tvSelectedTestCases;
+    private TextView tvTtsEngineStatus, tvAudioSaveDir, tvTtsSpeakStatus, tvSelectedTestCases, tvTtsEngineInfo;
+    private ImageView ivTtsEngineIcon;
     private ImageButton btnCopySaveDir;
     private final Handler ttsStatusHandler = new Handler(Looper.getMainLooper());
     private static final String PREFS_NAME = Constants.PREFS_NAME;
@@ -469,6 +473,8 @@ public class MainActivity extends AppCompatActivity {
         tvAudioSaveDir = findViewById(R.id.tvAudioSaveDir);
         tvTtsSpeakStatus = findViewById(R.id.tvTtsSpeakStatus);
         tvSelectedTestCases = findViewById(R.id.tvSelectedTestCases);
+        tvTtsEngineInfo = findViewById(R.id.tvTtsEngineInfo);
+        ivTtsEngineIcon = findViewById(R.id.ivTtsEngineIcon);
         btnCopySaveDir = findViewById(R.id.btnCopySaveDir);
         btnStop = findViewById(R.id.btnStop);
         btnSaveAudio = findViewById(R.id.btnSaveAudio);
@@ -1287,6 +1293,8 @@ public class MainActivity extends AppCompatActivity {
             tvAudioSaveDir.setText(getString(R.string.not_set));
             btnCopySaveDir.setVisibility(View.GONE);
         }
+        // 当前TTS引擎信息
+        tvTtsEngineInfo.setText(getTtsEngineInfo());
         // 语音合成状态（此处只初始化，动态状态由其它逻辑控制）
         // tvTtsSpeakStatus.setText("空闲"); // 由其它逻辑动态设置
         // 新增：显示当前选择的测试项
@@ -1494,6 +1502,57 @@ public class MainActivity extends AppCompatActivity {
         } else {
             btnSpeak.setEnabled(isTtsReady);
             btnSaveAudio.setEnabled(isTtsReady);
+        }
+    }
+
+    /**
+     * 获取当前TTS引擎信息并设置图标（支持第三方TTS引擎）
+     * 返回格式：引擎名称
+     */
+    private String getTtsEngineInfo() {
+        if (tts == null) {
+            ivTtsEngineIcon.setVisibility(View.GONE);
+            return getString(R.string.tts_engine_unknown);
+        }
+
+        try {
+            String engineName = tts.getDefaultEngine();
+            if (engineName == null || engineName.isEmpty()) {
+                ivTtsEngineIcon.setVisibility(View.GONE);
+                return getString(R.string.tts_engine_unknown);
+            }
+
+            String displayName = engineName;
+            int iconResId;
+            List<TextToSpeech.EngineInfo> engines = tts.getEngines();
+
+            for (TextToSpeech.EngineInfo engine : engines) {
+                if (engineName.equals(engine.name)) {
+                    displayName = engine.label;
+                    iconResId = engine.icon;
+
+                    // 跨包加载图标
+                    try {
+                        Context engineContext = createPackageContext(engine.name, 0);
+                        Drawable icon = ResourcesCompat.getDrawable(engineContext.getResources(), iconResId,
+                                engineContext.getTheme());
+                        ivTtsEngineIcon.setImageDrawable(icon);
+                        ivTtsEngineIcon.setVisibility(View.VISIBLE);
+                    } catch (Exception e) {
+                        ivTtsEngineIcon.setVisibility(View.GONE);
+                        Log.d("MainActivity", "无法加载引擎图标: " + engine.name);
+                    }
+                    break;
+                }
+            }
+
+            // 构建显示信息：引擎名称
+            return displayName;
+
+        } catch (Exception e) {
+            ivTtsEngineIcon.setVisibility(View.GONE);
+            Log.e("MainActivity", "获取TTS引擎信息失败", e);
+            return getString(R.string.tts_engine_unknown);
         }
     }
 

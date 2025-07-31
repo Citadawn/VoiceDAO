@@ -1,6 +1,6 @@
 ## 任务
 
-1. 列出所有已安装的 TTS 引擎。可以使用TextToSpeech的getEngines()方法来获取已安装的 TTS 引擎列表，该方法返回一个List<EngineInfo>对象，其中每个EngineInfo对象包含了引擎的名称、包名等信息。
+1. 列出所有已安装的 TTS 引擎。可以使用TextToSpeech的getEngines()方法来获取已安装的 TTS 引擎列表，该方法返回一个List<EngineInfo>对象，其中每个EngineInfo对象包含了引擎的名称、包名等信息。版本号
 
 2. 弄一个可用语言列表、一个声音（voice）列表、TTS 引擎列表。
    
@@ -32,11 +32,9 @@
 
 12. 句柄改一下
 
-13. 在状态信息中加一个当前 TTS 引擎信息
+13. 
 
-14. 
-
-15. 重构：
+14. 重构：
     
     1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
        

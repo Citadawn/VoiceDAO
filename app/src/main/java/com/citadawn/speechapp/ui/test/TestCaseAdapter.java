@@ -55,7 +55,6 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TestCase testCase = testCases.get(position);
-        holder.itemView.getContext();
         String name, desc;
         name = testCase.name;
         desc = testCase.description;

@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -312,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isLangSpinnerInit = false;
     private boolean isVoiceSpinnerInit = false;
     private TextView tvTtsEngineStatus, tvAudioSaveDir, tvTtsSpeakStatus, tvSelectedTestCases;
+    private ImageButton btnCopySaveDir;
     private final Handler ttsStatusHandler = new Handler(Looper.getMainLooper());
     private static final String PREFS_NAME = Constants.PREFS_NAME;
     private static final String KEY_SAVE_DIR_URI = Constants.KEY_SAVE_DIR_URI;
@@ -466,6 +468,7 @@ public class MainActivity extends AppCompatActivity {
         tvAudioSaveDir = findViewById(R.id.tvAudioSaveDir);
         tvTtsSpeakStatus = findViewById(R.id.tvTtsSpeakStatus);
         tvSelectedTestCases = findViewById(R.id.tvSelectedTestCases);
+        btnCopySaveDir = findViewById(R.id.btnCopySaveDir);
         btnStop = findViewById(R.id.btnStop);
         btnSaveAudio = findViewById(R.id.btnSaveAudio);
         // TTS未初始化时按钮不可用
@@ -1278,8 +1281,10 @@ public class MainActivity extends AppCompatActivity {
         // 音频保存目录
         if (saveDirUri != null) {
             tvAudioSaveDir.setText(getReadablePathFromUri(saveDirUri));
+            btnCopySaveDir.setVisibility(View.VISIBLE);
         } else {
             tvAudioSaveDir.setText(getString(R.string.not_set));
+            btnCopySaveDir.setVisibility(View.GONE);
         }
         // 语音合成状态（此处只初始化，动态状态由其它逻辑控制）
         // tvTtsSpeakStatus.setText("空闲"); // 由其它逻辑动态设置
@@ -1498,7 +1503,14 @@ public class MainActivity extends AppCompatActivity {
         String uriStr = uri.toString();
         if (uriStr.startsWith("content://com.android.externalstorage.documents/tree/primary%3A")) {
             String subPath = uriStr.substring(uriStr.indexOf("%3A") + 3);
-            return "/storage/emulated/0/" + subPath.replace("%2F", "/");
+            try {
+                // 解码URL编码的字符，特别是中文字符
+                String decodedPath = java.net.URLDecoder.decode(subPath, "UTF-8");
+                return "/storage/emulated/0/" + decodedPath.replace("%2F", "/");
+            } catch (Exception e) {
+                // 如果解码失败，返回原始路径
+                return "/storage/emulated/0/" + subPath.replace("%2F", "/");
+            }
         }
         return uriStr;
     }
@@ -1547,6 +1559,18 @@ public class MainActivity extends AppCompatActivity {
                 new Object[] { findViewById(R.id.ivSpeedInfo), R.string.speed_info_title, R.string.speed_info_content },
                 new Object[] { findViewById(R.id.ivPitchInfo), R.string.pitch_info_title,
                         R.string.pitch_info_content });
+
+        // 设置复制路径按钮点击事件
+        btnCopySaveDir.setOnClickListener(v -> {
+            if (saveDirUri != null) {
+                String path = getReadablePathFromUri(saveDirUri);
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(
+                        Context.CLIPBOARD_SERVICE);
+                android.content.ClipData clip = android.content.ClipData.newPlainText("Audio Save Directory", path);
+                clipboard.setPrimaryClip(clip);
+                ToastHelper.showShort(this, R.string.toast_path_copied);
+            }
+        });
     }
 
     /**

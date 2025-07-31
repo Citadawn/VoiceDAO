@@ -97,11 +97,6 @@ public class TextEditorActivity extends AppCompatActivity {
             setResult(RESULT_OK, data);
             finish();
         });
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            editorEditText.setTextSelectHandleTintList(
-                    android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#272727")));
-        }
     }
 
     // endregion

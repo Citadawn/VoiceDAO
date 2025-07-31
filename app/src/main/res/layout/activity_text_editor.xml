@@ -49,8 +49,7 @@
             android:textColorHint="@color/hint_gray"
             android:textCursorDrawable="@drawable/cursor_main_dark"
             android:textColorHighlight="#1A272727"
-            android:autofillHints=""
-            android:textSelectHandleTint="#272727" />
+            android:autofillHints="" />
     </ScrollView>
 
     <!-- 底部按钮栏：清空、字数统计、确定，三者水平居中对齐 -->

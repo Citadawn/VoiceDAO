@@ -1053,13 +1053,6 @@ public class MainActivity extends AppCompatActivity {
         btnClear.setEnabled(!editText.getText().toString().isEmpty());
         // 初始化时也调用一次
         updateResetButtons();
-
-        // ... editText 初始化后 ...
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            editText.setTextSelectHandleTintList(
-                    android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#272727")));
-        }
-        // ...
     }
 
     @Override

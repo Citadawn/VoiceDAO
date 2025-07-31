@@ -63,14 +63,12 @@
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
                 android:textCursorDrawable="@drawable/cursor_main_dark"
-                android:textSelectHandleLeft="@drawable/handle_main_dark_left"
-                android:textSelectHandleRight="@drawable/handle_main_dark_right"
-                android:textSelectHandle="@drawable/handle_main_dark_center"
                 android:textColorHighlight="@color/text_selection_highlight"
                 android:elevation="4dp"
                 android:importantForAutofill="no"
                 android:scrollbars="vertical"
-                android:fadeScrollbars="true" />
+                android:fadeScrollbars="true"
+                android:textSelectHandleTint="#272727" />
 
             <LinearLayout
                 android:id="@+id/layoutEditButtons"

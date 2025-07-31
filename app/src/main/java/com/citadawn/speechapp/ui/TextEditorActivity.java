@@ -37,7 +37,7 @@ public class TextEditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // 应用用户选择的语言设置 Apply user selected language setting
         LocaleHelper.setLocale(this, LocaleHelper.getCurrentLocale(this));
-        
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_editor);
 
@@ -86,7 +86,7 @@ public class TextEditorActivity extends AppCompatActivity {
 
         // 设置清空按钮逻辑（复用工具类）
         ClearButtonHelper.setupClearButton(btnEditorClear, editorEditText);
-        
+
         // 为编辑器按钮设置自动文本大小调整
         ButtonTextHelper.setupAutoTextSize(btnEditorOk);
         ButtonTextHelper.setupAutoTextSize(btnEditorClear);
@@ -97,6 +97,11 @@ public class TextEditorActivity extends AppCompatActivity {
             setResult(RESULT_OK, data);
             finish();
         });
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            editorEditText.setTextSelectHandleTintList(
+                    android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#272727")));
+        }
     }
 
     // endregion
@@ -111,7 +116,7 @@ public class TextEditorActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_editor_info) {
-            DialogHelper.showInfoDialog(this, 
+            DialogHelper.showInfoDialog(this,
                     R.string.dialog_title_editor_info, R.string.dialog_message_editor_info);
             return true;
         }

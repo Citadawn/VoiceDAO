@@ -78,15 +78,26 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-// 自定义Adapter用于语言下拉列表，左侧竖条区分支持度
+// region 内部适配器类
+
+/**
+ * 语言选择适配器
+ * 用于语言下拉列表，左侧竖条区分支持度
+ */
 class LanguageAdapter extends BaseAdapter {
+    // region 成员变量
+    
     private final List<Locale> locales;
     private final LayoutInflater inflater;
     private final TextToSpeech tts;
     private final Context context;
     private final Locale defaultLocale;
     private int selectedPosition = 0; // 保存当前选中位置
-
+    
+    // endregion
+    
+    // region 构造方法
+    
     public LanguageAdapter(Context context, List<Locale> locales, TextToSpeech tts, Locale defaultLocale) {
         this.context = context;
         this.locales = locales;
@@ -94,12 +105,20 @@ class LanguageAdapter extends BaseAdapter {
         this.tts = tts;
         this.defaultLocale = defaultLocale;
     }
-
+    
+    // endregion
+    
+    // region 公开方法
+    
     public void setSelectedPosition(int position) {
         this.selectedPosition = position;
         notifyDataSetChanged();
     }
 
+    // endregion
+    
+    // region 适配器核心方法
+    
     @Override
     public int getCount() {
         return locales.size();
@@ -131,7 +150,16 @@ class LanguageAdapter extends BaseAdapter {
         }
         return view;
     }
-
+    
+    // endregion
+    
+    // region 私有辅助方法
+    
+    /**
+     * 根据语言支持级别获取对应的颜色资源ID
+     * @param support 语言支持级别
+     * @return 颜色资源ID
+     */
     private int getSupportColorRes(int support) {
         if (support == TextToSpeech.LANG_AVAILABLE) {
             return R.color.tts_support_full;
@@ -146,6 +174,14 @@ class LanguageAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * 创建语言选择项的视图
+     * @param position 位置
+     * @param convertView 复用的视图
+     * @param parent 父容器
+     * @param isDropdown 是否为下拉视图
+     * @return 创建的视图
+     */
     private View createView(int position, View convertView, ViewGroup parent, boolean isDropdown) {
         View view = convertView;
         if (view == null) {
@@ -171,28 +207,47 @@ class LanguageAdapter extends BaseAdapter {
         }
         return view;
     }
+    
+    // endregion
 }
 
-// 自定义发音人适配器，支持显示 features
+/**
+ * 发音人选择适配器
+ * 支持显示发音人特性（features）
+ */
 class VoiceAdapter extends BaseAdapter {
+    // region 成员变量
+    
     private final List<Voice> voices;
     private final LayoutInflater inflater;
     private final Context context;
     private final Voice defaultVoice;
     private int selectedPosition = 0;
-
+    
+    // endregion
+    
+    // region 构造方法
+    
     public VoiceAdapter(Context context, List<Voice> voices, Voice defaultVoice) {
         this.context = context;
         this.voices = voices;
         this.defaultVoice = defaultVoice;
         this.inflater = LayoutInflater.from(context);
     }
-
+    
+    // endregion
+    
+    // region 公开方法
+    
     public void setSelectedPosition(int position) {
         this.selectedPosition = position;
         notifyDataSetChanged();
     }
 
+    // endregion
+    
+    // region 适配器核心方法
+    
     @Override
     public int getCount() {
         return voices.size();
@@ -224,7 +279,16 @@ class VoiceAdapter extends BaseAdapter {
         }
         return view;
     }
-
+    
+    // endregion
+    
+    // region 私有辅助方法
+    
+    /**
+     * 判断特性字符串是否为无意义的特性
+     * @param feature 特性字符串
+     * @return 是否为无意义特性
+     */
     private boolean isMeaninglessFeature(String feature) {
         // 纯英文单词
         if (feature.matches("^[A-Za-z]+$"))
@@ -245,6 +309,11 @@ class VoiceAdapter extends BaseAdapter {
         return feature.matches("^[0-9a-fA-F-]{32,}$");
     }
 
+    /**
+     * 判断是否应该显示特性信息
+     * @param features 特性集合
+     * @return 是否应该显示
+     */
     private boolean shouldShowFeatures(Set<String> features) {
         if (features == null || features.isEmpty())
             return false;
@@ -255,6 +324,13 @@ class VoiceAdapter extends BaseAdapter {
         return false;
     }
 
+    /**
+     * 创建发音人选择项的视图
+     * @param position 位置
+     * @param convertView 复用的视图
+     * @param parent 父容器
+     * @return 创建的视图
+     */
     private View createView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
@@ -288,27 +364,23 @@ class VoiceAdapter extends BaseAdapter {
 
         return view;
     }
+    
+    // endregion
 }
 
+// endregion
+
+/**
+ * 主界面活动类
+ * 提供文本转语音的核心功能，包括朗读、保存音频、语言选择等
+ */
 public class MainActivity extends AppCompatActivity {
-    // region 成员变量
+    
+    // region TTS 相关变量
+    
     private TextToSpeech tts;
-    private EditText editText;
-    private Button btnSpeak;
-    private SeekBar seekBarSpeed, seekBarPitch;
     private boolean isTtsReady = false;
-    private float speechRate = 1.0f;
-    private float pitch = 1.0f;
     private Locale currentLocale = null; // 当前语言，将通过TTS API动态获取
-    private Button btnClear;
-    private Button btnStop;
-    private Button btnSaveAudio;
-    private String pendingAudioText = null;
-    private TextView textSpeechRateValue, textPitchValue;
-    private Button btnSpeedReset, btnPitchReset;
-    private TextView tvSpeedSetResult, tvPitchSetResult;
-    private Spinner spinnerLanguage, spinnerVoice;
-    private Button btnLangVoiceReset;
     private Locale defaultLocale = null; // 默认语言，将通过TTS API获取
     private Voice globalDefaultVoice = null; // 全局默认发音人
     private final HashMap<Locale, Voice> languageDefaultVoices = new HashMap<>(); // 每个语言的默认发音人
@@ -316,38 +388,73 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<Voice> voiceList = new ArrayList<>();
     private boolean isLangSpinnerInit = false;
     private boolean isVoiceSpinnerInit = false;
+    
+    // endregion
+    
+    // region UI 控件变量
+    
+    private EditText editText;
+    private Button btnSpeak;
+    private SeekBar seekBarSpeed, seekBarPitch;
+    private Button btnClear;
+    private Button btnStop;
+    private Button btnSaveAudio;
+    private TextView textSpeechRateValue, textPitchValue;
+    private Button btnSpeedReset, btnPitchReset;
+    private TextView tvSpeedSetResult, tvPitchSetResult;
+    private Spinner spinnerLanguage, spinnerVoice;
+    private Button btnLangVoiceReset;
     private TextView tvTtsEngineStatus, tvAudioSaveDir, tvTtsSpeakStatus, tvSelectedTestCases, tvTtsEngineInfo;
     private ImageView ivTtsEngineIcon;
     private ImageButton btnCopySaveDir;
+    private Button btnCancelSave;
+    
+    // endregion
+    
+    // region 状态和配置变量
+    
+    private float speechRate = 1.0f;
+    private float pitch = 1.0f;
+    private String pendingAudioText = null;
     private final Handler ttsStatusHandler = new Handler(Looper.getMainLooper());
     private static final String PREFS_NAME = Constants.PREFS_NAME;
     private static final String KEY_SAVE_DIR_URI = Constants.KEY_SAVE_DIR_URI;
     private Uri saveDirUri = null;
-    private Button btnCancelSave;
     private boolean isSavingAudio = false;
     private File tempAudioFile = null;
     private String currentAudioFileName = "tts_output.wav";
+    
+    // endregion
 
-    // 当前TTS状态
+    // region 枚举和常量
+    
+    /**
+     * TTS 工作状态枚举
+     */
     private enum TtsWorkState {
         IDLE, // 空闲
         SPEAKING, // 正在朗读
         SAVING // 正在保存音频
     }
 
-    private volatile TtsWorkState ttsWorkState = TtsWorkState.IDLE;
-
-    // 新增：TTS任务准备状态
+    /**
+     * 待处理的 TTS 操作枚举
+     */
     private enum PendingTtsAction {
         NONE, PENDING_SPEAK, PENDING_SAVE
     }
-
+    
+    // endregion
+    
+    // region 状态变量
+    
+    private volatile TtsWorkState ttsWorkState = TtsWorkState.IDLE;
     private volatile PendingTtsAction pendingTtsAction = PendingTtsAction.NONE;
-
     private ActivityResultLauncher<Intent> editorLauncher;
-
     private long lastBackPressedTime = 0;
     private static final int DOUBLE_BACK_EXIT_INTERVAL = 2000; // 2秒
+    
+    // endregion
 
     // endregion
 
@@ -356,6 +463,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 活动创建时初始化UI和TTS引擎
      */
+    // endregion
+    
+    // region 生命周期方法
+    
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1054,7 +1165,11 @@ public class MainActivity extends AppCompatActivity {
         // 初始化时也调用一次
         updateResetButtons();
     }
-
+    
+    // endregion
+    
+    // region 生命周期方法
+    
     @Override
     protected void onDestroy() {
         ttsStatusHandler.removeCallbacksAndMessages(null);
@@ -1064,7 +1179,11 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-
+    
+    // endregion
+    
+    // region 菜单相关方法
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -1140,7 +1259,11 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    
+    // endregion
+    
+    // region 公开方法
+    
     private void updateToolbarTitle() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         String title = getString(R.string.app_name);
@@ -1152,7 +1275,11 @@ public class MainActivity extends AppCompatActivity {
         }
         toolbar.setTitle(title);
     }
-
+    
+    // endregion
+    
+    // region TTS 相关方法
+    
     /**
      * 将文本合成为音频文件并保存到指定URI
      *
@@ -1273,7 +1400,11 @@ public class MainActivity extends AppCompatActivity {
             tts.setVoice(voiceList.get(0));
         }
     }
-
+    
+    // endregion
+    
+    // region UI 相关方法
+    
     /**
      * 更新界面状态信息显示
      * 包括TTS引擎状态、保存目录、朗读状态等
@@ -1369,7 +1500,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
+    
+    // endregion
+    
+    // region 文件操作相关方法
+    
     private void showFileNameInputDialogAndSave(String text) {
         // 自动生成默认文件名
         String defaultName = "tts_"
@@ -1471,7 +1606,11 @@ public class MainActivity extends AppCompatActivity {
             updateStatusInfo();
         }
     }
-
+    
+    // endregion
+    
+    // region 工具方法
+    
     // 新增：重置按钮状态更新方法
     private void updateResetButtons() {
         // 语速
@@ -1669,7 +1808,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    
+    // endregion
+    
+    // region 测试相关方法
+    
     /**
      * 初始化测试用例的国际化文本
      */
@@ -1886,10 +2029,11 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.dialog_button_cancel, null)
                 .show();
     }
+    
     // endregion
-
-    // 新增logTtsVoices方法
-
+    
+    // region 私有辅助方法
+    
     /**
      * 输出TTS引擎所有语言和发音人信息到logcat，标注默认项
      */

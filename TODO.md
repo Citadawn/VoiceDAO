@@ -8,9 +8,9 @@
    
    声音列表包括发音人的语言和地区（如 zh_CN、en_US）（getLocale方法）、发音人（Voice）的唯一名称（标识符）（如“en-us-x-sfg#male_1-local”）（getName方法）、是否需要联网（isNetworkConnectionRequired方法）、音质等级（如 Voice.QUALITY_HIGH）（getQuality方法）、发音人（Voice）合成语音时的“预期延迟”级别（getLatency方法）列，并且可以通过点击音质等级、延迟列的标题头来对列表进行排序。  
    
-   TTS 引擎列表包括 TTS 引擎的图标（icon 字段）、TTS 引擎的名称（label 字段）、TTS 引擎的包名（name 字段）、默认的 TTS 引擎（getDefaultEngine方法）列，其中 TTS 引擎的图标（icon 字段）和 TTS 引擎的名称（label 字段）可以在同一列，并且可以通过点击名称列的标题头来对列表进行排序。
+   TTS 引擎列表包括 TTS 引擎的图标（icon 字段）、TTS 引擎的名称（label 字段）、TTS 引擎的包名（name 字段）列，其中 TTS 引擎的图标（icon 字段）和 TTS 引擎的名称（label 字段）可以在同一列，标识出默认的 TTS 引擎（getDefaultEngine方法）。
    
-   可以左右滑动查看列表，点击列表中的项来设置当前使用的语言、声音、TTS 引擎。还可以点击列表中的列来固定显示某列，在左右滑动时，固定显示的列会一直显示在屏幕上。  
+   （当列表宽度超过屏幕宽度的时候，可以左右滑动查看列表，还）可以固定显示某列，在左右滑动时，固定显示的列会一直显示在屏幕上。  
 
 3. 
 
@@ -30,17 +30,15 @@
 
 11. 
 
-12. 句柄改一下
-
-13. 
-
-14. 重构：
+12. 重构：
     
     1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
        
        格式化alt+shift+f
     
     2. 资源文件：命名是否是否贴切、删除多余资源文件
+
+13. ![](D:\Users\24858\Pictures\MarkText\2025-08-01-11-33-19-image.png)默认项猜测应该是软件界面语言Locale造成的。还有一个问题，当系统语言是中文，软件界面语言是英文的时候，默认语言仍然为中文（这好像也没有问题）。
 
 ## 问题
 
@@ -69,7 +67,7 @@
 新chat复制下面
 
 ```
-请严格按照本项目的 CONTRIBUTING.md 协作规范执行，包括分层、分区、命名、国际化和注释等所有要求
+以后进行的代码修改，请严格按照本项目的 CONTRIBUTING.md 协作规范执行，包括分层、分区、命名、国际化和注释等所有要求
 ```
 
 ```

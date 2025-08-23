@@ -20,4 +20,9 @@
     <color name="tts_support_none">#BDBDBD</color> <!-- 灰色 -->
     <color name="tts_spinner_selected_bg">#FFDDDDDD</color> <!-- 深灰高亮 -->
     <color name="tts_spinner_normal_bg">#00FFFFFF</color> <!-- 透明 -->
+    
+    <!-- TTS 浏览器相关颜色 -->
+    <color name="support_status_bg">#2196F3</color>
+    <color name="voice_info_bg">#F5F5F5</color>
+    <color name="voice_info_border">#E0E0E0</color>
 </resources>

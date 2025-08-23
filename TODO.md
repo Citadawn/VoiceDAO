@@ -1,44 +1,30 @@
 ## 任务
 
-1. 列出所有已安装的 TTS 引擎。可以使用TextToSpeech的getEngines()方法来获取已安装的 TTS 引擎列表，该方法返回一个List<EngineInfo>对象，其中每个EngineInfo对象包含了引擎的名称、包名等信息。版本号
+1. 中文与英文要加空格、数字与英文之间要加空格、数字与中文之间要加空格。
 
-2. 弄一个可用语言列表、一个声音（voice）列表、TTS 引擎列表。
+2. 为所有的 Toast 设置一个独特并且与消息相关联的图标。
+
+3. 在readme上说明本软件支持的Android版本范围
+
+4. 看看颜色代码是否需要统一放到 colors.xml 文件中。
+
+5. 是否需要为所有的颜色、字符串设置统一的资源文件colors.xml/strings.xml，比如：`android:textColor="#FF5722"`
+
+6. cursor：CONTRIBUTING.md 文件中未提到的按Android开发标准执行
+
+7. 更新一下状态信息区块开发指南、信息图标开发指南、测试模式添加测试项指南文件。
+
+8. 
+
+9. 重构：
    
-   可用语言列表包括语言的完整本地化名，如“英语（美国）”、语言标签字符串，如 "zh-CN"两列。  
+   1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
+      
+      格式化alt+shift+f
    
-   声音列表包括发音人的语言和地区（如 zh_CN、en_US）（getLocale方法）、发音人（Voice）的唯一名称（标识符）（如“en-us-x-sfg#male_1-local”）（getName方法）、是否需要联网（isNetworkConnectionRequired方法）、音质等级（如 Voice.QUALITY_HIGH）（getQuality方法）、发音人（Voice）合成语音时的“预期延迟”级别（getLatency方法）列，并且可以通过点击音质等级、延迟列的标题头来对列表进行排序。  
-   
-   TTS 引擎列表包括 TTS 引擎的图标（icon 字段）、TTS 引擎的名称（label 字段）、TTS 引擎的包名（name 字段）列，其中 TTS 引擎的图标（icon 字段）和 TTS 引擎的名称（label 字段）可以在同一列，标识出默认的 TTS 引擎（getDefaultEngine方法）。
-   
-   （当列表宽度超过屏幕宽度的时候，可以左右滑动查看列表，还）可以固定显示某列，在左右滑动时，固定显示的列会一直显示在屏幕上。  
+   2. 资源文件：命名是否是否贴切、删除多余资源文件
 
-3. 
-
-4. 中文与英文要加空格、数字与英文之间要加空格、数字与中文之间要加空格。
-
-5. 为所有的 Toast 设置一个独特并且与消息相关联的图标。
-
-6. 在readme上说明本软件支持的Android版本范围
-
-7. 看看颜色代码是否需要统一放到colors.xml文件中。
-
-8. 是否需要为所有的颜色、字符串设置统一的资源文件colors.xml/strings.xml，比如：`android:textColor="#FF5722"`
-
-9. cursor：CONTRIBUTING.md 文件中未提到的按Android开发标准执行
-
-10. 更新一下状态信息区块开发指南、信息图标开发指南、测试模式添加测试项指南文件。
-
-11. 
-
-12. 重构：
-    
-    1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
-       
-       格式化alt+shift+f
-    
-    2. 资源文件：命名是否是否贴切、删除多余资源文件
-
-13. ![](D:\Users\24858\Pictures\MarkText\2025-08-01-11-33-19-image.png)默认项猜测应该是软件界面语言Locale造成的。还有一个问题，当系统语言是中文，软件界面语言是英文的时候，默认语言仍然为中文（这好像也没有问题）。
+10. ![](D:\Users\24858\Pictures\MarkText\2025-08-01-11-33-19-image.png)默认项猜测应该是软件界面语言Locale造成的。还有一个问题，当系统语言是中文，软件界面语言是英文的时候，默认语言仍然为中文（这好像也没有问题）。
 
 ## 问题
 

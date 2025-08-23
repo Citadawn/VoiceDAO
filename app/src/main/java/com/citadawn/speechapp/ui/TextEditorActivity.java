@@ -24,15 +24,29 @@ import com.citadawn.speechapp.util.TextLengthHelper;
  * 提供大文本编辑功能，支持清空、字数统计等
  */
 public class TextEditorActivity extends AppCompatActivity {
-    // region 成员变量
+    
+    // region 常量
+    
+    /** Intent 传递文本的键名 */
     public static final String EXTRA_TEXT = "extra_text";
+    
+    // endregion
+    
+    // region 成员变量
+    
     private EditText editorEditText;
     private Button btnEditorClear, btnEditorOk;
     private TextView tvEditorCharCount;
     private int maxCharCount;
 
     // endregion
-    // region 生命周期
+    
+    // region 生命周期方法
+    
+    /**
+     * 活动创建时初始化UI和事件监听
+     * @param savedInstanceState 保存的状态
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 应用用户选择的语言设置 Apply user selected language setting
@@ -100,14 +114,25 @@ public class TextEditorActivity extends AppCompatActivity {
     }
 
     // endregion
-    // region 公开方法
-
+    
+    // region 菜单相关方法
+    
+    /**
+     * 创建选项菜单
+     * @param menu 菜单对象
+     * @return 是否成功创建
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_text_editor, menu);
         return true;
     }
 
+    /**
+     * 处理菜单项选择事件
+     * @param item 选中的菜单项
+     * @return 是否已处理
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_editor_info) {
@@ -119,7 +144,13 @@ public class TextEditorActivity extends AppCompatActivity {
     }
 
     // endregion
-    // region 私有方法
+    
+    // region 私有辅助方法
+    
+    /**
+     * 更新字符计数显示
+     * 当字符数超过限制时，当前数字会显示为红色
+     */
     private void updateCharCount() {
         int current = editorEditText.getText().length();
         String baseText = getString(R.string.char_count, current, maxCharCount);

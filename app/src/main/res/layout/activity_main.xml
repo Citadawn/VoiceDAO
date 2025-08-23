@@ -51,7 +51,7 @@
                 android:lines="3"
                 android:inputType="textMultiLine|textCapSentences"
                 android:windowSoftInputMode="stateHidden"
-                android:autofillHints=""
+                android:autofillHints="text"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/layoutEditButtons"

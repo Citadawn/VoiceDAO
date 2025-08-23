@@ -6,6 +6,10 @@
         android:title="@string/menu_tts_settings"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_tts_browser"
+        android:title="@string/menu_tts_browser"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_language"
         android:title="@string/menu_language"
         app:showAsAction="never" />

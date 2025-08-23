@@ -71,6 +71,7 @@
     <string name="hint_input_editor">请输入或粘贴要编辑的大段文本……</string>
     <string name="btn_ok">确定</string>
     <string name="menu_tts_settings">TTS设置</string>
+    <string name="menu_tts_browser">TTS浏览器</string>
     <string name="menu_info">说明</string>
     <string name="menu_about">关于</string>
     <string name="menu_language">语言</string>
@@ -98,6 +99,65 @@
     <string name="tts_prepare_save">准备开始保存音频…</string>
     <string name="tts_reading">正在朗读</string>
     <string name="tts_saving">正在保存音频</string>
+    
+    <!-- TTS 浏览器相关字符串 -->
+    <string name="tts_browser_title">TTS 浏览器</string>
+    <string name="tab_engines">引擎</string>
+    <string name="tab_languages_voices">语言和发音人</string>
+    <string name="engine_icon_description">引擎图标</string>
+    <string name="language_available">完全支持</string>
+    <string name="language_country_available">国家支持</string>
+    <string name="language_missing_data">缺少数据</string>
+    <string name="language_not_supported">不支持</string>
+    <string name="language_unknown">未知</string>
+    <string name="voice_name">发音人名称</string>
+    <string name="voice_network">需要联网</string>
+    <string name="voice_quality">音质等级</string>
+    <string name="voice_latency">延迟等级</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="quality_very_low">极低</string>
+    <string name="quality_low">低</string>
+    <string name="quality_normal">正常</string>
+    <string name="quality_high">高</string>
+    <string name="quality_very_high">极高</string>
+    <string name="quality_unknown">未知</string>
+    <string name="latency_very_low">极低</string>
+    <string name="latency_low">低</string>
+    <string name="latency_normal">正常</string>
+    <string name="latency_high">高</string>
+    <string name="latency_very_high">极高</string>
+    <string name="latency_unknown">未知</string>
+    
+    <!-- 搜索功能相关字符串 -->
+    <string name="search_language_hint">搜索语言……</string>
+    <string name="clear_search">清除搜索</string>
+    
+    <!-- TTS浏览器信息相关字符串 -->
+    <string name="tts_browser_info">TTS浏览器信息</string>
+    <string name="tts_browser_info_title">TTS浏览器</string>
+    <string name="tts_browser_info_content"><![CDATA[
+        <b>🔍 TTS浏览器概述</b><br/><br/>
+        此TTS浏览器显示您设备上安装的所有可用TTS引擎及其支持的语言和发音人。<br/><br/>
+        
+        <b>📋 功能特性：</b><br/>
+        • <b>引擎选项卡：</b>浏览所有已安装的TTS引擎，包括图标、名称和包信息<br/>
+        • <b>语言和发音人选项卡：</b>查看支持的语言、发音人详情和搜索功能<br/>
+        • <b>搜索：</b>通过名称或标签快速查找特定语言<br/>
+        • <b>智能排序：</b>默认引擎、语言和发音人会自动标记并优先显示<br/><br/>
+        
+        <b>🎯 使用方法：</b><br/>
+        • 在选项卡之间切换以探索不同信息<br/>
+        • 在语言和发音人选项卡中使用搜索过滤语言<br/>
+        • 滚动列表查看详细信息<br/><br/>
+        
+        <b>💡 提示：</b><br/>
+        • 引擎信息帮助您了解可用的TTS功能<br/>
+        • 语言支持状态指示语音数据是否可用<br/>
+        • 发音人详情显示质量、延迟和网络要求<br/>
+        • 语言名称以您当前的界面语言显示，便于理解<br/>
+        ]]></string>
+
     <string name="not_set">未设置</string>
     <string name="input_audio_filename">输入音频文件名</string>
     <string name="save">保存</string>

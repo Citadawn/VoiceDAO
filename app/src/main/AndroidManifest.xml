@@ -28,6 +28,9 @@
             android:exported="false"
             android:theme="@style/Theme.TextToSpeechApp"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.TtsBrowserActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TextToSpeechApp" />
     </application>
 
 </manifest>

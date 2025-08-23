@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -48,7 +46,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.core.content.res.ResourcesCompat;
 
 import com.citadawn.speechapp.R;
 import com.citadawn.speechapp.ui.test.TestCase;
@@ -65,12 +62,13 @@ import com.citadawn.speechapp.util.LocaleHelper;
 import com.citadawn.speechapp.util.SeekBarHelper;
 import com.citadawn.speechapp.util.TextLengthHelper;
 import com.citadawn.speechapp.util.ToastHelper;
+import com.citadawn.speechapp.util.TtsEngineHelper;
+import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
 import com.citadawn.speechapp.util.ViewHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,8 +109,14 @@ class LanguageAdapter extends BaseAdapter {
     // region 公开方法
     
     public void setSelectedPosition(int position) {
+        int oldPosition = this.selectedPosition;
         this.selectedPosition = position;
-        notifyDataSetChanged();
+        
+        // 对于BaseAdapter，只能使用notifyDataSetChanged，但可以优化调用时机
+        if (oldPosition != position) {
+            // 只有在真正需要更新UI时才调用
+            notifyDataSetChanged();
+        }
     }
 
     // endregion
@@ -240,8 +244,14 @@ class VoiceAdapter extends BaseAdapter {
     // region 公开方法
     
     public void setSelectedPosition(int position) {
+        int oldPosition = this.selectedPosition;
         this.selectedPosition = position;
-        notifyDataSetChanged();
+        
+        // 对于BaseAdapter，只能使用notifyDataSetChanged，但可以优化调用时机
+        if (oldPosition != position) {
+            // 只有在真正需要更新UI时才调用
+            notifyDataSetChanged();
+        }
     }
 
     // endregion
@@ -1035,18 +1045,9 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Set<Locale> locales = tts.getAvailableLanguages();
                     localeList.clear();
-                    // 按语言名称排序（默认语言排在最前面）
-                    Collator collator = Collator.getInstance(Locale.CHINESE);
-                    localeList.addAll(locales);
-                    localeList.sort((l1, l2) -> {
-                        // 默认语言始终排在最前面
-                        if (l1.equals(defaultLocale))
-                            return -1;
-                        if (l2.equals(defaultLocale))
-                            return 1;
-                        // 其他语言按拼音排序
-                        return collator.compare(l1.getDisplayName(), l2.getDisplayName());
-                    });
+                    // 使用工具类按语言名称排序（默认语言排在最前面）
+                    List<Locale> sortedLocales = TtsLanguageVoiceHelper.sortLocalesByDisplayName(locales, defaultLocale, this);
+                    localeList.addAll(sortedLocales);
                     spinnerLanguage
                             .setAdapter(new LanguageAdapter(this, localeList, tts, defaultLocale));
                     isLangSpinnerInit = true;
@@ -1059,21 +1060,13 @@ public class MainActivity extends AppCompatActivity {
 
                 // 输出语言列表和默认发音人
                 Set<Locale> locales = tts.getAvailableLanguages();
-                ArrayList<Locale> sortedLocales = new ArrayList<>(locales);
-                // 默认语言排在最前面，其余按拼音/本地化排序
-                Collator collator = Collator.getInstance(Locale.CHINESE);
-                sortedLocales.sort((l1, l2) -> {
-                    if (l1.equals(defaultLocale))
-                        return -1;
-                    if (l2.equals(defaultLocale))
-                        return 1;
-                    return collator.compare(l1.getDisplayName(), l2.getDisplayName());
-                });
+                // 使用工具类排序语言列表（默认语言排在最前面）
+                List<Locale> sortedLocales = TtsLanguageVoiceHelper.sortLocalesByDisplayName(locales, defaultLocale, this);
                 StringBuilder sb = new StringBuilder();
                 sb.append(getString(R.string.language_list));
                 sb.append("\n");
                 for (Locale locale : sortedLocales) {
-                    String display = locale.getDisplayName() + " (" + locale.toLanguageTag() + ")";
+                    String display = locale.getDisplayName(LocaleHelper.getCurrentLocale(this)) + " (" + locale.toLanguageTag() + ")";
                     Voice defVoice = languageDefaultVoices.get(locale);
                     if (locale.equals(defaultLocale)) {
                         sb.append(display).append(getString(R.string.default_voice));
@@ -1238,6 +1231,9 @@ public class MainActivity extends AppCompatActivity {
                 ToastHelper.showShort(this, R.string.toast_cannot_open_tts_settings);
             }
             return true;
+        } else if (id == R.id.action_tts_browser) {
+            TtsBrowserActivity.start(this);
+            return true;
         } else if (id == R.id.action_language) {
             showLanguageSelectionDialog();
             return true;
@@ -1365,27 +1361,16 @@ public class MainActivity extends AppCompatActivity {
         Set<Voice> voices = tts.getVoices();
         voiceList.clear();
 
-        // 先收集所有匹配语言的发音人
-        for (Voice voice : voices) {
-            if (voice.getLocale().equals(locale)) {
-                voiceList.add(voice);
-            }
-        }
+        // 使用工具类获取指定语言的发音人
+        voiceList.addAll(TtsLanguageVoiceHelper.getVoicesForLanguage(voices, locale));
 
         // 获取当前语言的默认发音人
         Voice currentLangDefaultVoice = languageDefaultVoices.get(locale);
 
-        // 默认发音人排在最前面
-        voiceList.sort((v1, v2) -> {
-            // 当前语言的默认发音人排在最前面
-            if (currentLangDefaultVoice != null) {
-                if (v1.equals(currentLangDefaultVoice))
-                    return -1;
-                if (v2.equals(currentLangDefaultVoice))
-                    return 1;
-            }
-            return v1.getName().compareTo(v2.getName());
-        });
+        // 使用工具类排序发音人（默认发音人排在最前面）
+        List<Voice> sortedVoices = TtsLanguageVoiceHelper.sortVoicesByDefault(voiceList, currentLangDefaultVoice);
+        voiceList.clear();
+        voiceList.addAll(sortedVoices);
 
         // 重新创建适配器以更新默认发音人信息
         VoiceAdapter adapter = new VoiceAdapter(this, voiceList, currentLangDefaultVoice);
@@ -1555,7 +1540,7 @@ public class MainActivity extends AppCompatActivity {
             if (newFile == null)
                 return false;
             try (OutputStream os = getContentResolver().openOutputStream(newFile.getUri());
-                    FileInputStream fis = new FileInputStream(tempAudioFile)) {
+                 FileInputStream fis = new FileInputStream(tempAudioFile)) {
                 if (os == null) {
                     return false;
                 }
@@ -1649,50 +1634,8 @@ public class MainActivity extends AppCompatActivity {
      * 返回格式：引擎名称
      */
     private String getTtsEngineInfo() {
-        if (tts == null) {
-            ivTtsEngineIcon.setVisibility(View.GONE);
-            return getString(R.string.tts_engine_unknown);
-        }
-
-        try {
-            String engineName = tts.getDefaultEngine();
-            if (engineName == null || engineName.isEmpty()) {
-                ivTtsEngineIcon.setVisibility(View.GONE);
-                return getString(R.string.tts_engine_unknown);
-            }
-
-            String displayName = engineName;
-            int iconResId;
-            List<TextToSpeech.EngineInfo> engines = tts.getEngines();
-
-            for (TextToSpeech.EngineInfo engine : engines) {
-                if (engineName.equals(engine.name)) {
-                    displayName = engine.label;
-                    iconResId = engine.icon;
-
-                    // 跨包加载图标
-                    try {
-                        Context engineContext = createPackageContext(engine.name, 0);
-                        Drawable icon = ResourcesCompat.getDrawable(engineContext.getResources(), iconResId,
-                                engineContext.getTheme());
-                        ivTtsEngineIcon.setImageDrawable(icon);
-                        ivTtsEngineIcon.setVisibility(View.VISIBLE);
-                    } catch (Exception e) {
-                        ivTtsEngineIcon.setVisibility(View.GONE);
-                        Log.d("MainActivity", "无法加载引擎图标: " + engine.name);
-                    }
-                    break;
-                }
-            }
-
-            // 构建显示信息：引擎名称
-            return displayName;
-
-        } catch (Exception e) {
-            ivTtsEngineIcon.setVisibility(View.GONE);
-            Log.e("MainActivity", "获取TTS引擎信息失败", e);
-            return getString(R.string.tts_engine_unknown);
-        }
+        // 使用工具类获取TTS引擎信息并设置图标
+        return TtsEngineHelper.getTtsEngineInfo(tts, this, ivTtsEngineIcon);
     }
 
     // 将SAF Uri转为可读路径，仅主存储primary支持

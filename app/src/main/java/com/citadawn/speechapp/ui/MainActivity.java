@@ -62,6 +62,7 @@ import com.citadawn.speechapp.util.LocaleHelper;
 import com.citadawn.speechapp.util.SeekBarHelper;
 import com.citadawn.speechapp.util.TextLengthHelper;
 import com.citadawn.speechapp.util.ToastHelper;
+import com.citadawn.speechapp.util.TtsEngineChangeHelper;
 import com.citadawn.speechapp.util.TtsEngineHelper;
 import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
 import com.citadawn.speechapp.util.ViewHelper;
@@ -1164,6 +1165,13 @@ public class MainActivity extends AppCompatActivity {
     // region 生命周期方法
     
     @Override
+    protected void onResume() {
+        super.onResume();
+        // 检测TTS引擎是否发生变化，如果发生变化则重新初始化
+        checkAndHandleTtsEngineChange();
+    }
+    
+    @Override
     protected void onDestroy() {
         ttsStatusHandler.removeCallbacksAndMessages(null);
         if (tts != null) {
@@ -2017,4 +2025,269 @@ public class MainActivity extends AppCompatActivity {
             Log.e("TTS_TEST", "logTtsVoices error", e);
         }
     }
+    
+    /**
+     * 检测并处理TTS引擎变化
+     * 如果检测到TTS引擎发生变化，会重新初始化TTS并保持用户当前设置
+     */
+    private void checkAndHandleTtsEngineChange() {
+        // 如果TTS还未初始化，跳过检测
+        if (tts == null || !isTtsReady) {
+            return;
+        }
+        
+        // 检测TTS引擎是否发生变化
+        if (TtsEngineChangeHelper.hasEngineChanged(this, tts)) {
+            // 显示提示信息
+            ToastHelper.showShort(this, R.string.toast_tts_engine_changed);
+            
+            // 重新初始化TTS引擎
+            reinitializeTts();
+        }
+    }
+    
+    /**
+     * 重新初始化TTS引擎
+     * 保持用户当前的语速、音调、语言和发音人设置
+     */
+    private void reinitializeTts() {
+        // 保存当前用户设置
+        float currentSpeechRate = speechRate;
+        float currentPitch = pitch;
+        Locale currentSelectedLocale = currentLocale;
+        Voice currentSelectedVoice = null;
+        
+        // 尝试获取当前选中的发音人
+        try {
+            if (tts != null) {
+                currentSelectedVoice = tts.getVoice();
+            }
+        } catch (Exception e) {
+            Log.w("MainActivity", "Failed to get current voice before reinitializing TTS", e);
+        }
+        
+        // 关闭现有TTS实例
+        if (tts != null) {
+            try {
+                tts.stop();
+                tts.shutdown();
+            } catch (Exception e) {
+                Log.w("MainActivity", "Error shutting down TTS", e);
+            }
+        }
+        
+        // 重置状态
+        isTtsReady = false;
+        btnSpeak.setEnabled(false);
+        btnStop.setEnabled(false);
+        btnSaveAudio.setEnabled(false);
+        tvTtsEngineStatus.setText(getString(R.string.status_not_ready));
+        
+        // 重新初始化TTS
+        final Locale savedLocale = currentSelectedLocale;
+        final Voice savedVoice = currentSelectedVoice;
+        final float savedSpeechRate = currentSpeechRate;
+        final float savedPitch = currentPitch;
+        
+        tts = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                // TTS初始化成功，恢复用户设置
+                restoreUserSettingsAfterReinit(savedLocale, savedVoice, savedSpeechRate, savedPitch);
+            } else {
+                // TTS初始化失败
+                Log.e("MainActivity", "TTS reinitialization failed with status: " + status);
+                isTtsReady = false;
+                updateStatusInfo();
+            }
+        });
+    }
+    
+    /**
+     * TTS重新初始化后恢复用户设置
+     * 
+     * @param savedLocale 保存的语言设置
+     * @param savedVoice 保存的发音人设置
+     * @param savedSpeechRate 保存的语速设置
+     * @param savedPitch 保存的音调设置
+     */
+    private void restoreUserSettingsAfterReinit(Locale savedLocale, Voice savedVoice, 
+                                                float savedSpeechRate, float savedPitch) {
+        try {
+            // 获取新的默认语言和发音人
+            Voice defaultVoice = tts.getDefaultVoice();
+            if (defaultVoice != null) {
+                defaultLocale = defaultVoice.getLocale();
+                globalDefaultVoice = defaultVoice;
+            } else {
+                defaultLocale = Locale.getDefault();
+            }
+            
+            // 设置TTS进度监听器（重用现有代码结构）
+            setupTtsProgressListener();
+            
+            // 重新获取可用语言列表
+            Set<Locale> locales = tts.getAvailableLanguages();
+            localeList.clear();
+            List<Locale> sortedLocales = TtsLanguageVoiceHelper.sortLocalesByDisplayName(locales, defaultLocale, this);
+            localeList.addAll(sortedLocales);
+            
+            // 重新初始化语言默认发音人
+            initializeLanguageDefaultVoices();
+            
+            // 恢复语速和音调设置
+            speechRate = savedSpeechRate;
+            pitch = savedPitch;
+            tts.setSpeechRate(speechRate);
+            tts.setPitch(pitch);
+            
+            // 更新UI显示
+            seekBarSpeed.setProgress((int) ((speechRate - 0.5f) * 100));
+            seekBarPitch.setProgress((int) ((pitch - 0.5f) * 100));
+            textSpeechRateValue.setText(String.format(Locale.US, "%.2f", speechRate));
+            textPitchValue.setText(String.format(Locale.US, "%.2f", pitch));
+            
+            // 恢复语言设置
+            Locale targetLocale = savedLocale;
+            if (targetLocale == null || !localeList.contains(targetLocale)) {
+                targetLocale = defaultLocale; // 如果保存的语言不可用，使用默认语言
+            }
+            currentLocale = targetLocale;
+            
+            // 更新语言下拉列表
+            LanguageAdapter languageAdapter = new LanguageAdapter(this, localeList, tts, defaultLocale);
+            spinnerLanguage.setAdapter(languageAdapter);
+            isLangSpinnerInit = true;
+            
+            int languageIndex = localeList.indexOf(targetLocale);
+            if (languageIndex >= 0) {
+                spinnerLanguage.setSelection(languageIndex);
+                languageAdapter.setSelectedPosition(languageIndex);
+            }
+            
+            // 设置TTS语言
+            tts.setLanguage(targetLocale);
+            
+            // 更新发音人列表
+            updateVoiceList(targetLocale, false);
+            
+            // 尝试恢复发音人设置
+            if (savedVoice != null && voiceList.contains(savedVoice)) {
+                int voiceIndex = voiceList.indexOf(savedVoice);
+                if (voiceIndex >= 0) {
+                    spinnerVoice.setSelection(voiceIndex);
+                    tts.setVoice(savedVoice);
+                    if (spinnerVoice.getAdapter() instanceof VoiceAdapter) {
+                        ((VoiceAdapter) spinnerVoice.getAdapter()).setSelectedPosition(voiceIndex);
+                    }
+                }
+            }
+            
+            // 恢复UI状态
+            isTtsReady = true;
+            btnSpeak.setEnabled(true);
+            btnStop.setEnabled(true);
+            btnSaveAudio.setEnabled(true);
+            tvTtsEngineStatus.setText(getString(R.string.status_ready));
+            updateStatusInfo();
+            updateResetButtons();
+            
+            Log.i("MainActivity", "TTS reinitialized successfully with restored settings");
+            
+        } catch (Exception e) {
+            Log.e("MainActivity", "Error restoring settings after TTS reinitialization", e);
+            // 如果恢复设置失败，至少确保TTS基本可用
+            isTtsReady = true;
+            btnSpeak.setEnabled(true);
+            btnStop.setEnabled(true);
+            btnSaveAudio.setEnabled(true);
+            tvTtsEngineStatus.setText(getString(R.string.status_ready));
+            updateStatusInfo();
+        }
+    }
+    
+    /**
+     * 设置TTS进度监听器
+     * 从原有的TTS初始化代码中提取出来，供重新初始化时使用
+     */
+    private void setupTtsProgressListener() {
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+                if ("tts_speak".equals(utteranceId)) {
+                    ttsWorkState = TtsWorkState.SPEAKING;
+                    pendingTtsAction = PendingTtsAction.NONE;
+                } else if ("tts_save".equals(utteranceId)) {
+                    ttsWorkState = TtsWorkState.SAVING;
+                    pendingTtsAction = PendingTtsAction.NONE;
+                }
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                if ("tts_speak".equals(utteranceId)) {
+                    ttsWorkState = TtsWorkState.IDLE;
+                    runOnUiThread(() -> {
+                        ToastHelper.showShort(MainActivity.this, R.string.toast_tts_speak_done);
+                        updateSpeakAndSaveButtons();
+                    });
+                } else if ("tts_save".equals(utteranceId)) {
+                    // 处理音频保存完成后的文件复制
+                    runOnUiThread(() -> {
+                        if (tempAudioFile != null && tempAudioFile.exists() && saveDirUri != null) {
+                            boolean ok = copyTempToSaveDir();
+                            if (ok) {
+                                ToastHelper.showShort(MainActivity.this, R.string.toast_save_audio_success);
+                            } else {
+                                ToastHelper.showShort(MainActivity.this, R.string.toast_save_audio_write_fail);
+                            }
+                            if (!tempAudioFile.delete()) {
+                                Log.w("MainActivity", "临时音频文件删除失败: " + tempAudioFile.getAbsolutePath());
+                            }
+                        } else {
+                            ToastHelper.showShort(MainActivity.this, R.string.toast_save_audio_write_fail);
+                        }
+                        isSavingAudio = false;
+                        btnSaveAudio.setEnabled(true);
+                        btnCancelSave.setEnabled(false);
+                        updateSpeakAndSaveButtons();
+                    });
+                    ttsWorkState = TtsWorkState.IDLE;
+                }
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+                // 兼容旧API，调用新API处理
+                onError(utteranceId, android.speech.tts.TextToSpeech.ERROR);
+            }
+
+            @Override
+            public void onError(String utteranceId, int errorCode) {
+                ttsWorkState = TtsWorkState.IDLE;
+                pendingTtsAction = PendingTtsAction.NONE;
+                if ("tts_speak".equals(utteranceId)) {
+                    runOnUiThread(() -> {
+                        ToastHelper.showShort(MainActivity.this, R.string.toast_tts_speak_error);
+                        updateSpeakAndSaveButtons();
+                    });
+                } else if ("tts_save".equals(utteranceId)) {
+                    runOnUiThread(() -> {
+                        if (tempAudioFile != null && tempAudioFile.exists()) {
+                            boolean deleted = tempAudioFile.delete();
+                            if (!deleted) {
+                                Log.w("MainActivity", "临时音频文件删除失败: " + tempAudioFile.getAbsolutePath());
+                            }
+                        }
+                        ToastHelper.showShort(MainActivity.this, R.string.toast_save_audio_synth_fail);
+                        isSavingAudio = false;
+                        btnSaveAudio.setEnabled(true);
+                        btnCancelSave.setEnabled(false);
+                        updateSpeakAndSaveButtons();
+                    });
+                }
+            }
+        });
+    }
+    
+    // endregion
 }

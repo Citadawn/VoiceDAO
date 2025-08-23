@@ -1237,14 +1237,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_language) {
             showLanguageSelectionDialog();
             return true;
-        } else if (id == R.id.action_info) {
-            String info = getString(R.string.desc_tts_info) + "\n\n" + getString(R.string.desc_tts_length_limit);
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.dialog_title_info)
-                    .setMessage(info)
-                    .setPositiveButton(R.string.dialog_button_ok, null)
-                    .show();
-            return true;
+
         } else if (id == R.id.action_about) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.dialog_title_about)

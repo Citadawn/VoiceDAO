@@ -13,10 +13,7 @@
         android:id="@+id/action_language"
         android:title="@string/menu_language"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_info"
-        android:title="@string/menu_info"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_about"
         android:title="@string/menu_about"

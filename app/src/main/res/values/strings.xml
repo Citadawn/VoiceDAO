@@ -6,15 +6,14 @@
     <string name="btn_speak" tools:ignore="MissingTranslation">Speak</string>
     <string name="status_ready" tools:ignore="MissingTranslation">TTS engine is ready</string>
     <string name="status_not_ready" tools:ignore="MissingTranslation">TTS engine is not initialized yet, please try again later</string>
-    <string name="desc_tts_info" tools:ignore="MissingTranslation">The reading language of this app is determined by the system TTS engine. To switch languages, please change the language in your TTS engine (such as MultiTTS, TTS-Server-Android, etc.) or in the system TTS settings.</string>
-    <string name="desc_tts_length_limit" tools:ignore="MissingTranslation">Each reading supports up to about 3500 characters (including punctuation and spaces). For long texts, please read in segments. Android TTS API supports a maximum of 3999 bytes per call; excess will be truncated or cause errors.</string>
+
 
     <string name="dialog_title_warning" tools:ignore="MissingTranslation">Warning</string>
     <string name="dialog_button_cancel" tools:ignore="MissingTranslation">Exit</string>
 
     <string name="toast_text_exceeds_limit" tools:ignore="MissingTranslation,PluralsCandidate">Text too long. Please reduce to %1$d chars or less.</string>
     <string name="toast_cannot_open_tts_settings" tools:ignore="MissingTranslation">Unable to open system TTS settings</string>
-    <string name="dialog_title_info" tools:ignore="MissingTranslation">Info</string>
+
     <string name="dialog_title_about" tools:ignore="MissingTranslation">About</string>
     <string name="dialog_message_about" tools:ignore="MissingTranslation">(Content to be added)</string>
     <string name="dialog_button_ok" tools:ignore="MissingTranslation">OK</string>
@@ -67,7 +66,7 @@ It is recommended to organize your text content in this editor before returning 
     <string name="btn_ok" tools:ignore="MissingTranslation">OK</string>
     <string name="menu_tts_settings" tools:ignore="MissingTranslation">TTS Settings</string>
     <string name="menu_tts_browser" tools:ignore="MissingTranslation">TTS Browser</string>
-    <string name="menu_info" tools:ignore="MissingTranslation">Info</string>
+
     <string name="menu_about" tools:ignore="MissingTranslation">About</string>
     <string name="menu_language" tools:ignore="MissingTranslation">Language</string>
     <string name="dialog_title_language" tools:ignore="MissingTranslation">Select Language</string>

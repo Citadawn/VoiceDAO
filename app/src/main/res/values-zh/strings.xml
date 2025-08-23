@@ -7,10 +7,7 @@
     <string name="btn_speak">朗读</string>
     <string name="status_ready">TTS引擎已就绪</string>
     <string name="status_not_ready">TTS引擎未初始化完成，请稍后再试</string>
-    <string name="desc_tts_info">本软件的朗读语言由系统TTS引擎决定。如需切换语言，请在所用TTS引擎（如 MultiTTS、TTS-Server-Android
-        等）或系统TTS设置中更改语言。</string>
-    <string name="desc_tts_length_limit">单次朗读最大支持约3500字符（含标点、空格），超长文本请分段朗读。Android TTS API
-        单次最大3999字节，超出部分将被截断或报错。</string>
+
 
     <string name="dialog_title_warning">提示</string>
 
@@ -19,7 +16,7 @@
 
     <string name="toast_text_exceeds_limit">文本过长，请删减至 %1$d 字符以内</string>
     <string name="toast_cannot_open_tts_settings">无法打开系统TTS设置界面</string>
-    <string name="dialog_title_info">说明</string>
+
     <string name="dialog_title_about">关于</string>
     <string name="dialog_message_about">（内容待补充）</string>
     <string name="dialog_button_ok">确定</string>
@@ -72,7 +69,7 @@
     <string name="btn_ok">确定</string>
     <string name="menu_tts_settings">TTS设置</string>
     <string name="menu_tts_browser">TTS浏览器</string>
-    <string name="menu_info">说明</string>
+
     <string name="menu_about">关于</string>
     <string name="menu_language">语言</string>
     <string name="dialog_title_language">选择语言</string>

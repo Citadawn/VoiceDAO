@@ -264,4 +264,15 @@
     <string name="test_case_name">测试项名称</string>
     <string name="test_case_description">测试项描述</string>
     <string name="toast_tts_engine_changed">TTS引擎已更改，正在重新初始化…</string>
+    
+    <!-- TTS测试输出标签 -->
+    <string name="test_header_separator">==== TTS引擎支持的语言和发音人 ====</string>
+    <string name="test_footer_separator">===============================================</string>
+    <string name="test_default_language">默认语言</string>
+    <string name="test_default_voice">默认发音人</string>
+    <string name="test_current_tts_voice">当前TTS发音人</string>
+    <string name="test_language_label">[语言]</string>
+    <string name="test_voice_label">发音人</string>
+    <string name="test_default_marker">默认</string>
+    <string name="test_default_for_language">该语言的默认发音人</string>
 </resources> 

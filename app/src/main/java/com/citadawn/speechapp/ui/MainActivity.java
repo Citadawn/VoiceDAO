@@ -1996,32 +1996,37 @@ public class MainActivity extends AppCompatActivity {
                 Locale l = v.getLocale();
                 localeVoices.computeIfAbsent(l, k -> new ArrayList<>()).add(v);
             }
-            Log.i("TTS_TEST", "==== TTS Engine Supported Languages and Voices ====");
-            Log.i("TTS_TEST", "Default Language: " + (defaultLang != null ? defaultLang : "null"));
-            Log.i("TTS_TEST", "Default Voice: " + (defaultVoice != null ? defaultVoice.getName() : "null"));
-            // 新增：直接输出当前TTS实例使用的voice对象
-            Log.i("TTS_TEST", "Current TTS Voice: " + currentVoice);
+            Log.i("TTS_TEST", getString(R.string.test_header_separator));
+            String defaultLangDisplay = defaultLang != null ? 
+                defaultLang.getDisplayName(LocaleHelper.getCurrentLocale(this)) + " (" + defaultLang.toLanguageTag() + ")" : "null";
+            Log.i("TTS_TEST", getString(R.string.test_default_language) + ": " + defaultLangDisplay);
+            String defaultVoiceDisplay = defaultVoice != null ? defaultVoice.toString() : "null";
+            Log.i("TTS_TEST", getString(R.string.test_default_voice) + ": " + defaultVoiceDisplay);
+            String currentVoiceDisplay = currentVoice != null ? currentVoice.toString() : "null";
+            Log.i("TTS_TEST", getString(R.string.test_current_tts_voice) + ": " + currentVoiceDisplay);
             for (Locale locale : localeVoices.keySet()) {
                 StringBuilder sb = new StringBuilder();
-                sb.append("[Language] ").append(locale);
+                String displayName = locale.getDisplayName(LocaleHelper.getCurrentLocale(this));
+                String languageTag = locale.toLanguageTag();
+                sb.append(getString(R.string.test_language_label)).append(" ").append(displayName).append(" (").append(languageTag).append(")");
                 if (locale.equals(defaultLang))
-                    sb.append("  <== DEFAULT");
+                    sb.append("  <== ").append(getString(R.string.test_default_marker));
                 Log.i("TTS_TEST", sb.toString());
                 List<Voice> vlist = localeVoices.get(locale);
                 Voice langDefaultVoice = languageDefaultVoices.get(locale);
                 if (vlist != null) {
                     for (Voice v : vlist) {
                         StringBuilder vinfo = new StringBuilder();
-                        vinfo.append("    - Voice: ").append(v.getName());
+                        vinfo.append("    - ").append(getString(R.string.test_voice_label)).append(": ").append(v.toString());
                         if (defaultVoice != null && v.getName().equals(defaultVoice.getName()))
-                            vinfo.append("  <== DEFAULT");
+                            vinfo.append("  <== ").append(getString(R.string.test_default_marker));
                         if (langDefaultVoice != null && v.getName().equals(langDefaultVoice.getName()))
-                            vinfo.append("  <== DEFAULT for this language");
+                            vinfo.append("  <== ").append(getString(R.string.test_default_for_language));
                         Log.i("TTS_TEST", vinfo.toString());
                     }
                 }
             }
-            Log.i("TTS_TEST", "===============================================");
+            Log.i("TTS_TEST", getString(R.string.test_footer_separator));
         } catch (Exception e) {
             Log.e("TTS_TEST", "logTtsVoices error", e);
         }

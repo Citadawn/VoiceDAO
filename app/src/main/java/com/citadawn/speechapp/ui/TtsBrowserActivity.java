@@ -32,6 +32,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.citadawn.speechapp.R;
 import com.citadawn.speechapp.util.DialogHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
+import com.citadawn.speechapp.util.StatusBarHelper;
 import com.citadawn.speechapp.util.TtsEngineHelper;
 import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
 import com.google.android.material.tabs.TabLayout;
@@ -73,6 +74,16 @@ public class TtsBrowserActivity extends AppCompatActivity {
         initViews();
         initTts();
         setupTabs();
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        // 在Android 15上，需要重新设置状态栏颜色
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            StatusBarHelper.forceStatusBarColor(getWindow());
+        }
     }
     
     @Override
@@ -129,6 +140,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.tts_browser_title);
         }
+        
+        // 设置状态栏背景色和文字颜色
+        StatusBarHelper.setupStatusBar(getWindow());
         
         // 处理系统窗口插入，避免与状态栏重叠
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_container), (v, insets) -> {

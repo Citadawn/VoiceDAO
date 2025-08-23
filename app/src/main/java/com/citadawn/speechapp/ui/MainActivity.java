@@ -66,6 +66,7 @@ import com.citadawn.speechapp.util.TtsEngineChangeHelper;
 import com.citadawn.speechapp.util.TtsEngineHelper;
 import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
 import com.citadawn.speechapp.util.ViewHelper;
+import com.citadawn.speechapp.util.StatusBarHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -519,6 +520,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_more_vert_white_24dp));
+        
+        // 设置状态栏背景色和文字颜色
+        StatusBarHelper.setupStatusBar(getWindow());
 
         // 动态设置statusBarSpacer高度为状态栏高度
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -611,7 +615,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 为所有按钮设置自动文本大小调整
         setupAllButtonsAutoTextSize();
-        btnStop = findViewById(R.id.btnStop);
         btnStop.setOnClickListener(v -> {
             if (tts != null && isTtsReady) {
                 tts.stop();
@@ -622,7 +625,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnSaveAudio = findViewById(R.id.btnSaveAudio);
         // SAF文件选择器回调
         registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -1169,6 +1171,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         // 检测TTS引擎是否发生变化，如果发生变化则重新初始化
         checkAndHandleTtsEngineChange();
+        
+        // 在Android 15上，需要重新设置状态栏颜色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            StatusBarHelper.forceStatusBarColor(getWindow());
+        }
     }
     
     @Override
@@ -1797,10 +1804,7 @@ public class MainActivity extends AppCompatActivity {
         DelayedTaskHelper.clearTextDelayed(tvSpeedSetResult, Constants.TOAST_MESSAGE_DELAY);
 
         // 记录测试日志
-        Log.i("TTS_TEST", "=== 语速设置失败测试 ===");
-        Log.i("TTS_TEST", "模拟语速设置失败，显示警告文字");
-        Log.i("TTS_TEST", "警告文字将在 " + Constants.TOAST_MESSAGE_DELAY + "ms 后自动清除");
-        Log.i("TTS_TEST", "=== 语速设置失败测试完成 ===");
+        Log.i("TTS_TEST", "语速设置失败测试完成");
     }
 
     /**
@@ -1827,10 +1831,7 @@ public class MainActivity extends AppCompatActivity {
         DelayedTaskHelper.clearTextDelayed(tvPitchSetResult, Constants.TOAST_MESSAGE_DELAY);
 
         // 记录测试日志
-        Log.i("TTS_TEST", "=== 音调设置失败测试 ===");
-        Log.i("TTS_TEST", "模拟音调设置失败，显示警告文字");
-        Log.i("TTS_TEST", "警告文字将在 " + Constants.TOAST_MESSAGE_DELAY + "ms 后自动清除");
-        Log.i("TTS_TEST", "=== 音调设置失败测试完成 ===");
+        Log.i("TTS_TEST", "音调设置失败测试完成");
     }
 
     private void showLanguageSelectionDialog() {
@@ -2141,8 +2142,8 @@ public class MainActivity extends AppCompatActivity {
             tts.setPitch(pitch);
             
             // 更新UI显示
-            seekBarSpeed.setProgress((int) ((speechRate - 0.5f) * 100));
-            seekBarPitch.setProgress((int) ((pitch - 0.5f) * 100));
+            seekBarSpeed.setProgress((int) ((speechRate - 0.5f) * 10));
+            seekBarPitch.setProgress((int) ((pitch - 0.5f) * 10));
             textSpeechRateValue.setText(String.format(Locale.US, "%.2f", speechRate));
             textPitchValue.setText(String.format(Locale.US, "%.2f", pitch));
             

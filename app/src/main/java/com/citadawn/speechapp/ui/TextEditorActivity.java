@@ -17,6 +17,7 @@ import com.citadawn.speechapp.util.ButtonTextHelper;
 import com.citadawn.speechapp.util.ClearButtonHelper;
 import com.citadawn.speechapp.util.DialogHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
+import com.citadawn.speechapp.util.StatusBarHelper;
 import com.citadawn.speechapp.util.TextLengthHelper;
 
 /**
@@ -54,6 +55,9 @@ public class TextEditorActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_editor);
+
+        // 设置状态栏文字颜色为黑色
+        StatusBarHelper.setupStatusBar(getWindow());
 
         Toolbar toolbar = findViewById(R.id.editorToolbar);
         setSupportActionBar(toolbar);

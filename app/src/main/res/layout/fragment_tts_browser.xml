@@ -16,6 +16,8 @@
         android:paddingEnd="16dp"
         android:paddingBottom="8dp"
         android:scrollbarStyle="outsideOverlay"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:fastScrollEnabled="true"
+        android:fastScrollAlwaysVisible="false" />
 
 </LinearLayout> 

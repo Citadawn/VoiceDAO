@@ -6,7 +6,7 @@
     <color name="hint_gray">#9CA3AF</color>
     <color name="text_primary">#1F2937</color>
     <color name="focus_border">#272727</color>
-    <color name="text_selection_highlight">#E8F0F8</color>
+
 
     <!-- 主题色相关颜色 -->
     <color name="theme_light_bg">#F8F9FA</color>
@@ -25,4 +25,8 @@
     <color name="support_status_bg">#2196F3</color>
     <color name="voice_info_bg">#F5F5F5</color>
     <color name="voice_info_border">#E0E0E0</color>
+    
+    <!-- TabLayout 背景色，比Toolbar稍浅，形成层次感 -->
+    <color name="tab_layout_bg">#323232</color>
+    <color name="tab_layout_border">#404040</color>
 </resources>

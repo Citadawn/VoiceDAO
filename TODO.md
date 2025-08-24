@@ -4,43 +4,41 @@
 
 2. 
 
-3. 为所有的 Toast 设置一个独特并且与消息相关联的图标。
+3. 在readme上说明本软件支持的Android版本范围
 
-4. 在readme上说明本软件支持的Android版本范围
+4. 看看颜色代码是否需要统一放到 colors.xml 文件中。
 
-5. 看看颜色代码是否需要统一放到 colors.xml 文件中。
+5. 是否需要为所有的颜色、字符串设置统一的资源文件colors.xml/strings.xml，比如：`android:textColor="#FF5722"`
 
-6. 是否需要为所有的颜色、字符串设置统一的资源文件colors.xml/strings.xml，比如：`android:textColor="#FF5722"`
+6. 更新一下状态信息区块开发指南、信息图标开发指南、测试模式添加测试项指南文件。
 
-7. 更新一下状态信息区块开发指南、信息图标开发指南、测试模式添加测试项指南文件。
+7. 
 
-8. 
+8. 重构：
+   
+   1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
+      
+      格式化alt+shift+f
+   
+   2. 资源文件：命名是否是否贴切、删除多余资源文件
 
-9. cursor：CONTRIBUTING.md 文件中未提到的按Android开发标准执行
-
-10. 
-
-11. 重构：
-    
-    1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
-       
-       格式化alt+shift+f
-    
-    2. 资源文件：命名是否是否贴切、删除多余资源文件
-
-12. ![](D:\Users\24858\Pictures\MarkText\2025-08-01-11-33-19-image.png)默认项猜测应该是软件界面语言Locale造成的。还有一个问题，当系统语言是中文，软件界面语言是英文的时候，默认语言仍然为中文（这好像也没有问题）。
+9. ![](D:\Users\24858\Pictures\MarkText\2025-08-01-11-33-19-image.png)默认项猜测应该是软件界面语言Locale造成的。还有一个问题，当系统语言是中文，软件界面语言是英文的时候，默认语言仍然为中文（这好像也没有问题）。
 
 ## 问题
 
 1. 有些第三方TTS引擎设置语速、音调没有作用
 
-2. 
+2. 不同的 TTS 引擎朗读、保存音频的速度不同，系统 TTS 引擎速度最快
 
-3. 不同的 TTS 引擎朗读、保存音频的速度不同，系统 TTS 引擎速度最快
+3. 
 
 4. 给软件一个专业的名字，并修改输出文件的默认保存名字
 
-5. 项目完成后，清理项目没有的东西，比如，string.xml中没有使用的string；查看文件名是否贴切
+5. 为所有的 Toast 设置一个独特并且与消息相关联的图标。
+
+6. 
+
+7. 项目完成后，清理项目没有的东西，比如，string.xml中没有使用的string；查看文件名是否贴切
 
 ## 信息
 

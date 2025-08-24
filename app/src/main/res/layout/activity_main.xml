@@ -62,8 +62,8 @@
                 android:paddingEnd="24dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
-                android:textCursorDrawable="@drawable/cursor_main_dark"
-                android:textColorHighlight="@color/text_selection_highlight"
+                            android:textCursorDrawable="@drawable/cursor_main_dark"
+            android:textColorHighlight="#1A272727"
                 android:elevation="4dp"
                 android:importantForAutofill="no"
                 android:scrollbars="vertical"
@@ -644,8 +644,8 @@
                         android:textSize="@dimen/sp_13" />
                     <ImageButton
                         android:id="@+id/btnCopySaveDir"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginStart="@dimen/dp_8"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_copy"

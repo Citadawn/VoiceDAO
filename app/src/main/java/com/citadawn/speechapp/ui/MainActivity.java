@@ -168,15 +168,15 @@ class LanguageAdapter extends BaseAdapter {
      */
     private int getSupportColorRes(int support) {
         if (support == TextToSpeech.LANG_AVAILABLE) {
-            return R.color.tts_support_full;
+            return R.color.tts_support_full; // 🟢 绿色：完全支持
         } else if (support == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-            return R.color.tts_support_partial;
+            return R.color.tts_support_partial; // 🟣 紫色：国家支持
         } else if (support == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
-            return R.color.tts_support_variant;
+            return R.color.tts_support_variant; // 🔵 蓝色：变体支持
         } else if (support == TextToSpeech.LANG_MISSING_DATA) {
-            return R.color.tts_support_missing_data;
+            return R.color.tts_support_missing_data; // 🟡 黄色：缺少数据
         } else {
-            return R.color.tts_support_none;
+            return R.color.tts_support_none; // ⚪ 灰色：不支持/未知
         }
     }
 

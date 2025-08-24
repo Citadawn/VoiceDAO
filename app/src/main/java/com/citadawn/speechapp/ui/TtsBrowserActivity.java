@@ -24,6 +24,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -60,6 +61,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
     
     // 滚动位置保存
     private final Map<Integer, Integer> scrollPositions = new HashMap<>();
+    private final Map<Integer, Integer> scrollOffsets = new HashMap<>();
     
     // endregion
     
@@ -209,6 +211,16 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 
                 lastPosition = position;
             }
+            
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                
+                // 当页面滚动状态改变时，确保所有ListView的滚动状态正确
+                if (state == ViewPager2.SCROLL_STATE_IDLE && pagerAdapter != null) {
+                    pagerAdapter.resetAllListViewScrollState();
+                }
+            }
         });
     }
     
@@ -225,6 +237,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
         private TextToSpeech tts;
         private final Map<Integer, BaseAdapter> adapters = new HashMap<>();
         private final Map<Integer, ListView> listViews = new HashMap<>();
+
         
         public TtsBrowserPagerAdapter(TtsBrowserActivity activity) {
             this.activity = activity;
@@ -239,7 +252,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 强制刷新所有数据，确保引擎列表正确显示
             notifyDataSetChanged();
         }
-        
+
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -263,8 +276,41 @@ public class TtsBrowserActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             if (tts == null) return;
             
-            ListView listView = holder.itemView.findViewById(R.id.list_view);
+
+            
+            ListView listView = holder.listView;
             listViews.put(position, listView);
+            
+            // 添加滚动监听器，实时保存滚动位置
+            listView.setOnScrollListener(new android.widget.AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(android.widget.AbsListView view, int scrollState) {
+                    // 滚动状态改变时保存位置
+                    if (scrollState == android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                        int currentPosition = holder.getAdapterPosition();
+                        if (currentPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                            saveScrollPosition(listView, currentPosition);
+                        }
+                        
+                        // 确保滚动状态正确重置
+                        view.post(() -> {
+                            view.setEnabled(true);
+                            view.setFocusable(true);
+                            view.setFocusableInTouchMode(true);
+                        });
+                    }
+                }
+                
+                @Override
+                public void onScroll(android.widget.AbsListView view, int firstVisibleItem, 
+                                   int visibleItemCount, int totalItemCount) {
+                    // 滚动时实时保存位置
+                    int currentPosition = holder.getAdapterPosition();
+                    if (currentPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                        saveScrollPosition(listView, currentPosition);
+                    }
+                }
+            });
             
             // 如果是语言发音人页面，设置搜索功能
             if (position == 1) {
@@ -290,8 +336,8 @@ public class TtsBrowserActivity extends AppCompatActivity {
             if (adapter != null) {
                 listView.setAdapter(adapter);
                 
-                // 恢复滚动位置
-                restoreScrollPosition(listView, position);
+                // 延迟恢复滚动位置，确保适配器完全加载
+                listView.post(() -> restoreScrollPosition(listView, position));
             }
         }
         
@@ -327,7 +373,12 @@ public class TtsBrowserActivity extends AppCompatActivity {
         private void saveScrollPosition(ListView listView, int position) {
             if (listView != null) {
                 int firstVisiblePosition = listView.getFirstVisiblePosition();
+                View firstVisibleView = listView.getChildAt(0);
+                int top = (firstVisibleView == null) ? 0 : firstVisibleView.getTop();
+                
+                // 保存位置和偏移量
                 activity.scrollPositions.put(position, firstVisiblePosition);
+                activity.scrollOffsets.put(position, top);
             }
         }
         
@@ -337,8 +388,24 @@ public class TtsBrowserActivity extends AppCompatActivity {
         private void restoreScrollPosition(ListView listView, int position) {
             if (listView != null) {
                 Integer scrollPosition = activity.scrollPositions.get(position);
+                Integer scrollOffset = activity.scrollOffsets.get(position);
+                
                 if (scrollPosition != null) {
-                    listView.post(() -> listView.setSelection(scrollPosition));
+                    // 使用更精确的恢复方法
+                    listView.post(() -> {
+                        // 确保ListView状态正确
+                        listView.setEnabled(true);
+                        listView.setFocusable(true);
+                        listView.setFocusableInTouchMode(true);
+                        
+                        if (scrollOffset != null) {
+                            // 恢复精确位置和偏移量
+                            listView.setSelectionFromTop(scrollPosition, scrollOffset);
+                        } else {
+                            // 备用方法
+                            listView.setSelection(scrollPosition);
+                        }
+                    });
                 }
             }
         }
@@ -350,6 +417,26 @@ public class TtsBrowserActivity extends AppCompatActivity {
             ListView listView = listViews.get(currentPosition);
             if (listView != null) {
                 saveScrollPosition(listView, currentPosition);
+            }
+        }
+        
+        /**
+         * 重置所有ListView的滚动状态
+         */
+        public void resetAllListViewScrollState() {
+            for (ListView listView : listViews.values()) {
+                if (listView != null) {
+                    // 强制重置滚动状态
+                    listView.clearFocus();
+                    listView.requestFocus();
+                    
+                    // 确保滚动功能正常
+                    listView.post(() -> {
+                        listView.setEnabled(true);
+                        listView.setFocusable(true);
+                        listView.setFocusableInTouchMode(true);
+                    });
+                }
             }
         }
         
@@ -411,8 +498,11 @@ public class TtsBrowserActivity extends AppCompatActivity {
         }
         
         static class ViewHolder extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
+            final ListView listView;
+            
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+                listView = itemView.findViewById(R.id.list_view);
             }
         }
     }
@@ -519,7 +609,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
     /**
      * 语言和发音人列表适配器
      */
-    private static class LanguageVoiceAdapter extends BaseAdapter {
+    private static class LanguageVoiceAdapter extends BaseAdapter implements android.widget.SectionIndexer {
         
         private final Context context;
         private final List<LanguageVoiceItem> allItems; // 所有原始数据
@@ -527,6 +617,10 @@ public class TtsBrowserActivity extends AppCompatActivity {
         private final LayoutInflater inflater;
         private final TextToSpeech tts;
         private String currentFilter = ""; // 当前搜索关键词
+        
+        // 快速滚动索引相关
+        private String[] sections;
+        private Integer[] sectionPositions;
         
         public LanguageVoiceAdapter(Context context, Set<Locale> languages, Set<Voice> voices, TextToSpeech tts) {
             this.context = context;
@@ -536,6 +630,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 使用改进的方法构建语言和发音人数据
             this.allItems = buildLanguageVoiceItems(languages, voices);
             this.items = new ArrayList<>(this.allItems); // 初始显示所有数据
+            
+            // 初始化快速滚动索引
+            buildSectionIndex();
         }
         
         /**
@@ -642,24 +739,35 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 设置支持情况
             int supportStatus = tts.isLanguageAvailable(item.locale);
             String supportText;
+            int supportColorRes;
             switch (supportStatus) {
                 case TextToSpeech.LANG_AVAILABLE:
                     supportText = context.getString(R.string.language_available);
+                    supportColorRes = R.color.tts_support_full; // 🟢 绿色：完全支持
                     break;
                 case TextToSpeech.LANG_COUNTRY_AVAILABLE:
                     supportText = context.getString(R.string.language_country_available);
+                    supportColorRes = R.color.tts_support_partial; // 🟣 紫色：国家支持
+                    break;
+                case TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE:
+                    supportText = context.getString(R.string.language_country_available); // 使用国家支持的文本，因为没有单独的变体支持文本
+                    supportColorRes = R.color.tts_support_variant; // 🔵 蓝色：变体支持
                     break;
                 case TextToSpeech.LANG_MISSING_DATA:
                     supportText = context.getString(R.string.language_missing_data);
+                    supportColorRes = R.color.tts_support_missing_data; // 🟡 黄色：缺少数据
                     break;
                 case TextToSpeech.LANG_NOT_SUPPORTED:
                     supportText = context.getString(R.string.language_not_supported);
+                    supportColorRes = R.color.tts_support_none; // ⚪ 灰色：不支持
                     break;
                 default:
                     supportText = context.getString(R.string.language_unknown);
+                    supportColorRes = R.color.tts_support_none; // ⚪ 灰色：未知
                     break;
             }
             holder.supportView.setText(supportText);
+            holder.supportView.setBackgroundColor(ContextCompat.getColor(context, supportColorRes));
             
             // 设置发音人信息
             if (item.voice != null) {
@@ -787,10 +895,66 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 对于BaseAdapter，使用notifyDataSetChanged，但可以优化调用时机
             // 只有在数据真正发生变化时才调用
             if (oldSize != items.size()) {
+                // 重新构建索引
+                buildSectionIndex();
                 notifyDataSetChanged();
             }
         }
         
+        /**
+         * 构建快速滚动索引
+         */
+        private void buildSectionIndex() {
+            List<String> sectionList = new ArrayList<>();
+            List<Integer> positionList = new ArrayList<>();
+            
+            String previousSection = "";
+            for (int i = 0; i < items.size(); i++) {
+                LanguageVoiceItem item = items.get(i);
+                if (item.voice == null) { // 只为语言项创建索引，跳过发音人项
+                    String languageName = item.locale.getDisplayName(LocaleHelper.getCurrentLocale(context));
+                    if (!languageName.isEmpty()) {
+                        String section = languageName.substring(0, 1).toUpperCase();
+                        if (!section.equals(previousSection)) {
+                            sectionList.add(section);
+                            positionList.add(i);
+                            previousSection = section;
+                        }
+                    }
+                }
+            }
+            
+            sections = sectionList.toArray(new String[0]);
+            sectionPositions = positionList.toArray(new Integer[0]);
+        }
+        
+        // SectionIndexer接口实现
+        @Override
+        public Object[] getSections() {
+            return sections;
+        }
+        
+        @Override
+        public int getPositionForSection(int sectionIndex) {
+            if (sections == null || sectionIndex < 0 || sectionIndex >= sections.length) {
+                return 0;
+            }
+            return sectionPositions[sectionIndex];
+        }
+        
+        @Override
+        public int getSectionForPosition(int position) {
+            if (sections == null || position < 0 || position >= getCount()) {
+                return 0;
+            }
+            
+            for (int i = sectionPositions.length - 1; i >= 0; i--) {
+                if (position >= sectionPositions[i]) {
+                    return i;
+                }
+            }
+            return 0;
+        }
 
         
         private static class LanguageVoiceItem {

@@ -26,13 +26,16 @@
             android:background="@drawable/edittext_bg"
             android:padding="12dp"
             android:textSize="14sp"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:textCursorDrawable="@drawable/cursor_main_dark"
+            android:textColorHighlight="#1A272727" />
 
         <ImageButton
             android:id="@+id/clear_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_clear_search"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/clear_search"
@@ -53,6 +56,8 @@
         android:paddingEnd="16dp"
         android:paddingBottom="8dp"
         android:scrollbarStyle="outsideOverlay"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:fastScrollEnabled="true"
+        android:fastScrollAlwaysVisible="false" />
 
 </LinearLayout> 

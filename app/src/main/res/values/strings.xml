@@ -114,6 +114,7 @@ It is recommended to organize your text content in this editor before returning 
     
     <!-- 搜索功能相关字符串 -->
     <string name="search_language_hint" tools:ignore="MissingTranslation">Search languages…</string>
+
     <string name="clear_search" tools:ignore="MissingTranslation">Clear search</string>
     
     <!-- TTS浏览器信息相关字符串 -->
@@ -121,24 +122,35 @@ It is recommended to organize your text content in this editor before returning 
     <string name="tts_browser_info_title" tools:ignore="MissingTranslation">TTS Browser</string>
     <string name="tts_browser_info_content" tools:ignore="MissingTranslation"><![CDATA[
         <b>🔍 TTS Browser Overview</b><br/><br/>
-        This TTS Browser displays all available TTS engines installed on your device and their supported languages and voices.<br/><br/>
+        This TTS Browser displays all available TTS engines installed on your device, as well as languages and voices supported by the current default TTS engine.<br/><br/>
         
         <b>📋 Features:</b><br/>
         • <b>Engines Tab:</b> Browse all installed TTS engines with their icons, names, and package information<br/>
-        • <b>Languages &amp; Voices Tab:</b> View supported languages, voice details, and search functionality<br/>
-        • <b>Search:</b> Quickly find specific languages by name or tag<br/>
+        • <b>Languages &amp; Voices Tab:</b> View languages and voices supported by the current default TTS engine, including details and search functionality<br/>
+        • <b>Search:</b> Quickly find specific languages by language name or language tag<br/>
         • <b>Smart Sorting:</b> Default engines, languages, and voices are automatically marked and prioritized<br/><br/>
         
-        <b>🎯 Usage:</b><br/>
-        • Switch between tabs to explore different information<br/>
-        • Use search to filter languages in the Languages &amp; Voices tab<br/>
-        • Scroll through lists to view detailed information<br/><br/>
+        <b>🎵 Quality Level Guide:</b><br/>
+        • <b>Very Low (100):</b> Understandable but unnatural, mechanical<br/>
+        • <b>Low (200):</b> Not very human-like, but usable<br/>
+        • <b>Normal (300):</b> Standard quality, sufficient for daily use<br/>
+        • <b>High (400):</b> Close to human speech, more natural<br/>
+        • <b>Very High (500):</b> Almost indistinguishable from human, highest quality<br/><br/>
         
-        <b>💡 Tips:</b><br/>
-        • Engine information helps you understand available TTS capabilities<br/>
-        • Language support status indicates whether voice data is available<br/>
-        • Voice details show quality, latency, and network requirements<br/>
-        • Language names are displayed in your current interface language for better understanding<br/>
+        <b>⚡ Latency Level Guide:</b><br/>
+        • <b>Very Low (100):</b> &lt;20ms, suitable for real-time conversations, games<br/>
+        • <b>Low (200):</b> ~20ms, suitable for interactive applications<br/>
+        • <b>Normal (300):</b> ~50ms, suitable for general reading applications<br/>
+        • <b>High (400):</b> ~200ms, network synthesis, quality priority<br/>
+        • <b>Very High (500):</b> &gt;200ms, network synthesis, high quality<br/><br/>
+        
+        <b>🌐 Support Status Guide:</b><br/>
+        • <b>🟢 Available:</b> Fully supported language and region, ready to use<br/>
+        • <b>🟣 Country Available:</b> Supports language and country, but not necessarily specific regions<br/>
+        • <b>🔵 Variant Available:</b> Supports language, country and specific variants<br/>
+        • <b>🟡 Missing Data:</b> Missing language data package, need to download in system TTS settings<br/>
+        • <b>⚪ Not Supported:</b> TTS engine does not support this language<br/>
+        • <b>⚪ Unknown:</b> Unable to determine support status
     ]]></string>
 
     <string name="minus" tools:ignore="MissingTranslation">-</string>
@@ -162,17 +174,23 @@ It is recommended to organize your text content in this editor before returning 
     <string name="none">None</string>
     <string name="tts_support_info_title" tools:ignore="MissingTranslation">Language Instructions</string>
     <string name="tts_support_info_content" tools:ignore="MissingTranslation"><![CDATA[
-        Language selection allows you to choose different languages for text-to-speech.<br/><br/>
-        <b>Selection Process:</b><br/>
-        • Each TTS engine has a default language configured in system TTS settings<br/>
-        • Deep background indicates the currently selected language<br/>
-        • Color bars on the left indicate TTS engine support level for each language<br/><br/>
-        <b>Support Levels:</b><br/>
-        <font color="#4CAF50">🟢 Green</font>: Fully supported language and region<br/>
-        <font color="#9C27B0">🟣 Purple</font>: Supported language and country, but not necessarily specific regions<br/>
-        <font color="#2196F3">🔵 Blue</font>: Supported language, country and variants<br/>
-        <font color="#FFEB3B">🟡 Yellow</font>: Missing language data package (needs download)<br/>
-        <font color="#BDBDBD">⚪ Gray</font>: Unsupported language<br/><br/>
+        <b>Language Selection Overview</b><br/><br/>
+        Language selection allows you to choose different languages for text-to-speech. Each TTS engine has a default language configured in system TTS settings, and deep background indicates the currently selected language.<br/><br/>
+        
+        <b>Usage:</b><br/>
+        • Click the language dropdown to view all available languages<br/>
+        • Color bars on the left indicate TTS engine support level for each language<br/>
+        • Select your desired language for speech synthesis<br/><br/>
+        
+        <b>Support Status Guide:</b><br/>
+        • <b>🟢 Available:</b> Fully supported language and region, ready to use<br/>
+        • <b>🟣 Country Available:</b> Supports language and country, but not necessarily specific regions<br/>
+        • <b>🔵 Variant Available:</b> Supports language, country and specific variants<br/>
+        • <b>🟡 Missing Data:</b> Missing language data package, need to download in system TTS settings<br/>
+        • <b>⚪ Not Supported:</b> TTS engine does not support this language<br/>
+        • <b>⚪ Unknown:</b> Unable to determine support status<br/><br/>
+        
+
     ]]></string>
     <string name="tts_support_info_button" tools:ignore="MissingTranslation">OK</string>
     <string name="menu_test_mode" tools:ignore="MissingTranslation">Test Mode</string>

@@ -521,6 +521,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_more_vert_white_24dp));
         
+        // 更新Toolbar标题，支持国际化
+        updateToolbarTitle();
+        
         // 设置状态栏背景色和文字颜色
         StatusBarHelper.setupStatusBar(getWindow());
 

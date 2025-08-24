@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">文本转语音</string>
+    <string name="app_name">语道</string>
     <string name="hint_input_text">输入要朗读或保存为音频的文本</string>
     <string name="label_speed">语速</string>
     <string name="label_pitch">音调</string>

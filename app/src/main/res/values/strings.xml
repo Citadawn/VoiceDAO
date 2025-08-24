@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="MissingTranslation">Text to Speech</string>
+    <string name="app_name" tools:ignore="MissingTranslation">VoiceDAO</string>
     <string name="hint_input_text" tools:ignore="MissingTranslation">Enter text to speak or save as audio</string>
     <string name="label_speed" tools:ignore="MissingTranslation">Speed</string>
     <string name="label_pitch" tools:ignore="MissingTranslation">Pitch</string>

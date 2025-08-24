@@ -7,7 +7,7 @@
     </style>
 
     <!-- 应用主题，继承自MaterialComponents，适配日夜模式 -->
-    <style name="Theme.TextToSpeechApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.VoiceDAO" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- 禁用系统ActionBar，使用自定义Toolbar -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

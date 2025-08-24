@@ -1,4 +1,4 @@
-# Contributing to TextToSpeechApp
+# Contributing to 语道 (VoiceDAO)
 
 感谢你对本项目的关注！请遵循以下协作规范。
 

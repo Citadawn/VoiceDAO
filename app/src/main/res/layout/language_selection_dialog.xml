@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:padding="24dp"
+    android:padding="@dimen/dp_24"
     android:gravity="center_horizontal">
     <LinearLayout
         android:layout_width="wrap_content"
@@ -11,22 +11,22 @@
         android:orientation="horizontal"
         android:gravity="bottom"
         tools:ignore="UselessParent"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="@dimen/dp_12">
 
         <TextView
             android:id="@+id/tvLanguageDialogTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dialog_title_language"
-            android:textSize="18sp"
+            android:textSize="@dimen/sp_18"
             android:textStyle="bold"
-            android:textColor="@color/main_dark" />
+            android:textColor="?attr/colorOnSurface" />
 
         <ImageView
             android:id="@+id/ivLanguageInfo"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="2dp"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_2"
             android:src="@drawable/ic_info_white_20dp"
             android:contentDescription="@string/language_selection_info_title"
             android:clickable="true"

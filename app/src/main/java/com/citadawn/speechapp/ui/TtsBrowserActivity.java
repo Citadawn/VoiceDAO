@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.util.TypedValue;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ import com.citadawn.speechapp.util.LocaleHelper;
 import com.citadawn.speechapp.util.StatusBarHelper;
 import com.citadawn.speechapp.util.TtsEngineHelper;
 import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
+import com.citadawn.speechapp.util.EngineLabelHelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -570,8 +572,8 @@ public class TtsBrowserActivity extends AppCompatActivity {
             }
 
             // 设置名称和包名，默认引擎添加标识
-            // 使用当前界面语言获取引擎显示名称
-            String engineName = TtsLanguageVoiceHelper.getLocalizedEngineName(engine.label, context);
+            // 使用官方资源按“应用界面语言”获取引擎本地化名称
+            String engineName = EngineLabelHelper.getLocalizedAppLabel(context, engine.name);
             if (engineName.isEmpty()) {
                 engineName = engine.name;
             }
@@ -775,9 +777,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 设置发音人信息
             if (item.voice != null) {
                 // 这是发音人项，调整样式
-                holder.languageView.setTextSize(14);
-                holder.languageView.setTextColor(context.getResources().getColor(android.R.color.darker_gray, null));
-                holder.languageView.setPadding(32, 0, 0, 0); // 缩进
+                holder.languageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.sp_14));
+                holder.languageView.setTextColor(ContextCompat.getColor(context, R.color.gray_666));
+                holder.languageView.setPadding((int) context.getResources().getDimension(R.dimen.dp_32), 0, 0, 0); // 缩进
 
                 // 检查是否为默认发音人
                 boolean isDefault = item.voice.equals(item.defaultVoice);
@@ -813,8 +815,8 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 holder.voiceView.setVisibility(View.VISIBLE);
             } else {
                 // 这是语言项，使用默认样式
-                holder.languageView.setTextSize(16);
-                holder.languageView.setTextColor(context.getResources().getColor(android.R.color.black, null));
+                holder.languageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.sp_16));
+                holder.languageView.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
                 holder.languageView.setPadding(0, 0, 0, 0);
                 holder.voiceView.setVisibility(View.GONE);
             }

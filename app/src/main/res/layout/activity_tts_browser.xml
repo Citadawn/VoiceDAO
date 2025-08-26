@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:elevation="4dp"
+            android:elevation="@dimen/dp_4"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/tab_layout_bg"
-            android:elevation="2dp"
+            android:elevation="@dimen/dp_2"
             app:tabGravity="fill"
             app:tabMode="fixed"
             app:tabTextColor="@android:color/white"

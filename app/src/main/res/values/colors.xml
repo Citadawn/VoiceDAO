@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="main_dark">#272727</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="pure_white">#FFFFFFFF</color>
+    <!-- 保留向后兼容的别名，避免大范围替换风险 -->
+    <item name="white" type="color">@color/pure_white</item>
     <color name="gray_666">#666666</color>
     <color name="hint_gray">#9CA3AF</color>
     <color name="text_primary">#1F2937</color>
     <color name="focus_border">#272727</color>
+    <color name="text_secondary_dark">#333333</color>
+    <color name="text_highlight">#1A272727</color>
+    <color name="accent_warning">#FF5722</color>
 
 
     <!-- 主题色相关颜色 -->
@@ -25,8 +30,17 @@
     <color name="support_status_bg">#2196F3</color>
     <color name="voice_info_bg">#F5F5F5</color>
     <color name="voice_info_border">#E0E0E0</color>
+    <color name="toast_border">#E0E0E0</color>
     
     <!-- TabLayout 背景色，比Toolbar稍浅，形成层次感 -->
     <color name="tab_layout_bg">#323232</color>
     <color name="tab_layout_border">#404040</color>
+    <!-- 控件背景与按钮态颜色 -->
+    <color name="btn_disabled_bg">#BDBDBD</color>
+    <color name="btn_pressed_bg">#CC272727</color>
+    <color name="panel_bg">#F5F5F5</color>
+    <color name="transparent">#00000000</color>
+    <color name="vector_light_gray">#F2F2F2</color>
+    <color name="vector_stroke_gray_1">#ECECEC</color>
+    <color name="vector_stroke_gray_2">#F0F0F0</color>
 </resources>

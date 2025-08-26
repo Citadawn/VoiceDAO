@@ -207,9 +207,9 @@ class LanguageAdapter extends BaseAdapter {
         bar.setBackgroundResource(colorRes);
         // 可选：下拉项背景色区分
         if (isDropdown) {
-            view.setBackgroundColor(ContextCompat.getColor(context, android.R.color.white));
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.pure_white));
         } else {
-            view.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
         }
         return view;
     }
@@ -620,7 +620,7 @@ public class MainActivity extends AppCompatActivity {
                 ttsWorkState = TtsWorkState.IDLE;
                 tvTtsSpeakStatus.setText(getString(R.string.tts_idle));
                 tvTtsSpeakStatus
-                        .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                        .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.tts_support_full));
             }
         });
 
@@ -711,23 +711,23 @@ public class MainActivity extends AppCompatActivity {
                 if (pendingTtsAction == PendingTtsAction.PENDING_SPEAK) {
                     tvTtsSpeakStatus.setText(getString(R.string.tts_prepare_read));
                     tvTtsSpeakStatus
-                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_orange_dark));
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.accent_warning));
                 } else if (pendingTtsAction == PendingTtsAction.PENDING_SAVE) {
                     tvTtsSpeakStatus.setText(getString(R.string.tts_prepare_save));
                     tvTtsSpeakStatus
-                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_orange_dark));
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.accent_warning));
                 } else if (ttsWorkState == TtsWorkState.SPEAKING) {
                     tvTtsSpeakStatus.setText(getString(R.string.tts_reading));
                     tvTtsSpeakStatus
-                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_dark));
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.accent_warning));
                 } else if (ttsWorkState == TtsWorkState.SAVING) {
                     tvTtsSpeakStatus.setText(getString(R.string.tts_saving));
                     tvTtsSpeakStatus
-                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_blue_dark));
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.tts_support_variant));
                 } else {
                     tvTtsSpeakStatus.setText(getString(R.string.tts_idle));
                     tvTtsSpeakStatus
-                            .setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                            .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.tts_support_full));
                 }
                 btnStop.setEnabled(ttsWorkState == TtsWorkState.SPEAKING);
                 updateSpeakAndSaveButtons();
@@ -1272,9 +1272,9 @@ public class MainActivity extends AppCompatActivity {
         String title = getString(R.string.app_name);
         if (TestManager.getInstance().isTestMode()) {
             title += getString(R.string.test_mode_toolbar_suffix);
-            toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.accent_warning));
         } else {
-            toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
+            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.pure_white));
         }
         toolbar.setTitle(title);
     }
@@ -1433,7 +1433,7 @@ public class MainActivity extends AppCompatActivity {
                 // 显示当前选择的测试项行
                 ((android.view.View) tvSelectedTestCases.getParent()).setVisibility(android.view.View.VISIBLE);
                 // 设置测试模式下的红色文字颜色
-                tvSelectedTestCases.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+                tvSelectedTestCases.setTextColor(ContextCompat.getColor(this, R.color.accent_warning));
                 // 设置标题文字颜色（通过findViewById获取标题TextView）
                 android.view.View parentView = (android.view.View) tvSelectedTestCases.getParent();
                 if (parentView instanceof android.widget.LinearLayout) {
@@ -1442,7 +1442,7 @@ public class MainActivity extends AppCompatActivity {
                         android.view.View titleView = linearLayout.getChildAt(0);
                         if (titleView instanceof android.widget.TextView) {
                             ((android.widget.TextView) titleView)
-                                    .setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+                                    .setTextColor(ContextCompat.getColor(this, R.color.accent_warning));
                         }
                     }
                 }
@@ -1451,7 +1451,7 @@ public class MainActivity extends AppCompatActivity {
                 // 隐藏当前选择的测试项行
                 ((android.view.View) tvSelectedTestCases.getParent()).setVisibility(android.view.View.GONE);
                 // 恢复默认文字颜色
-                tvSelectedTestCases.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+                tvSelectedTestCases.setTextColor(ContextCompat.getColor(this, R.color.gray_666));
                 // 恢复标题默认颜色
                 android.view.View parentView = (android.view.View) tvSelectedTestCases.getParent();
                 if (parentView instanceof android.widget.LinearLayout) {
@@ -1460,7 +1460,7 @@ public class MainActivity extends AppCompatActivity {
                         android.view.View titleView = linearLayout.getChildAt(0);
                         if (titleView instanceof android.widget.TextView) {
                             ((android.widget.TextView) titleView)
-                                    .setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+                                    .setTextColor(ContextCompat.getColor(this, R.color.gray_666));
                         }
                     }
                 }
@@ -1914,10 +1914,10 @@ public class MainActivity extends AppCompatActivity {
 
                 // 设置禁用项目的样式
                 if (!enabledItems[position]) {
-                    textView.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                    textView.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.gray_666));
                     textView.setEnabled(false);
                 } else {
-                    textView.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.black));
+                    textView.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.text_primary));
                     textView.setEnabled(true);
                 }
 

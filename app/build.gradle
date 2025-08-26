@@ -33,6 +33,12 @@ android {
             enableSplit = false
         }
     }
+
+    lintOptions {
+        abortOnError true
+        warningsAsErrors true
+        checkOnly 'HardcodedText','RtlHardcoded','RtlCompat','RtlEnabled','SetTextI18n','SmallSp','SpUsage','UseCompoundDrawables','UsingOnClickInXml','PxUsage','EllipsizeMaxLines','RelativeOverlap','ContentDescription','LabelFor','UnusedResources'
+    }
 }
 
 dependencies {

@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp"
-        android:background="@android:color/white"
-        android:elevation="2dp">
+        android:padding="@dimen/dp_8"
+        android:background="?attr/colorSurface"
+        android:elevation="@dimen/dp_2">
 
         <EditText
             android:id="@+id/search_edit_text"
@@ -23,17 +23,17 @@
             android:imeOptions="actionSearch"
             android:autofillHints="text"
             android:background="@drawable/edittext_bg"
-            android:padding="12dp"
-            android:textSize="14sp"
+            android:padding="@dimen/dp_12"
+            android:textSize="@dimen/sp_14"
             android:maxLines="1"
             android:textCursorDrawable="@drawable/cursor_main_dark"
-            android:textColorHighlight="#1A272727" />
+            android:textColorHighlight="@color/text_highlight" />
 
         <ImageButton
             android:id="@+id/clear_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/dp_8"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_clear_search"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -49,11 +49,11 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
+        android:dividerHeight="@dimen/dp_1"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_16"
+        android:paddingBottom="@dimen/dp_8"
         android:scrollbarStyle="outsideOverlay"
         android:clipToPadding="false"
         android:fastScrollEnabled="true"

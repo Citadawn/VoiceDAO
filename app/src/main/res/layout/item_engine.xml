@@ -3,21 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp"
+    android:padding="@dimen/dp_16"
     android:gravity="center_vertical">
 
     <!-- 引擎图标 -->
     <ImageView
         android:id="@+id/engine_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="@dimen/dp_48"
         android:src="@drawable/ic_launcher_foreground"
         android:contentDescription="@string/engine_icon_description" />
 
     <!-- 间距 -->
     <View
-        android:layout_width="16dp"
-        android:layout_height="1dp" />
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_1" />
 
     <!-- 引擎信息 -->
     <LinearLayout
@@ -31,7 +31,7 @@
             android:id="@+id/engine_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="@dimen/sp_16"
             android:textStyle="bold"
             android:textColor="?android:attr/textColorPrimary" />
 
@@ -40,9 +40,9 @@
             android:id="@+id/engine_package"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/sp_14"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="@dimen/dp_4" />
 
     </LinearLayout>
 

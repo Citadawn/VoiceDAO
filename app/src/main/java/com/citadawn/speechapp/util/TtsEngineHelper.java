@@ -48,8 +48,8 @@ public class TtsEngineHelper {
 
             for (TextToSpeech.EngineInfo engine : engines) {
                 if (engineName.equals(engine.name)) {
-                    // 使用当前界面语言获取引擎显示名称
-                    displayName = TtsLanguageVoiceHelper.getLocalizedEngineName(engine.label, context);
+                    // 使用官方资源按“应用界面语言”获取引擎本地化名称
+                    displayName = EngineLabelHelper.getLocalizedAppLabel(context, engine.name);
                     iconResId = engine.icon;
                     break;
                 }

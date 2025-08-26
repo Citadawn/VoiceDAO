@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="@dimen/dp_12"
         android:gravity="bottom"
         android:orientation="horizontal">
 
@@ -18,15 +18,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/test_mode_dialog_title"
-            android:textColor="@color/main_dark"
-            android:textSize="22sp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/sp_22"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivTestModeInfo"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="4dp"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_4"
             android:clickable="true"
             android:contentDescription="@string/test_mode_info_title"
             android:focusable="true"
@@ -37,40 +37,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/dp_8"
         android:background="@drawable/bg_test_controls"
         android:gravity="end"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="@dimen/dp_8">
 
         <TextView
             android:id="@+id/btnExpandAllDesc"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_28"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:contentDescription="@string/test_mode_btn_expand_all_desc"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/icon_expand"
-            android:textColor="@color/main_dark"
-            android:textSize="12sp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/sp_12"
             android:tooltipText="@string/test_mode_btn_expand_all_desc_tooltip"
             tools:targetApi="26" />
 
         <TextView
             android:id="@+id/btnCollapseAllDesc"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_28"
+            android:layout_marginStart="@dimen/dp_8"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:contentDescription="@string/test_mode_btn_collapse_all_desc"
             android:focusable="true"
             android:gravity="center"
             android:text="@string/icon_collapse"
-            android:textColor="@color/main_dark"
-            android:textSize="12sp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/sp_12"
             android:tooltipText="@string/test_mode_btn_collapse_all_desc_tooltip"
             tools:targetApi="26" />
     </LinearLayout>
@@ -78,10 +78,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTestCases"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="@dimen/dp_200"
+        android:layout_marginTop="@dimen/dp_8"
         android:background="@drawable/bg_test_list"
-        android:padding="8dp"
+        android:padding="@dimen/dp_8"
         android:scrollbars="vertical" />
 
     <LinearLayout
@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:orientation="horizontal"
-        android:paddingTop="16dp">
+        android:paddingTop="@dimen/dp_16">
 
         <Button
             android:id="@+id/btnCancel"
@@ -104,7 +104,7 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/dp_16"
             android:text="@string/test_mode_btn_start" />
     </LinearLayout>
 </LinearLayout> 

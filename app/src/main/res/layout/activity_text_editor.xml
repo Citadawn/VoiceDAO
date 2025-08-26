@@ -39,16 +39,16 @@
             android:minLines="10"
             android:maxLines="100"
             android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="80dp"
+            android:paddingStart="@dimen/dp_20"
+            android:paddingEnd="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_80"
             android:scrollbars="vertical"
             android:background="@null"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/hint_gray"
             android:textCursorDrawable="@drawable/cursor_main_dark"
-            android:textColorHighlight="#1A272727"
+            android:textColorHighlight="@color/text_highlight"
             android:autofillHints="text" />
     </ScrollView>
 
@@ -69,10 +69,8 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
+            style="@style/Widget.Button.Primary"
             android:text="@string/btn_clear"
-            android:textSize="@dimen/sp_16"
-            android:background="@drawable/btn_main_bg"
-            android:textColor="@color/white"
             android:stateListAnimator="@animator/btn_scale_animator" />
 
         <TextView
@@ -90,10 +88,8 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
+            style="@style/Widget.Button.Primary"
             android:text="@string/btn_ok"
-            android:textSize="@dimen/sp_16"
-            android:background="@drawable/btn_main_bg"
-            android:textColor="@color/white"
             android:stateListAnimator="@animator/btn_scale_animator" />
     </LinearLayout>
 

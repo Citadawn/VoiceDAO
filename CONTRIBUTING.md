@@ -41,6 +41,9 @@
 ### 资源管理
 
 - 所有颜色、尺寸值必须用资源引用（`@color/`、`@dimen/`），禁止硬编码
+- 通用文本色与面板背景一律使用主题属性（如 `?attr/colorOnSurface`、`?attr/colorSurface`）；仅“状态/警示/品牌”使用项目语义色（如 `accent_warning`、`tts_support_*`）
+- 按照既定样式（如 `Widget.Button.Primary`、`Widget.Button.Small`）复用按钮与文字样式，避免在布局中重复设置 `textSize/textColor/background`
+- 若需新增样式或主题属性，请先在 `values/styles.xml`、`values/themes.xml` 中扩展后再使用
 - 清理未使用资源，删除空目录
 
 ### 代码优化
@@ -118,3 +121,50 @@
 ---
 
 如有更优建议，欢迎补充！ 
+
+## UI 统一规范速查（给团队）
+
+---
+
+- 通用文本/面板：使用 `?attr/colorOnSurface`、`?attr/colorSurface`。
+- 状态/警示/品牌：使用项目语义色（如 `@color/accent_warning`、`@color/tts_support_*`）。
+- 按钮：统一使用样式 `@style/Widget.Button.Primary` 或 `@style/Widget.Button.Small`。
+- 尺寸/字号：统一从 `@dimen` 获取，不直接写 `dp/sp` 字面量。
+- 矢量与背景：颜色引用使用 `@color/*` 或主题属性，不写十六进制。
+- Java 设置字号：优先布局中定义；确需运行时设置时用 `setTextSize(COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.sp_xx))`。
+- Lint：禁止硬编码文本/颜色/px，违反项会在构建中阻断。
+
+### 新增界面参考样例
+
+布局片段（主题属性与样式复用）：
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorSurface"
+    android:padding="@dimen/dp_16">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/example_title"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/sp_16"/>
+
+    <Button
+        style="@style/Widget.Button.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_48"
+        android:text="@string/btn_ok"/>
+</LinearLayout>
+```
+
+Java 片段（避免硬编码）：
+
+```java
+textView.setTextColor(ContextCompat.getColor(this, R.color.accent_warning)); // 仅用于警示语义
+textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.sp_16));
+```
+
+CI 建议：在 PR 中自动执行 `assembleDebug` 与 `lintDebug`，阻止不符合规范的变更进入主干。

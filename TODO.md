@@ -14,6 +14,8 @@
 
 4. readme要更改相关内容，比如`git clone https://github.com/your-username/VoiceDAO.git`
 
+5. CONTRIBUTING.md的相关代码也要更改
+
 ## 规范
 
 新chat复制下面

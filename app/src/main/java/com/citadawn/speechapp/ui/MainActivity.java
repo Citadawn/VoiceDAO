@@ -465,7 +465,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> editorLauncher;
     private long lastBackPressedTime = 0;
     private static final int DOUBLE_BACK_EXIT_INTERVAL = 2000; // 2秒
-    private boolean isBackPressHandlerReady = false; // 返回键处理器是否已准备就绪
     
     // endregion
 
@@ -497,11 +496,6 @@ public class MainActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // 确保返回键处理器已准备就绪
-                if (!isBackPressHandlerReady) {
-                    return;
-                }
-                
                 // 主界面双击返回键退出逻辑
                 long now = System.currentTimeMillis();
                 if (now - lastBackPressedTime < DOUBLE_BACK_EXIT_INTERVAL) {
@@ -1165,9 +1159,6 @@ public class MainActivity extends AppCompatActivity {
         btnClear.setEnabled(!editText.getText().toString().isEmpty());
         // 初始化时也调用一次
         updateResetButtons();
-        
-        // 延迟设置返回键处理器为准备就绪状态，避免启动时过早触发
-        new Handler(Looper.getMainLooper()).postDelayed(() -> isBackPressHandlerReady = true, 500); // 延迟500毫秒
     }
     
     // endregion

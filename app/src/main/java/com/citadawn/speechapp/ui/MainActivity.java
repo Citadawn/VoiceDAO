@@ -60,13 +60,13 @@ import com.citadawn.speechapp.util.InfoIconHelper;
 import com.citadawn.speechapp.util.InfoIconPositionHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
 import com.citadawn.speechapp.util.SeekBarHelper;
+import com.citadawn.speechapp.util.StatusBarHelper;
 import com.citadawn.speechapp.util.TextLengthHelper;
 import com.citadawn.speechapp.util.ToastHelper;
 import com.citadawn.speechapp.util.TtsEngineChangeHelper;
 import com.citadawn.speechapp.util.TtsEngineHelper;
 import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
 import com.citadawn.speechapp.util.ViewHelper;
-import com.citadawn.speechapp.util.StatusBarHelper;
 
 import java.io.File;
 import java.io.FileInputStream;

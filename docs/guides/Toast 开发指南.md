@@ -1,10 +1,10 @@
-# Toast 开发指南
+## 概述
 
 ---
 
-## 概述
-
 本指南介绍如何在 VoiceDAO 项目中正确使用 Toast 消息提示功能。项目使用自定义 Toast 样式，确保所有 Toast 消息具有一致的外观和用户体验。
+
+**遵循规范**：请严格遵循本项目 [CONTRIBUTING.md](../../CONTRIBUTING.md) 的协作规范（分层、分区、命名、国际化与资源管理等）。
 
 ## Toast 样式规范
 
@@ -26,7 +26,7 @@
 - **自适应宽度**：根据内容自动调整宽度
 - **垂直居中**：文本垂直居中对齐
 
-## 使用方法
+## 快速开始
 
 ---
 
@@ -195,6 +195,53 @@ ToastHelper.showShort(this, R.string.toast_new_feature);
 - 验证文本长度是否合适
 - 检查在不同屏幕尺寸下的显示效果
 
+## 完整示例
+
+---
+
+### 示例：添加"音频播放完成"Toast 消息
+
+#### 1. 定义字符串资源
+
+```xml
+<!-- values/strings.xml -->
+<string name="toast_audio_play_complete">Audio playback completed</string>
+
+<!-- values-zh/strings.xml -->
+<string name="toast_audio_play_complete">音频播放完成</string>
+```
+
+#### 2. 在代码中使用
+
+```java
+// 在音频播放完成的回调中
+private void onAudioPlayComplete() {
+    // 显示播放完成提示
+    ToastHelper.showShort(this, R.string.toast_audio_play_complete);
+
+    // 其他完成后的逻辑
+    updatePlayButtonState();
+}
+```
+
+#### 3. 带参数的 Toast 消息
+
+```xml
+<!-- values/strings.xml -->
+<string name="toast_audio_saved_to">Audio saved to: %s</string>
+
+<!-- values-zh/strings.xml -->
+<string name="toast_audio_saved_to">音频已保存到：%s</string>
+```
+
+```java
+// 在保存音频成功后
+private void onAudioSaved(String filePath) {
+    // 显示保存成功提示，包含文件路径
+    ToastHelper.showShort(this, R.string.toast_audio_saved_to, filePath);
+}
+```
+
 ## 最佳实践
 
 ---
@@ -217,23 +264,34 @@ ToastHelper.showShort(this, R.string.toast_new_feature);
 - **提供建议**：给出解决错误的建议
 - **避免技术术语**：使用用户能理解的语言
 
-## 故障排除
+## 注意事项
 
 ---
 
+### 必须遵循的规范
+
+- **工具类使用**：始终使用 `ToastHelper.showShort()` 方法，而不是直接使用 `Toast.makeText()`
+- **资源管理**：所有文本内容必须使用字符串资源，禁止硬编码
+- **国际化**：必须同时添加中英文字符串资源，ID 保持一致
+- **代码分区**：相关逻辑放在 `// region Toast 消息 // endregion` 分区中
+
+### 开发建议
+
+- **消息长度**：控制 Toast 消息长度，避免过长影响用户体验
+- **显示频率**：避免频繁显示 Toast，影响用户操作
+- **错误处理**：Toast 消息应包含适当的错误处理逻辑
+- **测试验证**：在不同语言环境下测试 Toast 消息的显示效果
+
 ### 常见问题
 
-**Q: Toast 显示为系统默认样式**
-A: 确保使用 `ToastHelper.showShort()` 而不是 `Toast.makeText()`
+1. **Toast 显示为系统默认样式**：确保使用 `ToastHelper.showShort()` 而不是 `Toast.makeText()`
+2. **字符串资源找不到**：检查字符串资源是否在 `strings.xml` 中正确定义
+3. **中文显示为英文**：检查 `values-zh/strings.xml` 中是否有对应的中文翻译
+4. **Toast 样式异常**：检查 `custom_toast_layout.xml` 和 `toast_background.xml` 文件是否存在
 
-**Q: 字符串资源找不到**
-A: 检查字符串资源是否在 `strings.xml` 中正确定义
+## 故障排除
 
-**Q: 中文显示为英文**
-A: 检查 `values-zh/strings.xml` 中是否有对应的中文翻译
-
-**Q: Toast 样式异常**
-A: 检查 `custom_toast_layout.xml` 和 `toast_background.xml` 文件是否存在
+---
 
 ### 调试技巧
 
@@ -294,16 +352,13 @@ private static void showCustomToast(Context context, String message, int duratio
 - **字符串资源**：`app/src/main/res/values/strings.xml`
 - **中文字符串**：`app/src/main/res/values-zh/strings.xml`
 
-## 总结
+## 相关文档
 
 ---
 
-通过遵循本指南，您可以：
-
-1. 确保所有 Toast 消息具有一致的自定义样式
-2. 正确使用 `ToastHelper` 工具类
-3. 支持多语言国际化
-4. 维护良好的用户体验
-5. 遵循项目的开发规范
-
-记住：**始终使用 `ToastHelper.showShort()` 方法，而不是直接使用 `Toast.makeText()`**。这样可以确保所有 Toast 消息都应用了项目的自定义样式规范。 
+- [CONTRIBUTING.md](../../CONTRIBUTING.md) - 项目协作规范
+- [信息图标开发指南](./信息图标开发指南.md) - 信息图标的标准模板和使用方法
+- [状态信息区块开发说明](./状态信息区块开发说明.md) - 主界面状态信息的开发规范
+- [测试模式添加测试项指南](./测试模式添加测试项指南.md) - 为测试模式新增测试项的步骤
+- [README.md](../../README.md) - 项目说明文档
+- [文档索引](../文档索引.md) - 返回文档索引

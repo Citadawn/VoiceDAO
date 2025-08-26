@@ -1,16 +1,6 @@
 ## 任务
 
-1. 中文与英文要加空格、数字与英文之间要加空格、数字与中文之间要加空格。
-
-2. 在readme上说明本软件支持的Android版本范围
-
-3. 是否需要为所有的颜色、字符串设置统一的资源文件colors.xml/strings.xml，比如：`android:textColor="#FF5722"`
-
-4. 更新一下状态信息区块开发指南、信息图标开发指南、测试模式添加测试项指南文件。
-
-5. 
-
-6. 重构：
+1. 重构：
    
    1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
       
@@ -18,15 +8,11 @@
    
    2. 资源文件：命名是否是否贴切、删除多余资源文件
 
-7. ![](D:\Users\24858\Pictures\MarkText\2025-08-01-11-33-19-image.png)默认项猜测应该是软件界面语言Locale造成的。还有一个问题，当系统语言是中文，软件界面语言是英文的时候，默认语言仍然为中文（这好像也没有问题）。
+2. 
 
-8. 项目完成后，清理项目没有的东西，比如，string.xml中没有使用的string；查看文件名是否贴切
+3. 上传GitHub后readme等文档中的链接是否还能够点击
 
-## 信息
-
-此软件的主题色是 `#272727`，即深灰色（接近黑色），在项目中通常以 `@color/main_dark` 这个名称出现。在 `colors.xml` 中定义了：`  <color name="main_dark">#272727</color>`
-
-主色调搭配为：`#272727`（深灰/黑）+ 白色（`#FFFFFF`）
+4. readme要更改相关内容，比如`git clone https://github.com/your-username/VoiceDAO.git`
 
 ## 规范
 

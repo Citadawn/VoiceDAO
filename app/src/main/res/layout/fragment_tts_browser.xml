@@ -9,15 +9,15 @@
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
+        android:fastScrollAlwaysVisible="false"
+        android:fastScrollEnabled="true"
         android:paddingStart="8dp"
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
         android:paddingBottom="8dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:clipToPadding="false"
-        android:fastScrollEnabled="true"
-        android:fastScrollAlwaysVisible="false" />
+        android:scrollbarStyle="outsideOverlay" />
 
 </LinearLayout> 

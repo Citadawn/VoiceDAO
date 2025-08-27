@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.util.TypedValue;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -33,11 +33,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.citadawn.speechapp.R;
 import com.citadawn.speechapp.util.DialogHelper;
+import com.citadawn.speechapp.util.EngineLabelHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
 import com.citadawn.speechapp.util.StatusBarHelper;
 import com.citadawn.speechapp.util.TtsEngineHelper;
 import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
-import com.citadawn.speechapp.util.EngineLabelHelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -56,18 +56,25 @@ public class TtsBrowserActivity extends AppCompatActivity {
 
     // region 成员变量
 
+    // 滚动位置保存
+    private final Map<Integer, Integer> scrollPositions = new HashMap<>();
+    private final Map<Integer, Integer> scrollOffsets = new HashMap<>();
     private TextToSpeech tts;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private TtsBrowserPagerAdapter pagerAdapter;
 
-    // 滚动位置保存
-    private final Map<Integer, Integer> scrollPositions = new HashMap<>();
-    private final Map<Integer, Integer> scrollOffsets = new HashMap<>();
-
     // endregion
 
     // region 生命周期
+
+    /**
+     * 启动 TTS 浏览器界面
+     */
+    public static void start(Context context) {
+        Intent intent = new Intent(context, TtsBrowserActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +112,10 @@ public class TtsBrowserActivity extends AppCompatActivity {
         return true;
     }
 
+    // endregion
+
+    // region 公开方法
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -115,18 +126,6 @@ public class TtsBrowserActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // endregion
-
-    // region 公开方法
-
-    /**
-     * 启动 TTS 浏览器界面
-     */
-    public static void start(Context context) {
-        Intent intent = new Intent(context, TtsBrowserActivity.class);
-        context.startActivity(intent);
     }
 
     // endregion
@@ -237,9 +236,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             extends androidx.recyclerview.widget.RecyclerView.Adapter<TtsBrowserPagerAdapter.ViewHolder> {
 
         private final TtsBrowserActivity activity;
-        private TextToSpeech tts;
         private final Map<Integer, BaseAdapter> adapters = new HashMap<>();
         private final Map<Integer, ListView> listViews = new HashMap<>();
+        private TextToSpeech tts;
 
         public TtsBrowserPagerAdapter(TtsBrowserActivity activity) {
             this.activity = activity;
@@ -303,7 +302,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
 
                 @Override
                 public void onScroll(android.widget.AbsListView view, int firstVisibleItem,
-                        int visibleItemCount, int totalItemCount) {
+                                     int visibleItemCount, int totalItemCount) {
                     // 滚动时实时保存位置
                     int currentPosition = holder.getAdapterPosition();
                     if (currentPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
@@ -858,16 +857,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             }
         }
 
-        private static class ViewHolder {
-            TextView languageView;
-            TextView tagView;
-            TextView supportView;
-            TextView voiceView;
-        }
-
         /**
          * 过滤语言列表
-         * 
+         *
          * @param query 搜索关键词
          */
         public void filter(String query) {
@@ -961,6 +953,13 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 }
             }
             return 0;
+        }
+
+        private static class ViewHolder {
+            TextView languageView;
+            TextView tagView;
+            TextView supportView;
+            TextView voiceView;
         }
 
         private static class LanguageVoiceItem {

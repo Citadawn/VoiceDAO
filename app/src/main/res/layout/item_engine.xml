@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/dp_16"
-    android:gravity="center_vertical">
+    android:padding="@dimen/dp_16">
 
     <!-- 引擎图标 -->
     <ImageView
         android:id="@+id/engine_icon"
         android:layout_width="@dimen/dp_48"
         android:layout_height="@dimen/dp_48"
-        android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="@string/engine_icon_description" />
+        android:contentDescription="@string/engine_icon_description"
+        android:src="@drawable/ic_launcher_foreground" />
 
     <!-- 间距 -->
     <View
@@ -31,18 +31,18 @@
             android:id="@+id/engine_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/sp_16"
-            android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textStyle="bold" />
 
         <!-- 引擎包名 -->
         <TextView
             android:id="@+id/engine_package"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_14"
+            android:layout_marginTop="@dimen/dp_4"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="@dimen/dp_4" />
+            android:textSize="@dimen/sp_14" />
 
     </LinearLayout>
 

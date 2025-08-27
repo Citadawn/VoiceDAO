@@ -15,11 +15,13 @@ import java.util.Locale;
  */
 public final class EngineLabelHelper {
 
-    private EngineLabelHelper() {}
+    private EngineLabelHelper() {
+    }
 
     /**
      * 按当前界面语言获取引擎（应用包）的本地化名称。
-     * @param context 当前上下文（用于获取界面语言与PM）
+     *
+     * @param context     当前上下文（用于获取界面语言与PM）
      * @param packageName 引擎包名
      * @return 本地化的人类可读名称；异常或获取失败时返回包名本身
      */

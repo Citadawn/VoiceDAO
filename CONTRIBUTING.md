@@ -79,17 +79,17 @@ public class TtsEngineManager {
 #### 颜色和主题
 
 - **通用文本和面板**：使用主题属性
-  
-  - 文本颜色：`?attr/colorOnSurface`
-  - 背景颜色：`?attr/colorSurface`
-  - 分割线：`?attr/colorOutline`
+
+    - 文本颜色：`?attr/colorOnSurface`
+    - 背景颜色：`?attr/colorSurface`
+    - 分割线：`?attr/colorOutline`
 
 - **语义化颜色**：仅用于特定状态
-  
-  - 警告：`@color/accent_warning`
-  - 成功：`@color/accent_success`
-  - 错误：`@color/accent_error`
-  - TTS 支持状态：`@color/tts_support_*`
+
+    - 警告：`@color/accent_warning`
+    - 成功：`@color/accent_success`
+    - 错误：`@color/accent_error`
+    - TTS 支持状态：`@color/tts_support_*`
 
 #### 尺寸和字体
 

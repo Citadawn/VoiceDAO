@@ -86,18 +86,18 @@ import java.util.Set;
  */
 class LanguageAdapter extends BaseAdapter {
     // region 成员变量
-    
+
     private final List<Locale> locales;
     private final LayoutInflater inflater;
     private final TextToSpeech tts;
     private final Context context;
     private final Locale defaultLocale;
     private int selectedPosition = 0; // 保存当前选中位置
-    
+
     // endregion
-    
+
     // region 构造方法
-    
+
     public LanguageAdapter(Context context, List<Locale> locales, TextToSpeech tts, Locale defaultLocale) {
         this.context = context;
         this.locales = locales;
@@ -105,15 +105,15 @@ class LanguageAdapter extends BaseAdapter {
         this.tts = tts;
         this.defaultLocale = defaultLocale;
     }
-    
+
     // endregion
-    
+
     // region 公开方法
-    
+
     public void setSelectedPosition(int position) {
         int oldPosition = this.selectedPosition;
         this.selectedPosition = position;
-        
+
         // 对于BaseAdapter，只能使用notifyDataSetChanged，但可以优化调用时机
         if (oldPosition != position) {
             // 只有在真正需要更新UI时才调用
@@ -122,9 +122,9 @@ class LanguageAdapter extends BaseAdapter {
     }
 
     // endregion
-    
+
     // region 适配器核心方法
-    
+
     @Override
     public int getCount() {
         return locales.size();
@@ -156,13 +156,14 @@ class LanguageAdapter extends BaseAdapter {
         }
         return view;
     }
-    
+
     // endregion
-    
+
     // region 私有辅助方法
-    
+
     /**
      * 根据语言支持级别获取对应的颜色资源ID
+     *
      * @param support 语言支持级别
      * @return 颜色资源ID
      */
@@ -182,10 +183,11 @@ class LanguageAdapter extends BaseAdapter {
 
     /**
      * 创建语言选择项的视图
-     * @param position 位置
+     *
+     * @param position    位置
      * @param convertView 复用的视图
-     * @param parent 父容器
-     * @param isDropdown 是否为下拉视图
+     * @param parent      父容器
+     * @param isDropdown  是否为下拉视图
      * @return 创建的视图
      */
     private View createView(int position, View convertView, ViewGroup parent, boolean isDropdown) {
@@ -213,7 +215,7 @@ class LanguageAdapter extends BaseAdapter {
         }
         return view;
     }
-    
+
     // endregion
 }
 
@@ -223,32 +225,32 @@ class LanguageAdapter extends BaseAdapter {
  */
 class VoiceAdapter extends BaseAdapter {
     // region 成员变量
-    
+
     private final List<Voice> voices;
     private final LayoutInflater inflater;
     private final Context context;
     private final Voice defaultVoice;
     private int selectedPosition = 0;
-    
+
     // endregion
-    
+
     // region 构造方法
-    
+
     public VoiceAdapter(Context context, List<Voice> voices, Voice defaultVoice) {
         this.context = context;
         this.voices = voices;
         this.defaultVoice = defaultVoice;
         this.inflater = LayoutInflater.from(context);
     }
-    
+
     // endregion
-    
+
     // region 公开方法
-    
+
     public void setSelectedPosition(int position) {
         int oldPosition = this.selectedPosition;
         this.selectedPosition = position;
-        
+
         // 对于BaseAdapter，只能使用notifyDataSetChanged，但可以优化调用时机
         if (oldPosition != position) {
             // 只有在真正需要更新UI时才调用
@@ -257,9 +259,9 @@ class VoiceAdapter extends BaseAdapter {
     }
 
     // endregion
-    
+
     // region 适配器核心方法
-    
+
     @Override
     public int getCount() {
         return voices.size();
@@ -291,13 +293,14 @@ class VoiceAdapter extends BaseAdapter {
         }
         return view;
     }
-    
+
     // endregion
-    
+
     // region 私有辅助方法
-    
+
     /**
      * 判断特性字符串是否为无意义的特性
+     *
      * @param feature 特性字符串
      * @return 是否为无意义特性
      */
@@ -323,6 +326,7 @@ class VoiceAdapter extends BaseAdapter {
 
     /**
      * 判断是否应该显示特性信息
+     *
      * @param features 特性集合
      * @return 是否应该显示
      */
@@ -338,9 +342,10 @@ class VoiceAdapter extends BaseAdapter {
 
     /**
      * 创建发音人选择项的视图
-     * @param position 位置
+     *
+     * @param position    位置
      * @param convertView 复用的视图
-     * @param parent 父容器
+     * @param parent      父容器
      * @return 创建的视图
      */
     private View createView(int position, View convertView, ViewGroup parent) {
@@ -376,7 +381,7 @@ class VoiceAdapter extends BaseAdapter {
 
         return view;
     }
-    
+
     // endregion
 }
 
@@ -387,24 +392,27 @@ class VoiceAdapter extends BaseAdapter {
  * 提供文本转语音的核心功能，包括朗读、保存音频、语言选择等
  */
 public class MainActivity extends AppCompatActivity {
-    
+
     // region TTS 相关变量
-    
-    private TextToSpeech tts;
-    private boolean isTtsReady = false;
-    private Locale currentLocale = null; // 当前语言，将通过TTS API动态获取
-    private Locale defaultLocale = null; // 默认语言，将通过TTS API获取
-    private Voice globalDefaultVoice = null; // 全局默认发音人
+
+    private static final String PREFS_NAME = Constants.PREFS_NAME;
+    private static final String KEY_SAVE_DIR_URI = Constants.KEY_SAVE_DIR_URI;
+    private static final int DOUBLE_BACK_EXIT_INTERVAL = 2000; // 2秒
     private final HashMap<Locale, Voice> languageDefaultVoices = new HashMap<>(); // 每个语言的默认发音人
     private final ArrayList<Locale> localeList = new ArrayList<>();
     private final ArrayList<Voice> voiceList = new ArrayList<>();
+    private final Handler ttsStatusHandler = new Handler(Looper.getMainLooper());
+    private TextToSpeech tts;
+    private boolean isTtsReady = false;
+    private Locale currentLocale = null; // 当前语言，将通过TTS API动态获取
+
+    // endregion
+
+    // region UI 控件变量
+    private Locale defaultLocale = null; // 默认语言，将通过TTS API获取
+    private Voice globalDefaultVoice = null; // 全局默认发音人
     private boolean isLangSpinnerInit = false;
     private boolean isVoiceSpinnerInit = false;
-    
-    // endregion
-    
-    // region UI 控件变量
-    
     private EditText editText;
     private Button btnSpeak;
     private SeekBar seekBarSpeed, seekBarPitch;
@@ -416,69 +424,64 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvSpeedSetResult, tvPitchSetResult;
     private Spinner spinnerLanguage, spinnerVoice;
     private Button btnLangVoiceReset;
+
+    // endregion
+
+    // region 状态和配置变量
     private TextView tvTtsEngineStatus, tvAudioSaveDir, tvTtsSpeakStatus, tvSelectedTestCases, tvTtsEngineInfo;
     private ImageView ivTtsEngineIcon;
     private ImageButton btnCopySaveDir;
     private Button btnCancelSave;
-    
-    // endregion
-    
-    // region 状态和配置变量
-    
     private float speechRate = 1.0f;
     private float pitch = 1.0f;
     private String pendingAudioText = null;
-    private final Handler ttsStatusHandler = new Handler(Looper.getMainLooper());
-    private static final String PREFS_NAME = Constants.PREFS_NAME;
-    private static final String KEY_SAVE_DIR_URI = Constants.KEY_SAVE_DIR_URI;
     private Uri saveDirUri = null;
+    // 替换设置保存目录为registerForActivityResult
+    @SuppressLint("WrongConstant")
+    private final ActivityResultLauncher<Intent> openDirLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    if (uri != null) {
+                        final int takeFlags = result.getData().getFlags()
+                                & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        try {
+                            getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                            saveDirUri = uri;
+                            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+                            editor.putString(KEY_SAVE_DIR_URI, uri.toString());
+                            editor.apply();
+                            ToastHelper.showShort(this, R.string.toast_save_dir_set_success);
+                            updateStatusInfo();
+                        } catch (Exception e) {
+                            Log.e("MainActivity", "Exception", e);
+                            ToastHelper.showShort(this, R.string.toast_save_dir_set_fail);
+                        }
+                    }
+                }
+            });
     private boolean isSavingAudio = false;
-    private File tempAudioFile = null;
-    private String currentAudioFileName = "tts_output.wav";
-    
+
     // endregion
 
     // region 枚举和常量
-    
-    /**
-     * TTS 工作状态枚举
-     */
-    private enum TtsWorkState {
-        IDLE, // 空闲
-        SPEAKING, // 正在朗读
-        SAVING // 正在保存音频
-    }
+    private File tempAudioFile = null;
+    private String currentAudioFileName = "tts_output.wav";
 
-    /**
-     * 待处理的 TTS 操作枚举
-     */
-    private enum PendingTtsAction {
-        NONE, PENDING_SPEAK, PENDING_SAVE
-    }
-    
     // endregion
-    
+
     // region 状态变量
-    
     private volatile TtsWorkState ttsWorkState = TtsWorkState.IDLE;
     private volatile PendingTtsAction pendingTtsAction = PendingTtsAction.NONE;
     private ActivityResultLauncher<Intent> editorLauncher;
     private long lastBackPressedTime = 0;
-    private static final int DOUBLE_BACK_EXIT_INTERVAL = 2000; // 2秒
-    
-    // endregion
-
-    // endregion
-
-    // region 生命周期
 
     /**
      * 活动创建时初始化UI和TTS引擎
      */
     // endregion
-    
+
     // region 生命周期方法
-    
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -516,10 +519,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_more_vert_white_24dp));
-        
+
         // 更新Toolbar标题，支持国际化
         updateToolbarTitle();
-        
+
         // 设置状态栏背景色和文字颜色
         StatusBarHelper.setupStatusBar(getWindow());
 
@@ -545,9 +548,9 @@ public class MainActivity extends AppCompatActivity {
 
         // 添加触摸监听器到NestedScrollView，检测滑动时让输入框失去焦点
         scrollView.setOnTouchListener(new View.OnTouchListener() {
+            private static final float SCROLL_THRESHOLD = 15; // 滑动阈值，单位像素
             private float startY = 0;
             private float startX = 0;
-            private static final float SCROLL_THRESHOLD = 15; // 滑动阈值，单位像素
             private boolean isScrolling = false;
 
             @Override
@@ -1160,23 +1163,29 @@ public class MainActivity extends AppCompatActivity {
         // 初始化时也调用一次
         updateResetButtons();
     }
-    
+
     // endregion
-    
-    // region 生命周期方法
-    
+
+    // endregion
+
+    // region 生命周期
+
     @Override
     protected void onResume() {
         super.onResume();
         // 检测TTS引擎是否发生变化，如果发生变化则重新初始化
         checkAndHandleTtsEngineChange();
-        
+
         // 在Android 15上，需要重新设置状态栏颜色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             StatusBarHelper.forceStatusBarColor(getWindow());
         }
     }
-    
+
+    // endregion
+
+    // region 生命周期方法
+
     @Override
     protected void onDestroy() {
         ttsStatusHandler.removeCallbacksAndMessages(null);
@@ -1186,11 +1195,7 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-    
-    // endregion
-    
-    // region 菜单相关方法
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -1202,6 +1207,10 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    // endregion
+
+    // region 菜单相关方法
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -1262,11 +1271,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    
-    // endregion
-    
-    // region 公开方法
-    
+
     private void updateToolbarTitle() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         String title = getString(R.string.app_name);
@@ -1278,11 +1283,11 @@ public class MainActivity extends AppCompatActivity {
         }
         toolbar.setTitle(title);
     }
-    
+
     // endregion
-    
-    // region TTS 相关方法
-    
+
+    // region 公开方法
+
     /**
      * 将文本合成为音频文件并保存到指定URI
      *
@@ -1318,6 +1323,10 @@ public class MainActivity extends AppCompatActivity {
             tts.synthesizeToFile(text, ttsParams, tempWav, "tts_save");
         }
     }
+
+    // endregion
+
+    // region TTS 相关方法
 
     /**
      * 初始化各语言的默认发音人信息
@@ -1392,11 +1401,7 @@ public class MainActivity extends AppCompatActivity {
             tts.setVoice(voiceList.get(0));
         }
     }
-    
-    // endregion
-    
-    // region UI 相关方法
-    
+
     /**
      * 更新界面状态信息显示
      * 包括TTS引擎状态、保存目录、朗读状态等
@@ -1468,35 +1473,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // 替换设置保存目录为registerForActivityResult
-    @SuppressLint("WrongConstant")
-    private final ActivityResultLauncher<Intent> openDirLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri uri = result.getData().getData();
-                    if (uri != null) {
-                        final int takeFlags = result.getData().getFlags()
-                                & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        try {
-                            getContentResolver().takePersistableUriPermission(uri, takeFlags);
-                            saveDirUri = uri;
-                            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
-                            editor.putString(KEY_SAVE_DIR_URI, uri.toString());
-                            editor.apply();
-                            ToastHelper.showShort(this, R.string.toast_save_dir_set_success);
-                            updateStatusInfo();
-                        } catch (Exception e) {
-                            Log.e("MainActivity", "Exception", e);
-                            ToastHelper.showShort(this, R.string.toast_save_dir_set_fail);
-                        }
-                    }
-                }
-            });
-    
     // endregion
-    
-    // region 文件操作相关方法
-    
+
+    // region UI 相关方法
+
     private void showFileNameInputDialogAndSave(String text) {
         // 自动生成默认文件名
         String defaultName = "tts_"
@@ -1528,6 +1508,10 @@ public class MainActivity extends AppCompatActivity {
         tts.setPitch(pitch);
         tts.synthesizeToFile(text, ttsParams, tempAudioFile, "tts_save");
     }
+
+    // endregion
+
+    // region 文件操作相关方法
 
     // 在TTS合成完成回调onDone/onError中处理拷贝和清理
     private boolean copyTempToSaveDir() {
@@ -1598,11 +1582,7 @@ public class MainActivity extends AppCompatActivity {
             updateStatusInfo();
         }
     }
-    
-    // endregion
-    
-    // region 工具方法
-    
+
     // 新增：重置按钮状态更新方法
     private void updateResetButtons() {
         // 语速
@@ -1635,6 +1615,10 @@ public class MainActivity extends AppCompatActivity {
             btnSaveAudio.setEnabled(isTtsReady);
         }
     }
+
+    // endregion
+
+    // region 工具方法
 
     /**
      * 获取当前TTS引擎信息并设置图标（支持第三方TTS引擎）
@@ -1702,13 +1686,13 @@ public class MainActivity extends AppCompatActivity {
     private void setupInfoIcons() {
         // 使用批量设置方法，更简洁高效
         InfoIconHelper.setupInfoIcons(this,
-                new Object[] { findViewById(R.id.ivLangSupportInfo), R.string.tts_support_info_title,
-                        R.string.tts_support_info_content },
-                new Object[] { findViewById(R.id.ivVoiceSupportInfo), R.string.voice_info_title,
-                        R.string.voice_info_content },
-                new Object[] { findViewById(R.id.ivSpeedInfo), R.string.speed_info_title, R.string.speed_info_content },
-                new Object[] { findViewById(R.id.ivPitchInfo), R.string.pitch_info_title,
-                        R.string.pitch_info_content });
+                new Object[]{findViewById(R.id.ivLangSupportInfo), R.string.tts_support_info_title,
+                        R.string.tts_support_info_content},
+                new Object[]{findViewById(R.id.ivVoiceSupportInfo), R.string.voice_info_title,
+                        R.string.voice_info_content},
+                new Object[]{findViewById(R.id.ivSpeedInfo), R.string.speed_info_title, R.string.speed_info_content},
+                new Object[]{findViewById(R.id.ivPitchInfo), R.string.pitch_info_title,
+                        R.string.pitch_info_content});
 
         // 设置复制路径按钮点击事件
         btnCopySaveDir.setOnClickListener(v -> {
@@ -1758,11 +1742,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    
-    // endregion
-    
-    // region 测试相关方法
-    
+
     /**
      * 初始化测试用例的国际化文本
      */
@@ -1806,6 +1786,10 @@ public class MainActivity extends AppCompatActivity {
         Log.i("TTS_TEST", "语速设置失败测试完成");
     }
 
+    // endregion
+
+    // region 测试相关方法
+
     /**
      * 测试音调设置失败功能
      */
@@ -1846,7 +1830,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // 创建可选择的项目列表
-        boolean[] enabledItems = { true, true, true };
+        boolean[] enabledItems = {true, true, true};
 
         // 如果系统语言是中文，禁用中文选项
         if (isSystemChinese) {
@@ -1874,8 +1858,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 设置信息图标点击事件和内容（用InfoIconHelper）
         com.citadawn.speechapp.util.InfoIconHelper.setupInfoIcons(this,
-                new Object[] { ivLanguageInfo, R.string.language_selection_info_title,
-                        R.string.language_selection_info_message });
+                new Object[]{ivLanguageInfo, R.string.language_selection_info_title,
+                        R.string.language_selection_info_message});
         // 动态定位信息图标（用InfoIconPositionHelper）
         dialogView.post(() -> {
             if (ivLanguageInfo != null && tvLanguageDialogTitle != null) {
@@ -1903,7 +1887,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public android.view.View getView(int position, android.view.View convertView,
-                    android.view.ViewGroup parent) {
+                                             android.view.ViewGroup parent) {
                 if (convertView == null) {
                     convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_single_choice, parent,
                             false);
@@ -1973,11 +1957,7 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.dialog_button_cancel, null)
                 .show();
     }
-    
-    // endregion
-    
-    // region 私有辅助方法
-    
+
     /**
      * 输出TTS引擎所有语言和发音人信息到logcat，标注默认项
      */
@@ -1996,8 +1976,8 @@ public class MainActivity extends AppCompatActivity {
                 localeVoices.computeIfAbsent(l, k -> new ArrayList<>()).add(v);
             }
             Log.i("TTS_TEST", getString(R.string.test_header_separator));
-            String defaultLangDisplay = defaultLang != null ? 
-                defaultLang.getDisplayName(LocaleHelper.getCurrentLocale(this)) + " (" + defaultLang.toLanguageTag() + ")" : "null";
+            String defaultLangDisplay = defaultLang != null ?
+                    defaultLang.getDisplayName(LocaleHelper.getCurrentLocale(this)) + " (" + defaultLang.toLanguageTag() + ")" : "null";
             Log.i("TTS_TEST", getString(R.string.test_default_language) + ": " + defaultLangDisplay);
             String defaultVoiceDisplay = defaultVoice != null ? defaultVoice.toString() : "null";
             Log.i("TTS_TEST", getString(R.string.test_default_voice) + ": " + defaultVoiceDisplay);
@@ -2030,7 +2010,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("TTS_TEST", "logTtsVoices error", e);
         }
     }
-    
+
     /**
      * 检测并处理TTS引擎变化
      * 如果检测到TTS引擎发生变化，会重新初始化TTS并保持用户当前设置
@@ -2040,17 +2020,21 @@ public class MainActivity extends AppCompatActivity {
         if (tts == null || !isTtsReady) {
             return;
         }
-        
+
         // 检测TTS引擎是否发生变化
         if (TtsEngineChangeHelper.hasEngineChanged(this, tts)) {
             // 显示提示信息
             ToastHelper.showShort(this, R.string.toast_tts_engine_changed);
-            
+
             // 重新初始化TTS引擎
             reinitializeTts();
         }
     }
-    
+
+    // endregion
+
+    // region 私有辅助方法
+
     /**
      * 重新初始化TTS引擎
      * 保持用户当前的语速、音调、语言和发音人设置
@@ -2061,7 +2045,7 @@ public class MainActivity extends AppCompatActivity {
         float currentPitch = pitch;
         Locale currentSelectedLocale = currentLocale;
         Voice currentSelectedVoice = null;
-        
+
         // 尝试获取当前选中的发音人
         try {
             if (tts != null) {
@@ -2070,7 +2054,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.w("MainActivity", "Failed to get current voice before reinitializing TTS", e);
         }
-        
+
         // 关闭现有TTS实例
         if (tts != null) {
             try {
@@ -2080,20 +2064,20 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("MainActivity", "Error shutting down TTS", e);
             }
         }
-        
+
         // 重置状态
         isTtsReady = false;
         btnSpeak.setEnabled(false);
         btnStop.setEnabled(false);
         btnSaveAudio.setEnabled(false);
         tvTtsEngineStatus.setText(getString(R.string.status_not_ready));
-        
+
         // 重新初始化TTS
         final Locale savedLocale = currentSelectedLocale;
         final Voice savedVoice = currentSelectedVoice;
         final float savedSpeechRate = currentSpeechRate;
         final float savedPitch = currentPitch;
-        
+
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 // TTS初始化成功，恢复用户设置
@@ -2106,16 +2090,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    
+
     /**
      * TTS重新初始化后恢复用户设置
-     * 
-     * @param savedLocale 保存的语言设置
-     * @param savedVoice 保存的发音人设置
+     *
+     * @param savedLocale     保存的语言设置
+     * @param savedVoice      保存的发音人设置
      * @param savedSpeechRate 保存的语速设置
-     * @param savedPitch 保存的音调设置
+     * @param savedPitch      保存的音调设置
      */
-    private void restoreUserSettingsAfterReinit(Locale savedLocale, Voice savedVoice, 
+    private void restoreUserSettingsAfterReinit(Locale savedLocale, Voice savedVoice,
                                                 float savedSpeechRate, float savedPitch) {
         try {
             // 获取新的默认语言和发音人
@@ -2126,55 +2110,55 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 defaultLocale = Locale.getDefault();
             }
-            
+
             // 设置TTS进度监听器（重用现有代码结构）
             setupTtsProgressListener();
-            
+
             // 重新获取可用语言列表
             Set<Locale> locales = tts.getAvailableLanguages();
             localeList.clear();
             List<Locale> sortedLocales = TtsLanguageVoiceHelper.sortLocalesByDisplayName(locales, defaultLocale, this);
             localeList.addAll(sortedLocales);
-            
+
             // 重新初始化语言默认发音人
             initializeLanguageDefaultVoices();
-            
+
             // 恢复语速和音调设置
             speechRate = savedSpeechRate;
             pitch = savedPitch;
             tts.setSpeechRate(speechRate);
             tts.setPitch(pitch);
-            
+
             // 更新UI显示
             seekBarSpeed.setProgress((int) ((speechRate - 0.5f) * 10));
             seekBarPitch.setProgress((int) ((pitch - 0.5f) * 10));
             textSpeechRateValue.setText(String.format(Locale.US, "%.2f", speechRate));
             textPitchValue.setText(String.format(Locale.US, "%.2f", pitch));
-            
+
             // 恢复语言设置
             Locale targetLocale = savedLocale;
             if (targetLocale == null || !localeList.contains(targetLocale)) {
                 targetLocale = defaultLocale; // 如果保存的语言不可用，使用默认语言
             }
             currentLocale = targetLocale;
-            
+
             // 更新语言下拉列表
             LanguageAdapter languageAdapter = new LanguageAdapter(this, localeList, tts, defaultLocale);
             spinnerLanguage.setAdapter(languageAdapter);
             isLangSpinnerInit = true;
-            
+
             int languageIndex = localeList.indexOf(targetLocale);
             if (languageIndex >= 0) {
                 spinnerLanguage.setSelection(languageIndex);
                 languageAdapter.setSelectedPosition(languageIndex);
             }
-            
+
             // 设置TTS语言
             tts.setLanguage(targetLocale);
-            
+
             // 更新发音人列表
             updateVoiceList(targetLocale, false);
-            
+
             // 尝试恢复发音人设置
             if (savedVoice != null && voiceList.contains(savedVoice)) {
                 int voiceIndex = voiceList.indexOf(savedVoice);
@@ -2186,7 +2170,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-            
+
             // 恢复UI状态
             isTtsReady = true;
             btnSpeak.setEnabled(true);
@@ -2195,9 +2179,9 @@ public class MainActivity extends AppCompatActivity {
             tvTtsEngineStatus.setText(getString(R.string.status_ready));
             updateStatusInfo();
             updateResetButtons();
-            
+
             Log.i("MainActivity", "TTS reinitialized successfully with restored settings");
-            
+
         } catch (Exception e) {
             Log.e("MainActivity", "Error restoring settings after TTS reinitialization", e);
             // 如果恢复设置失败，至少确保TTS基本可用
@@ -2209,7 +2193,7 @@ public class MainActivity extends AppCompatActivity {
             updateStatusInfo();
         }
     }
-    
+
     /**
      * 设置TTS进度监听器
      * 从原有的TTS初始化代码中提取出来，供重新初始化时使用
@@ -2293,6 +2277,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    
+
+    /**
+     * TTS 工作状态枚举
+     */
+    private enum TtsWorkState {
+        IDLE, // 空闲
+        SPEAKING, // 正在朗读
+        SAVING // 正在保存音频
+    }
+
+    /**
+     * 待处理的 TTS 操作枚举
+     */
+    private enum PendingTtsAction {
+        NONE, PENDING_SPEAK, PENDING_SAVE
+    }
+
     // endregion
 }

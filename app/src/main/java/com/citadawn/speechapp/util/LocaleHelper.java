@@ -13,13 +13,13 @@ import java.util.Locale;
  * Language switching utility class
  */
 public class LocaleHelper {
-    // region 常量与模式
-    private static final String TAG = "LocaleHelper";
     public static final String KEY_LANGUAGE_MODE = "language_mode";
     public static final String KEY_SELECTED_LOCALE = "selected_locale";
     public static final int MODE_FOLLOW_SYSTEM = 0; // 跟随系统
     public static final int MODE_MANUAL = 1; // 手动选择
     public static final String LOCALE_ZH_CN = "zh-CN"; // 中文（简体）
+    // region 常量与模式
+    private static final String TAG = "LocaleHelper";
     // endregion
 
     // region 获取当前语言与模式

@@ -25,13 +25,13 @@
     <color name="tts_support_none">#BDBDBD</color> <!-- 灰色 -->
     <color name="tts_spinner_selected_bg">#FFDDDDDD</color> <!-- 深灰高亮 -->
     <color name="tts_spinner_normal_bg">#00FFFFFF</color> <!-- 透明 -->
-    
+
     <!-- TTS 浏览器相关颜色 -->
     <color name="support_status_bg">#2196F3</color>
     <color name="voice_info_bg">#F5F5F5</color>
     <color name="voice_info_border">#E0E0E0</color>
     <color name="toast_border">#E0E0E0</color>
-    
+
     <!-- TabLayout 背景色，比Toolbar稍浅，形成层次感 -->
     <color name="tab_layout_bg">#323232</color>
     <color name="tab_layout_border">#404040</color>

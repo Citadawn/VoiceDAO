@@ -3,54 +3,56 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-  <group android:scaleX="0.77"
-      android:scaleY="0.77"
-      android:translateX="12.42"
-      android:translateY="12.42">
-    <group android:scaleX="1.0584905"
-        android:scaleY="1.0584905"
-        android:translateX="-3.1584907"
-        android:translateY="-1.5707548">
-        
-        <!-- 将前景内容缩小并稍微上移到安全区域内 -->
+    <group
+        android:scaleX="0.77"
+        android:scaleY="0.77"
+        android:translateX="12.42"
+        android:translateY="12.42">
         <group
-            android:scaleX="0.72"
-            android:scaleY="0.72"
-            android:translateX="15.12"
-            android:translateY="12.96">
-            
-            <!-- 文字符号 "T" -->
-            <path
-                android:fillColor="@color/main_dark"
-                android:pathData="M32,28 L76,28 L76,36 L68,36 L68,68 L60,68 L60,36 L32,36 Z" />
-            
-            <!-- 语音波形符号 -->
-            <path
-                android:fillColor="@color/main_dark"
-                android:pathData="M38,72 L42,72 L42,80 L38,80 Z" />
-            <path
-                android:fillColor="@color/main_dark"
-                android:pathData="M46,70 L50,70 L50,82 L46,82 Z" />
-            <path
-                android:fillColor="@color/main_dark"
-                android:pathData="M54,68 L58,68 L58,84 L54,84 Z" />
-            <path
-                android:fillColor="@color/main_dark"
-                android:pathData="M62,70 L66,70 L66,82 L62,82 Z" />
-            <path
-                android:fillColor="@color/main_dark"
-                android:pathData="M70,72 L74,72 L74,80 L70,80 Z" />
-            
-            <!-- 转换箭头（缩小） -->
-            <path
-                android:fillColor="@color/main_dark"
-                android:pathData="M46,88 L62,88 L62,91 L66,88 L62,85 L62,88 L46,88 Z" />
-            
-            <!-- 装饰性圆点（仅保留顶部） -->
-            <path
-                android:fillColor="@color/main_dark"
-                android:pathData="M54,20m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+            android:scaleX="1.0584905"
+            android:scaleY="1.0584905"
+            android:translateX="-3.1584907"
+            android:translateY="-1.5707548">
+
+            <!-- 将前景内容缩小并稍微上移到安全区域内 -->
+            <group
+                android:scaleX="0.72"
+                android:scaleY="0.72"
+                android:translateX="15.12"
+                android:translateY="12.96">
+
+                <!-- 文字符号 "T" -->
+                <path
+                    android:fillColor="@color/main_dark"
+                    android:pathData="M32,28 L76,28 L76,36 L68,36 L68,68 L60,68 L60,36 L32,36 Z" />
+
+                <!-- 语音波形符号 -->
+                <path
+                    android:fillColor="@color/main_dark"
+                    android:pathData="M38,72 L42,72 L42,80 L38,80 Z" />
+                <path
+                    android:fillColor="@color/main_dark"
+                    android:pathData="M46,70 L50,70 L50,82 L46,82 Z" />
+                <path
+                    android:fillColor="@color/main_dark"
+                    android:pathData="M54,68 L58,68 L58,84 L54,84 Z" />
+                <path
+                    android:fillColor="@color/main_dark"
+                    android:pathData="M62,70 L66,70 L66,82 L62,82 Z" />
+                <path
+                    android:fillColor="@color/main_dark"
+                    android:pathData="M70,72 L74,72 L74,80 L70,80 Z" />
+
+                <!-- 转换箭头（缩小） -->
+                <path
+                    android:fillColor="@color/main_dark"
+                    android:pathData="M46,88 L62,88 L62,91 L66,88 L62,85 L62,88 L46,88 Z" />
+
+                <!-- 装饰性圆点（仅保留顶部） -->
+                <path
+                    android:fillColor="@color/main_dark"
+                    android:pathData="M54,20m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+            </group>
         </group>
     </group>
-  </group>
 </vector>

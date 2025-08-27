@@ -14,14 +14,14 @@ import java.util.List;
  * 提供引擎信息获取、图标加载、默认引擎处理等功能
  */
 public class TtsEngineHelper {
-    
+
     private static final String TAG = "TtsEngineHelper";
-    
+
     /**
      * 获取TTS引擎信息（包含名称和图标）
-     * 
-     * @param tts TTS实例
-     * @param context 上下文
+     *
+     * @param tts      TTS实例
+     * @param context  上下文
      * @param iconView 图标视图（可为null）
      * @return 引擎显示名称
      */
@@ -73,11 +73,11 @@ public class TtsEngineHelper {
 
     /**
      * 加载引擎图标
-     * 
+     *
      * @param engineName 引擎包名
-     * @param iconResId 图标资源ID
-     * @param iconView 图标视图
-     * @param context 上下文
+     * @param iconResId  图标资源ID
+     * @param iconView   图标视图
+     * @param context    上下文
      */
     private static void loadEngineIcon(String engineName, int iconResId, android.widget.ImageView iconView, Context context) {
         try {
@@ -91,10 +91,10 @@ public class TtsEngineHelper {
             Log.d(TAG, "无法加载引擎图标: " + engineName);
         }
     }
-    
+
     /**
      * 获取默认引擎名称
-     * 
+     *
      * @param tts TTS实例
      * @return 默认引擎包名，如果获取失败返回null
      */
@@ -102,7 +102,7 @@ public class TtsEngineHelper {
         if (tts == null) {
             return null;
         }
-        
+
         try {
             return tts.getDefaultEngine();
         } catch (Exception e) {
@@ -110,10 +110,10 @@ public class TtsEngineHelper {
             return null;
         }
     }
-    
+
     /**
      * 获取所有引擎并排序
-     * 
+     *
      * @param tts TTS实例
      * @return 排序后的引擎列表，如果获取失败返回空列表
      */
@@ -121,7 +121,7 @@ public class TtsEngineHelper {
         if (tts == null) {
             return new java.util.ArrayList<>();
         }
-        
+
         try {
             List<TextToSpeech.EngineInfo> engines = tts.getEngines();
             String defaultEngine = getDefaultEngineName(tts);
@@ -131,10 +131,10 @@ public class TtsEngineHelper {
             return new java.util.ArrayList<>();
         }
     }
-    
+
     /**
      * 获取默认语言
-     * 
+     *
      * @param tts TTS实例
      * @return 默认语言Locale，如果获取失败返回null
      */
@@ -142,7 +142,7 @@ public class TtsEngineHelper {
         if (tts == null) {
             return null;
         }
-        
+
         try {
             android.speech.tts.Voice defaultVoice = tts.getDefaultVoice();
             if (defaultVoice != null) {
@@ -151,13 +151,13 @@ public class TtsEngineHelper {
         } catch (Exception e) {
             Log.e(TAG, "获取默认语言失败", e);
         }
-        
+
         return null;
     }
-    
+
     /**
      * 获取可用语言和发音人
-     * 
+     *
      * @param tts TTS实例
      * @return 包含语言和发音人的数组，如果获取失败返回null
      */
@@ -165,7 +165,7 @@ public class TtsEngineHelper {
         if (tts == null) {
             return null;
         }
-        
+
         try {
             java.util.Set<java.util.Locale> languages = tts.getAvailableLanguages();
             java.util.Set<android.speech.tts.Voice> voices = tts.getVoices();
@@ -173,7 +173,7 @@ public class TtsEngineHelper {
         } catch (Exception e) {
             Log.e(TAG, "获取可用语言和发音人失败", e);
         }
-        
+
         return null;
     }
 } 

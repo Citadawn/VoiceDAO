@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:padding="@dimen/dp_24"
-    android:gravity="center_horizontal">
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/dp_24">
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/dp_12"
         android:gravity="bottom"
-        tools:ignore="UselessParent"
-        android:layout_marginBottom="@dimen/dp_12">
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/tvLanguageDialogTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dialog_title_language"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/sp_18"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface" />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivLanguageInfo"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
             android:layout_marginStart="@dimen/dp_2"
-            android:src="@drawable/ic_info_white_20dp"
-            android:contentDescription="@string/language_selection_info_title"
             android:clickable="true"
-            android:focusable="true" />
+            android:contentDescription="@string/language_selection_info_title"
+            android:focusable="true"
+            android:src="@drawable/ic_info_white_20dp" />
     </LinearLayout>
 </LinearLayout> 

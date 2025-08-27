@@ -25,27 +25,30 @@ import com.citadawn.speechapp.util.TextLengthHelper;
  * 提供大文本编辑功能，支持清空、字数统计等
  */
 public class TextEditorActivity extends AppCompatActivity {
-    
+
     // region 常量
-    
-    /** Intent 传递文本的键名 */
+
+    /**
+     * Intent 传递文本的键名
+     */
     public static final String EXTRA_TEXT = "extra_text";
-    
+
     // endregion
-    
+
     // region 成员变量
-    
+
     private EditText editorEditText;
     private Button btnEditorClear, btnEditorOk;
     private TextView tvEditorCharCount;
     private int maxCharCount;
 
     // endregion
-    
+
     // region 生命周期方法
-    
+
     /**
      * 活动创建时初始化UI和事件监听
+     *
      * @param savedInstanceState 保存的状态
      */
     @Override
@@ -118,11 +121,12 @@ public class TextEditorActivity extends AppCompatActivity {
     }
 
     // endregion
-    
+
     // region 菜单相关方法
-    
+
     /**
      * 创建选项菜单
+     *
      * @param menu 菜单对象
      * @return 是否成功创建
      */
@@ -134,6 +138,7 @@ public class TextEditorActivity extends AppCompatActivity {
 
     /**
      * 处理菜单项选择事件
+     *
      * @param item 选中的菜单项
      * @return 是否已处理
      */
@@ -148,9 +153,9 @@ public class TextEditorActivity extends AppCompatActivity {
     }
 
     // endregion
-    
+
     // region 私有辅助方法
-    
+
     /**
      * 更新字符计数显示
      * 当字符数超过限制时，当前数字会显示为红色

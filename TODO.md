@@ -1,20 +1,10 @@
 ## 任务
 
-1. 重构：
-   
-   1. 类：优化整理app/src/main/java/com/citadawn/speechapp/util/TextLengthHelper.java
-      
-      格式化alt+shift+f
-   
-   2. 资源文件：命名是否是否贴切、删除多余资源文件
+1. 上传GitHub后readme等文档中的链接是否还能够点击
 
-2. 
+2. readme要更改相关内容，比如`git clone https://github.com/your-username/VoiceDAO.git`
 
-3. 上传GitHub后readme等文档中的链接是否还能够点击
-
-4. readme要更改相关内容，比如`git clone https://github.com/your-username/VoiceDAO.git`
-
-5. CONTRIBUTING.md的相关代码也要更改
+3. CONTRIBUTING.md的相关代码也要更改
 
 ## 规范
 

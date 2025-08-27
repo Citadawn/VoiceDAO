@@ -26,7 +26,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    
+
     // 禁用语言分割，避免Play Core警告
     bundle {
         language {
@@ -37,7 +37,7 @@ android {
     lintOptions {
         abortOnError true
         warningsAsErrors true
-        checkOnly 'HardcodedText','RtlHardcoded','RtlCompat','RtlEnabled','SetTextI18n','SmallSp','SpUsage','UseCompoundDrawables','UsingOnClickInXml','PxUsage','EllipsizeMaxLines','RelativeOverlap','ContentDescription','LabelFor','UnusedResources'
+        checkOnly 'HardcodedText', 'RtlHardcoded', 'RtlCompat', 'RtlEnabled', 'SetTextI18n', 'SmallSp', 'SpUsage', 'UseCompoundDrawables', 'UsingOnClickInXml', 'PxUsage', 'EllipsizeMaxLines', 'RelativeOverlap', 'ContentDescription', 'LabelFor', 'UnusedResources'
     }
 }
 

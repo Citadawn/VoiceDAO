@@ -12,14 +12,15 @@ import java.lang.ref.WeakReference;
  */
 public class DelayedTaskHelper {
     // region 静态工具方法
-    
+
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
-    
+
     /**
      * 安全地延迟执行任务
-     * @param view 关联的View（用于防止内存泄漏）
+     *
+     * @param view        关联的View（用于防止内存泄漏）
      * @param delayMillis 延迟时间（毫秒）
-     * @param task 要执行的任务
+     * @param task        要执行的任务
      */
     public static void postDelayed(View view, long delayMillis, Runnable task) {
         WeakReference<View> viewRef = new WeakReference<>(view);
@@ -33,7 +34,8 @@ public class DelayedTaskHelper {
 
     /**
      * 延迟清除文本视图内容
-     * @param textView 要清除的文本视图
+     *
+     * @param textView    要清除的文本视图
      * @param delayMillis 延迟时间（毫秒）
      */
     public static void clearTextDelayed(android.widget.TextView textView, long delayMillis) {

@@ -4,7 +4,8 @@
 
 ---
 
-`TextToSpeech.EngineInfo` 是 Android 文本转语音（TTS）API 中的一个内部类，用于表示已安装的 TTS 引擎信息。该类包含引擎的包名、显示名称、图标等基本信息，主要用于引擎列表展示和引擎切换功能。  
+`TextToSpeech.EngineInfo` 是 Android 文本转语音（TTS）API 中的一个内部类，用于表示已安装的 TTS
+引擎信息。该类包含引擎的包名、显示名称、图标等基本信息，主要用于引擎列表展示和引擎切换功能。
 
 ## 字段
 
@@ -12,7 +13,7 @@
 
 ### name 字段
 
-`TextToSpeech.EngineInfo.name` 是一个 `String` 类型的字段，表示 TTS 引擎的包名（Package Name）。  
+`TextToSpeech.EngineInfo.name` 是一个 `String` 类型的字段，表示 TTS 引擎的包名（Package Name）。
 
 **字段含义**：
 
@@ -33,7 +34,7 @@
 
 ### label 字段
 
-`TextToSpeech.EngineInfo.label` 是一个 `String` 类型的字段，表示 TTS 引擎的用户友好显示名称。  
+`TextToSpeech.EngineInfo.label` 是一个 `String` 类型的字段，表示 TTS 引擎的用户友好显示名称。
 
 **字段含义**：
 
@@ -54,7 +55,7 @@
 
 ### icon 字段
 
-`TextToSpeech.EngineInfo.icon` 是一个 `int` 类型的字段，表示 TTS 引擎的图标资源 ID。  
+`TextToSpeech.EngineInfo.icon` 是一个 `int` 类型的字段，表示 TTS 引擎的图标资源 ID。
 
 **字段含义**：
 
@@ -72,16 +73,17 @@
 
 ### toString
 
-- **说明**：`toString()` 方法是 `TextToSpeech.EngineInfo` 类继承自 `Object` 类的方法，用于返回 `EngineInfo` 对象的字符串表示。
+- **说明**：`toString()` 方法是 `TextToSpeech.EngineInfo` 类继承自 `Object` 类的方法，用于返回
+  `EngineInfo` 对象的字符串表示。
 
 - **方法签名**：
-  
+
   ```java
   public String toString()
   ```
 
 - **返回值**：返回一个 `String` 类型的字符串，包含 `EngineInfo` 对象的主要信息，通常格式为：
-  
+
   ```java
   EngineInfo{name=包名, label=显示名称, icon=图标资源ID}
   ```

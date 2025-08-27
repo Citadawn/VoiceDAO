@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    
+
     <!-- 用于声明TTS服务包可见性，确保App能在Android 11及以上正常查询TTS服务 -->
     <queries>
         <intent>
@@ -24,11 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.TextEditorActivity"
+        <activity
+            android:name=".ui.TextEditorActivity"
             android:exported="false"
             android:theme="@style/Theme.VoiceDAO"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.TtsBrowserActivity"
+        <activity
+            android:name=".ui.TtsBrowserActivity"
             android:exported="false"
             android:theme="@style/Theme.VoiceDAO" />
     </application>

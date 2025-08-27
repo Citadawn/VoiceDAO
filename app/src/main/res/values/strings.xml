@@ -74,7 +74,7 @@ It is recommended to organize your text content in this editor before returning 
     <string name="language_chinese" tools:ignore="MissingTranslation">Chinese (Simplified)</string>
     <string name="language_english" tools:ignore="MissingTranslation">English</string>
     <string name="toast_language_changed" tools:ignore="MissingTranslation">Language changed successfully</string>
-    
+
     <!-- TTS 浏览器相关字符串 -->
     <string name="tts_browser_title" tools:ignore="MissingTranslation">TTS Browser</string>
     <string name="tab_engines" tools:ignore="MissingTranslation">Engines</string>
@@ -111,12 +111,12 @@ It is recommended to organize your text content in this editor before returning 
     <string name="label_tts_engine_info" tools:ignore="MissingTranslation">TTS Engine:</string>
     <string name="tts_engine_unknown" tools:ignore="MissingTranslation">Unknown</string>
     <string name="tts_engine_icon" tools:ignore="MissingTranslation">TTS Engine Icon</string>
-    
+
     <!-- 搜索功能相关字符串 -->
     <string name="search_language_hint" tools:ignore="MissingTranslation">Search languages…</string>
 
     <string name="clear_search" tools:ignore="MissingTranslation">Clear search</string>
-    
+
     <!-- TTS浏览器信息相关字符串 -->
     <string name="tts_browser_info" tools:ignore="MissingTranslation">TTS Browser Info</string>
     <string name="tts_browser_info_title" tools:ignore="MissingTranslation">TTS Browser</string>
@@ -276,7 +276,7 @@ It is recommended to organize your text content in this editor before returning 
     <string name="test_case_name">Test Case Name</string>
     <string name="test_case_description">Test case description</string>
     <string name="toast_tts_engine_changed" tools:ignore="MissingTranslation">TTS engine changed, reinitializing…</string>
-    
+
     <!-- TTS测试输出标签 -->
     <string name="test_header_separator" tools:ignore="MissingTranslation">==== TTS Engine Supported Languages and Voices ====</string>
     <string name="test_footer_separator" tools:ignore="MissingTranslation">===============================================</string>
@@ -287,6 +287,6 @@ It is recommended to organize your text content in this editor before returning 
     <string name="test_voice_label" tools:ignore="MissingTranslation">Voice</string>
     <string name="test_default_marker" tools:ignore="MissingTranslation">DEFAULT</string>
     <string name="test_default_for_language" tools:ignore="MissingTranslation">DEFAULT for this language</string>
-    
-    
+
+
 </resources> 

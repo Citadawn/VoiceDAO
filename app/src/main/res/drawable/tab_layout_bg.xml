@@ -6,7 +6,7 @@
             <solid android:color="@color/tab_layout_bg" />
         </shape>
     </item>
-    
+
     <!-- 底部边框 -->
     <item android:gravity="bottom">
         <shape android:shape="rectangle">

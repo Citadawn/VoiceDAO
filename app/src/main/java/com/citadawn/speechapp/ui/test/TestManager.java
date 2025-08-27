@@ -8,26 +8,32 @@ import java.util.List;
  * 负责管理测试用例的创建、选择和状态控制
  */
 public class TestManager {
-    
+
     // region 静态变量
-    
-    /** 单例实例 */
+
+    /**
+     * 单例实例
+     */
     private static TestManager instance;
-    
+
     // endregion
-    
+
     // region 成员变量
-    
-    /** 所有测试用例列表 */
+
+    /**
+     * 所有测试用例列表
+     */
     private final List<TestCase> testCases = new ArrayList<>();
-    
-    /** 测试模式状态 */
+
+    /**
+     * 测试模式状态
+     */
     private boolean testMode = false;
-    
+
     // endregion
-    
+
     // region 构造方法
-    
+
     /**
      * 私有构造函数，初始化测试用例
      */
@@ -39,11 +45,12 @@ public class TestManager {
     }
 
     // endregion
-    
+
     // region 静态工具方法
-    
+
     /**
      * 获取TestManager单例实例
+     *
      * @return TestManager实例
      */
     public static TestManager getInstance() {
@@ -52,13 +59,14 @@ public class TestManager {
         }
         return instance;
     }
-    
+
     // endregion
-    
+
     // region 公开方法
-    
+
     /**
      * 获取所有测试用例列表
+     *
      * @return 测试用例列表
      */
     public List<TestCase> getTestCases() {
@@ -66,15 +74,8 @@ public class TestManager {
     }
 
     /**
-     * 设置测试模式状态
-     * @param enabled 是否启用测试模式
-     */
-    public void setTestMode(boolean enabled) {
-        this.testMode = enabled;
-    }
-
-    /**
      * 检查是否处于测试模式
+     *
      * @return 是否处于测试模式
      */
     public boolean isTestMode() {
@@ -82,7 +83,17 @@ public class TestManager {
     }
 
     /**
+     * 设置测试模式状态
+     *
+     * @param enabled 是否启用测试模式
+     */
+    public void setTestMode(boolean enabled) {
+        this.testMode = enabled;
+    }
+
+    /**
      * 获取已选中的测试用例列表
+     *
      * @return 已选中的测试用例列表
      */
     public List<TestCase> getSelectedTestCases() {
@@ -102,6 +113,6 @@ public class TestManager {
         }
         testMode = false;
     }
-    
+
     // endregion
 }

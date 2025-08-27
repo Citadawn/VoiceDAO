@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,44 +11,44 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:titleTextColor="@android:color/white"
-        app:title="@string/title_text_editor"
-        app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+        app:title="@string/title_text_editor" />
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fillViewport="true"
         android:clipToPadding="false"
+        android:fillViewport="true"
         android:paddingBottom="@dimen/dp_64"
-        app:layout_constraintTop_toBottomOf="@id/editorToolbar"
         app:layout_constraintBottom_toTopOf="@id/layoutEditorBottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/editorToolbar">
 
         <EditText
             android:id="@+id/editorEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_input_editor"
-            android:textSize="@dimen/sp_16"
+            android:autofillHints="text"
+            android:background="@null"
             android:gravity="top|start"
-            android:minLines="10"
-            android:maxLines="100"
+            android:hint="@string/hint_input_editor"
             android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+            android:maxLines="100"
+            android:minLines="10"
             android:paddingStart="@dimen/dp_20"
-            android:paddingEnd="@dimen/dp_20"
             android:paddingTop="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_20"
             android:paddingBottom="@dimen/dp_80"
             android:scrollbars="vertical"
-            android:background="@null"
             android:textColor="@color/text_primary"
+            android:textColorHighlight="@color/text_highlight"
             android:textColorHint="@color/hint_gray"
             android:textCursorDrawable="@drawable/cursor_main_dark"
-            android:textColorHighlight="@color/text_highlight"
-            android:autofillHints="text" />
+            android:textSize="@dimen/sp_16" />
     </ScrollView>
 
     <!-- 底部按钮栏：清空、字数统计、确定，三者水平居中对齐 -->
@@ -57,40 +56,40 @@
         android:id="@+id/layoutEditorBottomBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_margin="@dimen/dp_24"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="@dimen/dp_24">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/btnEditorClear"
+            style="@style/Widget.Button.Primary"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            style="@style/Widget.Button.Primary"
-            android:text="@string/btn_clear"
-            android:stateListAnimator="@animator/btn_scale_animator" />
+            android:stateListAnimator="@animator/btn_scale_animator"
+            android:text="@string/btn_clear" />
 
         <TextView
             android:id="@+id/tvEditorCharCount"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="@string/char_count"
-            android:textSize="@dimen/sp_14"
             android:gravity="center"
-            android:textColor="@color/gray_666" />
+            android:text="@string/char_count"
+            android:textColor="@color/gray_666"
+            android:textSize="@dimen/sp_14" />
 
         <Button
             android:id="@+id/btnEditorOk"
+            style="@style/Widget.Button.Primary"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            style="@style/Widget.Button.Primary"
-            android:text="@string/btn_ok"
-            android:stateListAnimator="@animator/btn_scale_animator" />
+            android:stateListAnimator="@animator/btn_scale_animator"
+            android:text="@string/btn_ok" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout> 

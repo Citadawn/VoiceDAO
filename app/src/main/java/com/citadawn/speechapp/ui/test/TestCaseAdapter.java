@@ -19,49 +19,40 @@ import java.util.List;
  * 用于在RecyclerView中显示测试用例列表，支持选择、展开/收起描述等功能
  */
 public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHolder> {
-    
+
     // region 成员变量
-    
-    /** 测试用例列表 */
-    private final List<TestCase> testCases;
-    
-    /** 选择状态变化监听器 */
-    private OnSelectionChangedListener selectionListener;
-    
-    /** 记录每个item描述是否展开 */
-    private final boolean[] descExpanded;
-    
-    // endregion
-    
-    // region 接口定义
-    
+
     /**
-     * 选择状态变化监听器接口
+     * 测试用例列表
      */
-    public interface OnSelectionChangedListener {
-        /**
-         * 当选择状态发生变化时调用
-         */
-        void onSelectionChanged();
-    }
-    
+    private final List<TestCase> testCases;
+    /**
+     * 记录每个item描述是否展开
+     */
+    private final boolean[] descExpanded;
+    /**
+     * 选择状态变化监听器
+     */
+    private OnSelectionChangedListener selectionListener;
+
     // endregion
-    
-    // region 构造方法
-    
+
+    // region 接口定义
+
     /**
      * 创建测试用例适配器
+     *
      * @param testCases 测试用例列表
      */
     public TestCaseAdapter(List<TestCase> testCases) {
         this.testCases = testCases;
         this.descExpanded = new boolean[testCases.size()];
     }
-    
+
     // endregion
-    
-    // region 公开方法
-    
+
+    // region 构造方法
+
     /**
      * 收起所有测试用例的描述
      */
@@ -69,6 +60,10 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
         Arrays.fill(descExpanded, false);
         notifyItemRangeChanged(0, descExpanded.length);
     }
+
+    // endregion
+
+    // region 公开方法
 
     /**
      * 展开所有测试用例的描述
@@ -80,22 +75,23 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
 
     /**
      * 设置选择状态变化监听器
+     *
      * @param listener 监听器
      */
     public void setOnSelectionChangedListener(OnSelectionChangedListener listener) {
         this.selectionListener = listener;
     }
-    
-    // endregion
-    
-    // region 适配器核心方法
-    
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_case, parent, false);
         return new ViewHolder(view);
     }
+
+    // endregion
+
+    // region 适配器核心方法
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -128,28 +124,45 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
     public int getItemCount() {
         return testCases.size();
     }
-    
+
+    /**
+     * 选择状态变化监听器接口
+     */
+    public interface OnSelectionChangedListener {
+        /**
+         * 当选择状态发生变化时调用
+         */
+        void onSelectionChanged();
+    }
+
     // endregion
 
     // region 内部类
-    
+
     /**
      * ViewHolder 内部类
      * 用于缓存 RecyclerView 中的视图引用
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        
-        /** 测试用例选择复选框 */
+
+        /**
+         * 测试用例选择复选框
+         */
         final CheckBox cbTestCase;
-        
-        /** 测试用例描述文本 */
+
+        /**
+         * 测试用例描述文本
+         */
         final TextView tvTestCaseDesc;
-        
-        /** 展开/收起描述按钮 */
+
+        /**
+         * 展开/收起描述按钮
+         */
         final TextView btnToggleDesc;
 
         /**
          * 创建 ViewHolder
+         *
          * @param itemView 列表项视图
          */
         ViewHolder(View itemView) {
@@ -159,6 +172,6 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
             btnToggleDesc = itemView.findViewById(R.id.btnToggleDesc);
         }
     }
-    
+
     // endregion
 } 

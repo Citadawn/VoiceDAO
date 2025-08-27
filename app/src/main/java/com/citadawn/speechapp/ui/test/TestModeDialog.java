@@ -25,58 +25,53 @@ import java.util.List;
  * 提供测试用例选择界面，支持多选、展开/收起描述等功能
  */
 public class TestModeDialog extends Dialog {
-    
+
     // region 成员变量
-    
-    /** 测试用例列表 */
-    private final List<TestCase> testCases;
-    
-    /** 测试选择监听器 */
-    private final OnTestSelectedListener listener;
-    
-    /** 开始测试按钮 */
-    private Button btnStartTest;
-    
-    /** 测试用例适配器 */
-    private TestCaseAdapter adapter;
-    
-    // endregion
-    
-    // region 接口定义
-    
+
     /**
-     * 测试选择监听器接口
+     * 测试用例列表
      */
-    public interface OnTestSelectedListener {
-        /**
-         * 当测试用例被选择时调用
-         * @param selected 已选择的测试用例列表
-         */
-        void onTestSelected(List<TestCase> selected);
-    }
-    
+    private final List<TestCase> testCases;
+
+    /**
+     * 测试选择监听器
+     */
+    private final OnTestSelectedListener listener;
+
+    /**
+     * 开始测试按钮
+     */
+    private Button btnStartTest;
+
+    /**
+     * 测试用例适配器
+     */
+    private TestCaseAdapter adapter;
+
     // endregion
-    
-    // region 构造方法
-    
+
+    // region 接口定义
+
     /**
      * 创建测试模式对话框
-     * @param context 上下文
+     *
+     * @param context   上下文
      * @param testCases 测试用例列表
-     * @param listener 选择监听器
+     * @param listener  选择监听器
      */
     public TestModeDialog(@NonNull Context context, List<TestCase> testCases, OnTestSelectedListener listener) {
         super(context);
         this.testCases = testCases;
         this.listener = listener;
     }
-    
+
     // endregion
-    
-    // region 生命周期方法
-    
+
+    // region 构造方法
+
     /**
      * 对话框创建时初始化UI和事件监听
+     *
      * @param savedInstanceState 保存的状态
      */
     @Override
@@ -127,11 +122,11 @@ public class TestModeDialog extends Dialog {
             dismiss();
         });
     }
-    
+
     // endregion
-    
-    // region 私有辅助方法
-    
+
+    // region 生命周期方法
+
     /**
      * 更新测试按钮状态
      */
@@ -162,6 +157,10 @@ public class TestModeDialog extends Dialog {
         btnStartTest.setText(buttonText);
     }
 
+    // endregion
+
+    // region 私有辅助方法
+
     /**
      * 使用统一工具类设置信息图标位置
      */
@@ -188,7 +187,6 @@ public class TestModeDialog extends Dialog {
         return ViewHelper.findTextViewByTargetText(rootView, targetText);
     }
 
-
     /**
      * 显示测试模式信息对话框
      */
@@ -199,11 +197,7 @@ public class TestModeDialog extends Dialog {
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
-    
-    // endregion
-    
-    // region 生命周期方法
-    
+
     /**
      * 对话框显示时设置窗口属性
      */
@@ -216,5 +210,21 @@ public class TestModeDialog extends Dialog {
             // 设置dialog居中显示
             getWindow().setGravity(android.view.Gravity.CENTER);
         }
+    }
+
+    // endregion
+
+    // region 生命周期方法
+
+    /**
+     * 测试选择监听器接口
+     */
+    public interface OnTestSelectedListener {
+        /**
+         * 当测试用例被选择时调用
+         *
+         * @param selected 已选择的测试用例列表
+         */
+        void onTestSelected(List<TestCase> selected);
     }
 } 

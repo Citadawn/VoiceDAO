@@ -2,19 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="@drawable/toast_background"
-    android:padding="@dimen/dp_12"
+    android:elevation="@dimen/dp_8"
     android:gravity="center_vertical"
-    android:elevation="@dimen/dp_8">
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_12">
 
     <TextView
         android:id="@+id/toast_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/sp_14"
+        android:ellipsize="end"
         android:maxLines="3"
-        android:ellipsize="end" />
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/sp_14" />
 
 </LinearLayout> 

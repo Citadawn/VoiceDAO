@@ -2,7 +2,8 @@
 
 ---
 
-语道 (VoiceDAO) 是一个专注于文本转语音（TTS）功能的 Android 应用。用户可输入任意文本，调节语速和音调，一键朗读。该项目依赖于系统当前设置的 TTS 引擎，本身不内置语音合成能力，专注于提供简洁直观的用户界面和流畅的 TTS 体验。
+语道 (VoiceDAO) 是一个专注于文本转语音（TTS）功能的 Android 应用。用户可输入任意文本，调节语速和音调，一键朗读。该项目依赖于系统当前设置的
+TTS 引擎，本身不内置语音合成能力，专注于提供简洁直观的用户界面和流畅的 TTS 体验。
 
 ## 主要功能
 
@@ -53,21 +54,21 @@
 ### 安装步骤
 
 1. **克隆项目**
-   
+
    ```bash
    git clone https://github.com/your-username/VoiceDAO.git
    cd VoiceDAO
    ```
 
 2. **打开项目**
-   
-   - 使用 Android Studio 打开项目
-   - 等待 Gradle 同步完成
+
+    - 使用 Android Studio 打开项目
+    - 等待 Gradle 同步完成
 
 3. **运行应用**
-   
-   - 连接 Android 设备或启动模拟器
-   - 点击运行按钮，选择目标设备
+
+    - 连接 Android 设备或启动模拟器
+    - 点击运行按钮，选择目标设备
 
 ### 系统要求
 
@@ -101,7 +102,8 @@ Android 系统的"文字转语音（TTS）设置"页面用于选择系统默认 
 - 此页面设置的"语言、语速、音高"会在全局生效，影响所有新创建的 TTS 实例的默认值
 - 大多数 App（包括本项目）会在调用 TTS 朗读时自行指定参数，优先级高于系统设置页面
 - 如果 TTS 引擎本身不支持某种语言，即使在此页面设置也不会生效，TTS 引擎的默认语言会使用系统语言
-- 某些 TTS 引擎也可以设置语速和音高，比如 MultiTTS、TTS Server，其中 MultiTTS 设置的语速和音高只在 MultiTTS 中有效，而 TTS Server 中设置的语速和音高在全局有效
+- 某些 TTS 引擎也可以设置语速和音高，比如 MultiTTS、TTS Server，其中 MultiTTS 设置的语速和音高只在
+  MultiTTS 中有效，而 TTS Server 中设置的语速和音高在全局有效
 
 ## 开发指南
 
@@ -126,7 +128,8 @@ Android 系统的"文字转语音（TTS）设置"页面用于选择系统默认 
 - [启动器图标设计指南](./docs/reference/启动器图标设计指南.md) - 应用启动器图标的设计理念和实现方式
 - [Locale 类](./docs/reference/Locale 类.md) - Java `Locale` 类的属性与方法详解
 - [TextToSpeech 类](./docs/reference/TextToSpeech 类.md) - Android `TextToSpeech` 类的属性与方法详解
-- [TextToSpeech.EngineInfo 类](./docs/reference/TextToSpeech.EngineInfo 类.md) - Android `TextToSpeech.EngineInfo` 类的属性与方法详解
+- [TextToSpeech.EngineInfo 类](./docs/reference/TextToSpeech.EngineInfo 类.md) - Android
+  `TextToSpeech.EngineInfo` 类的属性与方法详解
 - [Voice 类](./docs/reference/Voice 类.md) - Android `Voice` 类的属性与方法详解
 
 ## 项目结构

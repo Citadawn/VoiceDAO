@@ -40,7 +40,7 @@
     <color name="btn_pressed_bg">#CC272727</color>
     <color name="panel_bg">#F5F5F5</color>
     <color name="transparent">#00000000</color>
-    <color name="vector_light_gray">#F2F2F2</color>
-    <color name="vector_stroke_gray_1">#ECECEC</color>
-    <color name="vector_stroke_gray_2">#F0F0F0</color>
+    <color name="vector_light_gray">#E0E0E0</color>
+    <color name="vector_stroke_gray_1">#D8D8D8</color>
+    <color name="vector_stroke_gray_2">#DDDDDD</color>
 </resources>

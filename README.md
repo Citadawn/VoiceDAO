@@ -56,8 +56,13 @@ TTS 引擎，本身不内置语音合成能力，专注于提供简洁直观的�
 1. **克隆项目**
    
    ```bash
-   git clone https://github.com/your-username/VoiceDAO.git
+   # 从 GitHub 克隆
+   git clone https://github.com/Citadawn/VoiceDAO.git
    cd VoiceDAO
+   
+   # 或从 Gitee 克隆（国内访问更快）
+   git clone https://gitee.com/Citadawn/voice-dao.git
+   cd voice-dao
    ```
 
 2. **打开项目**
@@ -188,9 +193,9 @@ VoiceDAO/
 
 ---
 
-- 项目主页：[GitHub Repository](https://github.com/[your-username]/VoiceDAO)
-- 问题反馈：[Issues](https://github.com/[your-username]/VoiceDAO/issues)
-- 讨论交流：[Discussions](https://github.com/[your-username]/VoiceDAO/discussions)
+- 项目主页：[GitHub Repository](https://github.com/Citadawn/VoiceDAO) | [Gitee Repository](https://gitee.com/Citadawn/voice-dao)
+- 问题反馈：[GitHub Issues](https://github.com/Citadawn/VoiceDAO/issues) | [Gitee Issues](https://gitee.com/Citadawn/voice-dao/issues)
+- 讨论交流：[GitHub Discussions](https://github.com/Citadawn/VoiceDAO/discussions) | [Gitee Pull Requests](https://gitee.com/Citadawn/voice-dao/pulls)
 
 ---
 

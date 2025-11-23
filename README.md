@@ -54,7 +54,7 @@ TTS 引擎，本身不内置语音合成能力，专注于提供简洁直观的�
 ### 安装步骤
 
 1. **克隆项目**
-
+   
    ```bash
    # 从 GitHub 克隆
    git clone https://github.com/Citadawn/VoiceDAO.git
@@ -66,14 +66,14 @@ TTS 引擎，本身不内置语音合成能力，专注于提供简洁直观的�
    ```
 
 2. **打开项目**
-
-    - 使用 Android Studio 打开项目
-    - 等待 Gradle 同步完成
+   
+   - 使用 Android Studio 打开项目
+   - 等待 Gradle 同步完成
 
 3. **运行应用**
-
-    - 连接 Android 设备或启动模拟器
-    - 点击运行按钮，选择目标设备
+   
+   - 连接 Android 设备或启动模拟器
+   - 点击运行按钮，选择目标设备
 
 ### 系统要求
 
@@ -194,10 +194,13 @@ VoiceDAO/
 ---
 
 -
+
 项目主页：[GitHub Repository](https://github.com/Citadawn/VoiceDAO) | [Gitee Repository](https://gitee.com/Citadawn/voice-dao)
 -
+
 问题反馈：[GitHub Issues](https://github.com/Citadawn/VoiceDAO/issues) | [Gitee Issues](https://gitee.com/Citadawn/voice-dao/issues)
 -
+
 讨论交流：[GitHub Discussions](https://github.com/Citadawn/VoiceDAO/discussions) | [Gitee Pull Requests](https://gitee.com/Citadawn/voice-dao/pulls)
 
 ---

@@ -71,7 +71,6 @@ import com.citadawn.speechapp.util.ViewHelper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1638,7 +1637,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 // 解码URL编码的字符，特别是中文字符
                 // 使用字符串参数而非StandardCharsets.UTF_8以保持API 24兼容性
-                String decodedPath = java.net.URLDecoder.decode(subPath, StandardCharsets.UTF_8);
+                String decodedPath = java.net.URLDecoder.decode(subPath, "UTF-8");
                 return "/storage/emulated/0/" + decodedPath.replace("%2F", "/");
             } catch (Exception e) {
                 // 如果解码失败，返回原始路径

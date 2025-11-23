@@ -40,8 +40,7 @@ public class ViewHelper {
 
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);
-            if (child instanceof TextView) {
-                TextView textView = (TextView) child;
+            if (child instanceof TextView textView) {
                 if (text.equals(textView.getText().toString())) {
                     return textView;
                 }
@@ -83,8 +82,7 @@ public class ViewHelper {
 
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);
-            if (child instanceof TextView) {
-                TextView textView = (TextView) child;
+            if (child instanceof TextView textView) {
                 if (targetText.equals(textView.getText().toString())) {
                     return textView;
                 }

@@ -42,7 +42,7 @@
             android:paddingStart="@dimen/dp_20"
             android:paddingTop="@dimen/dp_16"
             android:paddingEnd="@dimen/dp_20"
-            android:paddingBottom="@dimen/dp_80"
+            android:paddingBottom="80dp"
             android:scrollbars="vertical"
             android:textColor="@color/text_primary"
             android:textColorHighlight="@color/text_highlight"
@@ -67,7 +67,7 @@
             android:id="@+id/btnEditorClear"
             style="@style/Widget.Button.Primary"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/dp_48"
             android:layout_weight="1"
             android:stateListAnimator="@animator/btn_scale_animator"
             android:text="@string/btn_clear" />
@@ -75,7 +75,7 @@
         <TextView
             android:id="@+id/tvEditorCharCount"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/dp_48"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/char_count"
@@ -86,7 +86,7 @@
             android:id="@+id/btnEditorOk"
             style="@style/Widget.Button.Primary"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/dp_48"
             android:layout_weight="1"
             android:stateListAnimator="@animator/btn_scale_animator"
             android:text="@string/btn_ok" />

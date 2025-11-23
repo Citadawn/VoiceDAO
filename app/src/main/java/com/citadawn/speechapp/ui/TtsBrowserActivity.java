@@ -319,14 +319,11 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 如果适配器已存在，直接使用；否则创建新的
             BaseAdapter adapter = adapters.get(position);
             if (adapter == null) {
-                switch (position) {
-                    case 0:
-                        adapter = createEngineAdapter();
-                        break;
-                    case 1:
-                        adapter = createLanguageVoiceAdapter();
-                        break;
-                }
+                adapter = switch (position) {
+                    case 0 -> createEngineAdapter();
+                    case 1 -> createLanguageVoiceAdapter();
+                    default -> null;
+                };
                 if (adapter != null) {
                     adapters.put(position, adapter);
                 }
@@ -492,8 +489,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
             ListView targetListView = listViews.get(1);
             if (targetListView != null) {
                 BaseAdapter adapter = (BaseAdapter) targetListView.getAdapter();
-                if (adapter instanceof LanguageVoiceAdapter) {
-                    LanguageVoiceAdapter languageVoiceAdapter = (LanguageVoiceAdapter) adapter;
+                if (adapter instanceof LanguageVoiceAdapter languageVoiceAdapter) {
                     languageVoiceAdapter.filter(query);
                 }
             }
@@ -743,33 +739,32 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 设置支持情况
             int supportStatus = tts.isLanguageAvailable(item.locale);
             String supportText;
-            int supportColorRes;
-            switch (supportStatus) {
-                case TextToSpeech.LANG_AVAILABLE:
+            int supportColorRes = switch (supportStatus) {
+                case TextToSpeech.LANG_AVAILABLE -> {
                     supportText = context.getString(R.string.language_available);
-                    supportColorRes = R.color.tts_support_full; // 🟢 绿色：完全支持
-                    break;
-                case TextToSpeech.LANG_COUNTRY_AVAILABLE:
+                    yield R.color.tts_support_full;
+                }
+                case TextToSpeech.LANG_COUNTRY_AVAILABLE -> {
                     supportText = context.getString(R.string.language_country_available);
-                    supportColorRes = R.color.tts_support_partial; // 🟣 紫色：国家支持
-                    break;
-                case TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE:
+                    yield R.color.tts_support_partial;
+                }
+                case TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE -> {
                     supportText = context.getString(R.string.language_country_available); // 使用国家支持的文本，因为没有单独的变体支持文本
-                    supportColorRes = R.color.tts_support_variant; // 🔵 蓝色：变体支持
-                    break;
-                case TextToSpeech.LANG_MISSING_DATA:
+                    yield R.color.tts_support_variant;
+                }
+                case TextToSpeech.LANG_MISSING_DATA -> {
                     supportText = context.getString(R.string.language_missing_data);
-                    supportColorRes = R.color.tts_support_missing_data; // 🟡 黄色：缺少数据
-                    break;
-                case TextToSpeech.LANG_NOT_SUPPORTED:
+                    yield R.color.tts_support_missing_data;
+                }
+                case TextToSpeech.LANG_NOT_SUPPORTED -> {
                     supportText = context.getString(R.string.language_not_supported);
-                    supportColorRes = R.color.tts_support_none; // ⚪ 灰色：不支持
-                    break;
-                default:
+                    yield R.color.tts_support_none;
+                }
+                default -> {
                     supportText = context.getString(R.string.language_unknown);
-                    supportColorRes = R.color.tts_support_none; // ⚪ 灰色：未知
-                    break;
-            }
+                    yield R.color.tts_support_none;
+                }
+            };
             holder.supportView.setText(supportText);
             holder.supportView.setBackgroundColor(ContextCompat.getColor(context, supportColorRes));
 
@@ -824,37 +819,25 @@ public class TtsBrowserActivity extends AppCompatActivity {
         }
 
         private String getQualityText(int quality) {
-            switch (quality) {
-                case Voice.QUALITY_VERY_LOW:
-                    return context.getString(R.string.quality_very_low);
-                case Voice.QUALITY_LOW:
-                    return context.getString(R.string.quality_low);
-                case Voice.QUALITY_NORMAL:
-                    return context.getString(R.string.quality_normal);
-                case Voice.QUALITY_HIGH:
-                    return context.getString(R.string.quality_high);
-                case Voice.QUALITY_VERY_HIGH:
-                    return context.getString(R.string.quality_very_high);
-                default:
-                    return context.getString(R.string.quality_unknown);
-            }
+            return switch (quality) {
+                case Voice.QUALITY_VERY_LOW -> context.getString(R.string.quality_very_low);
+                case Voice.QUALITY_LOW -> context.getString(R.string.quality_low);
+                case Voice.QUALITY_NORMAL -> context.getString(R.string.quality_normal);
+                case Voice.QUALITY_HIGH -> context.getString(R.string.quality_high);
+                case Voice.QUALITY_VERY_HIGH -> context.getString(R.string.quality_very_high);
+                default -> context.getString(R.string.quality_unknown);
+            };
         }
 
         private String getLatencyText(int latency) {
-            switch (latency) {
-                case Voice.LATENCY_VERY_LOW:
-                    return context.getString(R.string.latency_very_low);
-                case Voice.LATENCY_LOW:
-                    return context.getString(R.string.latency_low);
-                case Voice.LATENCY_NORMAL:
-                    return context.getString(R.string.latency_normal);
-                case Voice.LATENCY_HIGH:
-                    return context.getString(R.string.latency_high);
-                case Voice.LATENCY_VERY_HIGH:
-                    return context.getString(R.string.latency_very_high);
-                default:
-                    return context.getString(R.string.latency_unknown);
-            }
+            return switch (latency) {
+                case Voice.LATENCY_VERY_LOW -> context.getString(R.string.latency_very_low);
+                case Voice.LATENCY_LOW -> context.getString(R.string.latency_low);
+                case Voice.LATENCY_NORMAL -> context.getString(R.string.latency_normal);
+                case Voice.LATENCY_HIGH -> context.getString(R.string.latency_high);
+                case Voice.LATENCY_VERY_HIGH -> context.getString(R.string.latency_very_high);
+                default -> context.getString(R.string.latency_unknown);
+            };
         }
 
         /**

@@ -8,7 +8,7 @@
 
     <View
         android:id="@+id/viewSupportBar"
-        android:layout_width="@dimen/dp_6"
+        android:layout_width="6dp"
         android:layout_height="@dimen/dp_32"
         android:layout_marginEnd="@dimen/dp_12"
         android:background="@color/tts_support_full" />

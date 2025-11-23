@@ -17,7 +17,7 @@
     <!-- 间距 -->
     <View
         android:layout_width="@dimen/dp_16"
-        android:layout_height="@dimen/dp_1" />
+        android:layout_height="1dp" />
 
     <!-- 引擎信息 -->
     <LinearLayout

@@ -52,7 +52,7 @@
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:lines="3"
-                android:minHeight="@dimen/dp_80"
+                android:minHeight="80dp"
                 android:paddingStart="@dimen/dp_24"
                 android:paddingTop="@dimen/dp_20"
                 android:paddingEnd="@dimen/dp_24"
@@ -62,7 +62,7 @@
                 android:textColorHighlight="@color/text_highlight"
                 android:textColorHint="@color/hint_gray"
                 android:textCursorDrawable="@drawable/cursor_main_dark"
-                android:textSize="16sp"
+                android:textSize="@dimen/sp_16"
                 android:windowSoftInputMode="stateHidden"
                 app:layout_constraintEnd_toStartOf="@id/layoutEditButtons"
                 app:layout_constraintStart_toStartOf="parent"
@@ -199,7 +199,7 @@
                     <SeekBar
                         android:id="@+id/seekBarSpeed"
                         android:layout_width="0dp"
-                        android:layout_height="32dp"
+                        android:layout_height="@dimen/dp_32"
                         android:layout_marginStart="@dimen/dp_8"
                         android:layout_marginEnd="@dimen/dp_8"
                         android:layout_weight="1"
@@ -330,7 +330,7 @@
                     <SeekBar
                         android:id="@+id/seekBarPitch"
                         android:layout_width="0dp"
-                        android:layout_height="32dp"
+                        android:layout_height="@dimen/dp_32"
                         android:layout_marginStart="@dimen/dp_8"
                         android:layout_marginEnd="@dimen/dp_8"
                         android:layout_weight="1"
@@ -411,7 +411,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:minWidth="@dimen/dp_120"
+                        android:minWidth="120dp"
                         android:minHeight="@dimen/dp_48"
                         android:scrollbars="horizontal"
                         android:spinnerMode="dropdown" />
@@ -440,9 +440,9 @@
 
                         <ImageView
                             android:id="@+id/ivVoiceSupportInfo"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="2dp"
+                            android:layout_width="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_20"
+                            android:layout_marginStart="@dimen/dp_2"
                             android:clickable="true"
                             android:contentDescription="@string/tts_support_info_title"
                             android:focusable="true"
@@ -454,7 +454,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:minWidth="@dimen/dp_120"
+                        android:minWidth="120dp"
                         android:minHeight="@dimen/dp_48"
                         android:scrollbars="horizontal"
                         android:spinnerMode="dropdown" />
@@ -463,8 +463,8 @@
                 <!-- 第三行：重置按钮 -->
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnLangVoiceReset"
-                    android:layout_width="44dp"
-                    android:layout_height="28dp"
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_28"
                     android:layout_gravity="end"
                     android:background="@drawable/btn_main_bg"
                     android:gravity="center"
@@ -491,7 +491,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSpeak"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="@dimen/dp_48"
                     android:layout_marginEnd="@dimen/dp_12"
                     android:layout_weight="2"
                     android:background="@drawable/btn_main_bg"
@@ -503,7 +503,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnStop"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="@dimen/dp_48"
                     android:layout_weight="1"
                     android:background="@drawable/btn_main_bg"
                     android:stateListAnimator="@animator/btn_scale_animator"
@@ -527,7 +527,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSaveAudio"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="@dimen/dp_48"
                     android:layout_marginEnd="@dimen/dp_12"
                     android:layout_weight="2"
                     android:background="@drawable/btn_main_bg"
@@ -539,7 +539,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnCancelSave"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="@dimen/dp_48"
                     android:layout_weight="1"
                     android:background="@drawable/btn_main_bg"
                     android:stateListAnimator="@animator/btn_scale_animator"
@@ -551,7 +551,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSetSaveDir"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/dp_48"
                 android:layout_marginTop="@dimen/dp_16"
                 android:background="@drawable/btn_main_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
@@ -568,7 +568,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_24"
                 android:background="?attr/colorSurface"
-                android:minHeight="@dimen/dp_60"
+                android:minHeight="60dp"
                 android:orientation="vertical"
                 android:padding="@dimen/dp_16"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -628,8 +628,8 @@
                         android:layout_width="@dimen/dp_20"
                         android:layout_height="@dimen/dp_20"
                         android:layout_gravity="top"
-                        android:layout_marginStart="@dimen/dp_6"
-                        android:layout_marginEnd="@dimen/dp_6"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginEnd="6dp"
                         android:contentDescription="@string/tts_engine_icon"
                         android:visibility="gone" />
 

@@ -78,7 +78,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTestCases"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_200"
+        android:layout_height="200dp"
         android:layout_marginTop="@dimen/dp_8"
         android:background="@drawable/bg_test_list"
         android:padding="@dimen/dp_8"

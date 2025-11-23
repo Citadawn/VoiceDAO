@@ -50,7 +50,7 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="@dimen/dp_1"
+        android:dividerHeight="1dp"
         android:fastScrollAlwaysVisible="false"
         android:fastScrollEnabled="true"
         android:paddingStart="@dimen/dp_8"

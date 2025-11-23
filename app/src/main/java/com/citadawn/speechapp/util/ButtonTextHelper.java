@@ -4,8 +4,6 @@ import android.graphics.Paint;
 import android.util.TypedValue;
 import android.widget.Button;
 
-import com.citadawn.speechapp.R;
-
 /**
  * 按钮文本自动调整工具类
  * 提供按钮文本大小自动调整功能，确保文本完全显示在按钮内
@@ -71,7 +69,8 @@ public class ButtonTextHelper {
             float trySize = originalTextSize;
             Paint paint = new Paint();
             paint.set(button.getPaint());
-            float minSize = button.getContext().getResources().getDimension(R.dimen.sp_8);
+            // 最小字体大小为 8sp
+            float minSize = 8f * button.getContext().getResources().getDisplayMetrics().scaledDensity;
 
             paint.setTextSize(trySize);
             while (paint.measureText(text) > buttonWidth && trySize > minSize) {

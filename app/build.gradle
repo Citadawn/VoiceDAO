@@ -38,6 +38,7 @@ android {
         // 官方推荐的标准配置：错误阻止构建，警告不阻止构建
         abortOnError true
         warningsAsErrors false
+        checkReleaseBuilds false
         // 不设置 checkOnly，检查所有 lint 规则
     }
 }

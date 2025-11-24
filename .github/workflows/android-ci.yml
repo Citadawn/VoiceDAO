@@ -122,4 +122,24 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/**/*.apk
+          generate_release_notes: true
+          body: |
+            ## 📦 版本信息
+            
+            - **版本号**: ${{ github.ref_name }}
+            - **构建时间**: ${{ github.event.head_commit.timestamp || github.run_started_at }}
+            - **提交**: ${{ github.event.head_commit.message || github.sha }}
+            
+            ## ⚙️ 系统要求
+            
+            - Android 7.0 (API 24) 及以上版本
+            - 系统已安装并配置 TTS 引擎
+            
+            ## 📝 更新内容
+            
+            查看上方的"自动生成的 Release notes"了解本次更新的详细变更。
+            
+            ---
+            
+            **注意**: 此版本使用正式签名证书构建，可直接安装使用。
 

@@ -85,18 +85,118 @@ jobs:
         run: ./gradlew clean lint test
 
       - name: Assemble debug APK
+        if: "!startsWith(github.ref, 'refs/tags/')"
         run: ./gradlew assembleDebug
 
       - name: Upload debug APK
-        if: success()
+        if: success() && github.actor != 'dependabot[bot]' && "!startsWith(github.ref, 'refs/tags/')"
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/*.apk
+          retention-days: 7
+
+      - name: Validate and extract version from tag
+        if: startsWith(github.ref, 'refs/tags/')
+        id: version
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG_NAME#v}
+          
+          # Validate version format (semantic versioning: x.y.z)
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "❌ ERROR: Invalid tag format. Expected format: vX.Y.Z (e.g., v1.2.3)"
+            echo "Current tag: $TAG_NAME"
+            echo "Extracted version: $VERSION"
+            exit 1
+          fi
+          
+          echo "✅ Valid tag format: $TAG_NAME -> version $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          # Calculate versionCode (e.g., 2.0.0 -> 20000, 1.2.3 -> 10203)
+          IFS='.' read -ra VERSION_PARTS <<< "$VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
+          VERSION_CODE=$((MAJOR * 10000 + MINOR * 100 + PATCH))
+          echo "versionCode=$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "Calculated versionCode: $VERSION_CODE"
+
+      - name: Update version in build.gradle
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          VERSION_CODE="${{ steps.version.outputs.versionCode }}"
+          
+          # Update versionName
+          sed -i "s/versionName \".*\"/versionName \"$VERSION\"/" app/build.gradle
+          
+          # Update versionCode
+          sed -i "s/versionCode [0-9]*/versionCode $VERSION_CODE/" app/build.gradle
+          
+          echo "✅ Updated build.gradle:"
+          echo "  versionName: $VERSION"
+          echo "  versionCode: $VERSION_CODE"
+          echo ""
+          echo "Updated lines:"
+          grep -E "(versionCode|versionName)" app/build.gradle
 
       - name: Assemble release APK
         if: startsWith(github.ref, 'refs/tags/')
         run: ./gradlew assembleRelease
+
+      - name: Verify release APK signature
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          APK_FILE=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          if [ -z "$APK_FILE" ]; then
+            echo "Error: APK file not found"
+            exit 1
+          fi
+          
+          echo "Verifying APK signature with apksigner..."
+          
+          # Find apksigner in Android SDK
+          APKSIGNER=$(find $ANDROID_HOME -name apksigner 2>/dev/null | head -n 1)
+          if [ -z "$APKSIGNER" ]; then
+            APKSIGNER=$(find ~/.android -name apksigner 2>/dev/null | head -n 1)
+          fi
+          if [ -z "$APKSIGNER" ]; then
+            echo "⚠️  apksigner not found, trying alternative method..."
+            # Fallback: try to extract signature info using keytool
+            unzip -q -o "$APK_FILE" META-INF/*.RSA META-INF/*.DSA META-INF/*.EC 2>/dev/null || true
+            CERT_FILE=$(ls META-INF/*.RSA META-INF/*.DSA META-INF/*.EC 2>/dev/null | head -n 1)
+            if [ -n "$CERT_FILE" ]; then
+              SIGNATURE_INFO=$(keytool -printcert -file "$CERT_FILE" 2>&1 || true)
+              if echo "$SIGNATURE_INFO" | grep -q "CN=Android Debug"; then
+                echo "⚠️  WARNING: APK appears to be signed with DEBUG keystore!"
+                echo "This may indicate that release signing secrets are not configured correctly."
+                echo "$SIGNATURE_INFO"
+              elif echo "$SIGNATURE_INFO" | grep -qi "voicedao\|owner"; then
+                echo "✅ SUCCESS: APK signature verified (not debug keystore)"
+                echo "$SIGNATURE_INFO"
+              fi
+            else
+              echo "⚠️  Could not extract certificate info"
+            fi
+          else
+            # Use apksigner to verify
+            SIGNATURE_INFO=$("$APKSIGNER" verify --print-certs "$APK_FILE" 2>&1 || true)
+            if echo "$SIGNATURE_INFO" | grep -q "CN=Android Debug"; then
+              echo "⚠️  WARNING: APK appears to be signed with DEBUG keystore!"
+              echo "This may indicate that release signing secrets are not configured correctly."
+              echo "$SIGNATURE_INFO"
+            fi
+            if echo "$SIGNATURE_INFO" | grep -qi "voicedao"; then
+              echo "✅ SUCCESS: APK is signed with RELEASE keystore (alias: voicedao)"
+            else
+              echo "✅ SUCCESS: APK signature verified (not debug keystore)"
+            fi
+            echo ""
+            echo "Full signature details:"
+            echo "$SIGNATURE_INFO"
+          fi
 
       - name: Upload release APK
         if: startsWith(github.ref, 'refs/tags/')

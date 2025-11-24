@@ -63,12 +63,10 @@ jobs:
             exit 1
           fi
           printf '\n' >> gradle.properties
-          cat <<'EOF' >> gradle.properties
-VOICE_DAO_RELEASE_STORE_FILE=/home/runner/.android/voicedao-release.jks
-VOICE_DAO_RELEASE_STORE_PASSWORD=${STORE_PASSWORD}
-VOICE_DAO_RELEASE_KEY_ALIAS=${KEY_ALIAS}
-VOICE_DAO_RELEASE_KEY_PASSWORD=${KEY_PASSWORD}
-EOF
+          echo "VOICE_DAO_RELEASE_STORE_FILE=/home/runner/.android/voicedao-release.jks" >> gradle.properties
+          echo "VOICE_DAO_RELEASE_STORE_PASSWORD=${STORE_PASSWORD}" >> gradle.properties
+          echo "VOICE_DAO_RELEASE_KEY_ALIAS=${KEY_ALIAS}" >> gradle.properties
+          echo "VOICE_DAO_RELEASE_KEY_PASSWORD=${KEY_PASSWORD}" >> gradle.properties
 
       - name: Ensure signing keystore exists
         run: |

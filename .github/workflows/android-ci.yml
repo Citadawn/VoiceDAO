@@ -62,12 +62,13 @@ jobs:
             echo "Release signing secrets are incomplete." >&2
             exit 1
           fi
-          cat <<EOF >> gradle.properties
-          VOICE_DAO_RELEASE_STORE_FILE=/home/runner/.android/voicedao-release.jks
-          VOICE_DAO_RELEASE_STORE_PASSWORD=${STORE_PASSWORD}
-          VOICE_DAO_RELEASE_KEY_ALIAS=${KEY_ALIAS}
-          VOICE_DAO_RELEASE_KEY_PASSWORD=${KEY_PASSWORD}
-          EOF
+          printf '\n' >> gradle.properties
+          cat <<'EOF' >> gradle.properties
+VOICE_DAO_RELEASE_STORE_FILE=/home/runner/.android/voicedao-release.jks
+VOICE_DAO_RELEASE_STORE_PASSWORD=${STORE_PASSWORD}
+VOICE_DAO_RELEASE_KEY_ALIAS=${KEY_ALIAS}
+VOICE_DAO_RELEASE_KEY_PASSWORD=${KEY_PASSWORD}
+EOF
 
       - name: Ensure signing keystore exists
         run: |

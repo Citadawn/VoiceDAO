@@ -85,11 +85,11 @@ jobs:
         run: ./gradlew clean lint test
 
       - name: Assemble debug APK
-        if: "!startsWith(github.ref, 'refs/tags/')"
+        if: !startsWith(github.ref, 'refs/tags/')
         run: ./gradlew assembleDebug
 
       - name: Upload debug APK
-        if: success() && github.actor != 'dependabot[bot]' && "!startsWith(github.ref, 'refs/tags/')"
+        if: success() && github.actor != 'dependabot[bot]' && !startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk

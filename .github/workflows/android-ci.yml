@@ -118,9 +118,16 @@ jobs:
           name: app-release-apk
           path: dist
 
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=VoiceDAO $VERSION" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          name: ${{ steps.version.outputs.version }}
           files: dist/**/*.apk
           generate_release_notes: true
           body: |
@@ -134,10 +141,6 @@ jobs:
             
             - Android 7.0 (API 24) 及以上版本
             - 系统已安装并配置 TTS 引擎
-            
-            ## 📝 更新内容
-            
-            查看上方的"自动生成的 Release notes"了解本次更新的详细变更。
             
             ---
             

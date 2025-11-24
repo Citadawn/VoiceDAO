@@ -39,6 +39,36 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
+      - name: Restore release keystore (tags only)
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          KEYSTORE_B64: ${{ secrets.VOICE_DAO_RELEASE_KEYSTORE }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ]; then
+            echo "VOICE_DAO_RELEASE_KEYSTORE secret is missing." >&2
+            exit 1
+          fi
+          mkdir -p ~/.android
+          echo "$KEYSTORE_B64" | base64 -d > ~/.android/voicedao-release.jks
+
+      - name: Inject release signing secrets
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          STORE_PASSWORD: ${{ secrets.VOICE_DAO_RELEASE_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.VOICE_DAO_RELEASE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.VOICE_DAO_RELEASE_KEY_PASSWORD }}
+        run: |
+          if [ -z "$STORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASSWORD" ]; then
+            echo "Release signing secrets are incomplete." >&2
+            exit 1
+          fi
+          cat <<EOF >> gradle.properties
+          VOICE_DAO_RELEASE_STORE_FILE=/home/runner/.android/voicedao-release.jks
+          VOICE_DAO_RELEASE_STORE_PASSWORD=${STORE_PASSWORD}
+          VOICE_DAO_RELEASE_KEY_ALIAS=${KEY_ALIAS}
+          VOICE_DAO_RELEASE_KEY_PASSWORD=${KEY_PASSWORD}
+          EOF
+
       - name: Ensure signing keystore exists
         run: |
           mkdir -p ~/.android

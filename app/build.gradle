@@ -2,16 +2,35 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+def releaseSigningProps = new Properties()
+def releaseSigningPropsFile = rootProject.file("keystore.properties")
+if (releaseSigningPropsFile.exists()) {
+    releaseSigningPropsFile.withInputStream { stream ->
+        releaseSigningProps.load(stream)
+    }
+}
+
+def resolveSigningValue = { String key ->
+    return releaseSigningProps.getProperty(key)
+        ?: (project.hasProperty(key) ? project.findProperty(key)?.toString() : null)
+        ?: System.getenv(key)
+}
+
 android {
     namespace = 'com.citadawn.speechapp'
     compileSdk = 36
 
     signingConfigs {
         release {
-            keyAlias = project.findProperty("VOICE_DAO_RELEASE_KEY_ALIAS") ?: "debug"
-            keyPassword = project.findProperty("VOICE_DAO_RELEASE_KEY_PASSWORD") ?: "android"
-            storeFile = project.findProperty("VOICE_DAO_RELEASE_STORE_FILE") ? file(project.property("VOICE_DAO_RELEASE_STORE_FILE")) : file(System.getProperty("user.home") + "/.android/debug.keystore")
-            storePassword = project.findProperty("VOICE_DAO_RELEASE_STORE_PASSWORD") ?: "android"
+            def keyAliasValue = resolveSigningValue("VOICE_DAO_RELEASE_KEY_ALIAS")
+            def keyPasswordValue = resolveSigningValue("VOICE_DAO_RELEASE_KEY_PASSWORD")
+            def storeFileValue = resolveSigningValue("VOICE_DAO_RELEASE_STORE_FILE")
+            def storePasswordValue = resolveSigningValue("VOICE_DAO_RELEASE_STORE_PASSWORD")
+
+            keyAlias = keyAliasValue ?: "debug"
+            keyPassword = keyPasswordValue ?: "android"
+            storeFile = storeFileValue ? file(storeFileValue) : file(System.getProperty("user.home") + "/.android/debug.keystore")
+            storePassword = storePasswordValue ?: "android"
         }
     }
 

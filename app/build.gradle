@@ -6,6 +6,15 @@ android {
     namespace = 'com.citadawn.speechapp'
     compileSdk = 36
 
+    signingConfigs {
+        release {
+            keyAlias = project.findProperty("VOICE_DAO_RELEASE_KEY_ALIAS") ?: "debug"
+            keyPassword = project.findProperty("VOICE_DAO_RELEASE_KEY_PASSWORD") ?: "android"
+            storeFile = project.findProperty("VOICE_DAO_RELEASE_STORE_FILE") ? file(project.property("VOICE_DAO_RELEASE_STORE_FILE")) : file(System.getProperty("user.home") + "/.android/debug.keystore")
+            storePassword = project.findProperty("VOICE_DAO_RELEASE_STORE_PASSWORD") ?: "android"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.citadawn.speechapp"
         minSdk = 24
@@ -20,6 +29,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

@@ -17,15 +17,18 @@ GitHub Actions 在以下情况下会自动运行：
 当代码推送到 main 分支或创建 Pull Request 时，workflow 会执行以下步骤：
 
 1. **环境设置**
+   
    - 检出代码
    - 设置 JDK 17
    - 配置 Gradle 环境（启用缓存加速构建）
 
 2. **代码质量检查**
+   
    - 运行单元测试（`./gradlew test`）
    - 运行 Lint 检查（`./gradlew lint`）
 
 3. **构建 Debug APK**
+   
    - 构建 debug 版本的 APK（使用调试密钥签名）
    - 上传 debug APK 作为 artifact（保留 7 天，Dependabot PR 不上传）
 
@@ -36,25 +39,30 @@ GitHub Actions 在以下情况下会自动运行：
 当推送以 `v` 开头的 tag（如 `v1.0.0`）时，workflow 会执行以下步骤：
 
 1. **环境设置**
+   
    - 检出代码
    - 设置 JDK 17
    - 配置 Gradle 环境
 
 2. **版本号处理**
+   
    - 验证 tag 格式（必须是 `vX.Y.Z`，如 `v1.2.3`）
    - 从 tag 自动提取版本号（`v1.2.3` → `1.2.3`）
    - 自动更新 `app/build.gradle` 中的 `versionName`
    - 自动计算并更新 `versionCode`（计算公式见下方）
 
 3. **签名配置**
+   
    - 从 GitHub Secrets 恢复正式 keystore
    - 注入签名配置到 `gradle.properties`
 
 4. **构建 Release APK**
+   
    - 使用正式密钥签名构建 release APK
    - 验证 APK 签名（确保使用正式密钥而非调试密钥）
 
 5. **创建 GitHub Release**
+   
    - 自动创建 GitHub Release
    - 上传 release APK 作为附件
    - 自动生成 Release notes（基于 commits）
@@ -67,6 +75,7 @@ GitHub Actions 在以下情况下会自动运行：
 ### 版本号格式
 
 - **Tag 格式**：必须遵循语义化版本规范 `vX.Y.Z`
+  
   - `X`：主版本号（重大变更）
   - `Y`：次版本号（新功能）
   - `Z`：修订版本号（bug 修复）
@@ -82,17 +91,20 @@ GitHub Actions 在以下情况下会自动运行：
 ### versionCode 计算公式
 
 **本项目使用的公式**（自定义）：
+
 ```
 versionCode = 主版本 * 10000 + 次版本 * 100 + 修订版本
 ```
 
 **示例**：
+
 - `v1.0.0` → `versionCode = 1 * 10000 + 0 * 100 + 0 = 10000`
 - `v2.0.0` → `versionCode = 2 * 10000 + 0 * 100 + 0 = 20000`
 - `v1.2.3` → `versionCode = 1 * 10000 + 2 * 100 + 3 = 10203`
 - `v2.1.0` → `versionCode = 2 * 10000 + 1 * 100 + 0 = 20100`
 
 **说明**：
+
 - 这是**项目自定义**的计算方式，不是 Android 官方标准
 - Android 的 `versionCode` 只是一个递增整数，没有官方计算公式
 - 不同项目有不同的计算方式，常见的有：
@@ -139,4 +151,3 @@ A: Debug APK artifacts 保留 7 天。Release APK 会永久保存在 GitHub Rele
 
 - [应用签名与 GitHub Actions 配置指南](./release-signing.md) - 详细的签名配置和 Secrets 设置说明
 - [文档索引](../文档索引.md) - 项目文档导航中心
-

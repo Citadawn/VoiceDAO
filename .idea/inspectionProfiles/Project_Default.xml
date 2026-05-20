@@ -1,12 +1,138 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
-    <inspection_tool class="Annotator" enabled="false" level="ERROR" enabled_by_default="false" />
-    <inspection_tool class="CharsetObjectCanBeUsed" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="SpellCheckingInspection" enabled="true" level="INFORMATION" enabled_by_default="true">
-      <option name="processCode" value="true" />
+    
+    <!-- 拼写检查：只检查注释和字符串，不检查代码（减少误报） -->
+    <inspection_tool class="SpellCheckingInspection" enabled="true" level="TYPO" enabled_by_default="true" editorAttributes="TYPO">
+      <option name="processCode" value="false" />
       <option name="processLiterals" value="true" />
       <option name="processComments" value="true" />
     </inspection_tool>
+    
+    <!-- Java 代码质量检查 -->
+    <!-- 未使用的导入 -->
+    <inspection_tool class="UnusedImport" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 未使用的局部变量 -->
+    <inspection_tool class="UnusedLocal" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 未使用的私有成员 -->
+    <inspection_tool class="UnusedDeclaration" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ADD_MAINS_TO_ENTRIES" value="true" />
+      <option name="ADD_APPLET_TO_ENTRIES" value="true" />
+      <option name="ADD_SERVLET_TO_ENTRIES" value="true" />
+      <option name="ADD_NONJAVA_TO_ENTRIES" value="true" />
+    </inspection_tool>
+    
+    <!-- 魔法数字 -->
+    <inspection_tool class="MagicNumber" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreNumbers" value="-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 24, 32, 64, 100, 1000" />
+      <option name="ignoreHashCodeMethod" value="true" />
+      <option name="ignoreAnnotation" value="false" />
+      <option name="ignoreFieldDeclaration" value="false" />
+      <option name="ignoreLocalVariableDeclaration" value="false" />
+      <option name="ignoreParameter" value="false" />
+      <option name="ignorePredicateMethods" value="true" />
+      <option name="ignoreArrayInitializers" value="false" />
+    </inspection_tool>
+    
+    <!-- 空 catch 块 -->
+    <inspection_tool class="EmptyCatchBlock" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="commentsAreContent" value="true" />
+    </inspection_tool>
+    
+    <!-- 空的 if 语句 -->
+    <inspection_tool class="EmptyStatementBody" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_reportEmptyBlocks" value="true" />
+    </inspection_tool>
+    
+    <!-- 重复代码 -->
+    <inspection_tool class="DuplicatedCode" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    
+    <!-- 过时的 API -->
+    <inspection_tool class="Deprecation" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 缺少 JavaDoc -->
+    <inspection_tool class="JavaDoc" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="TOP_LEVEL_CLASS_OPTIONS">
+        <value>
+          <option name="ACCESS_JAVADOC_REQUIRED_FOR" value="none" />
+          <option name="REQUIRED_TAGS" value="" />
+        </value>
+      </option>
+      <option name="INNER_CLASS_OPTIONS">
+        <value>
+          <option name="ACCESS_JAVADOC_REQUIRED_FOR" value="none" />
+          <option name="REQUIRED_TAGS" value="" />
+        </value>
+      </option>
+      <option name="METHOD_OPTIONS">
+        <value>
+          <option name="ACCESS_JAVADOC_REQUIRED_FOR" value="public" />
+          <option name="REQUIRED_TAGS" value="@param@return@throws" />
+        </value>
+      </option>
+      <option name="FIELD_OPTIONS">
+        <value>
+          <option name="ACCESS_JAVADOC_REQUIRED_FOR" value="none" />
+          <option name="REQUIRED_TAGS" value="" />
+        </value>
+      </option>
+    </inspection_tool>
+    
+    <!-- Android 特定检查 -->
+    <!-- 硬编码字符串 -->
+    <inspection_tool class="HardCodedString" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 硬编码文本 -->
+    <inspection_tool class="HardcodedText" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 缺少权限检查 -->
+    <inspection_tool class="MissingPermission" enabled="true" level="ERROR" enabled_by_default="true" />
+    
+    <!-- 资源类型不匹配 -->
+    <inspection_tool class="ResourceType" enabled="true" level="ERROR" enabled_by_default="true" />
+    
+    <!-- 过时的 Android API -->
+    <inspection_tool class="NewApi" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreRangeOfSdkVersions" value="false" />
+    </inspection_tool>
+    
+    <!-- 内存泄漏：Handler 泄漏 -->
+    <inspection_tool class="HandlerLeak" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 内存泄漏：静态字段持有 Context -->
+    <inspection_tool class="StaticFieldLeak" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 性能：在 onDraw 中分配对象 -->
+    <inspection_tool class="DrawAllocation" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 性能：在主线程进行网络操作 -->
+    <inspection_tool class="NetworkSecurityConfig" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 代码风格 -->
+    <!-- 命名约定 -->
+    <inspection_tool class="JavaNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_ignoreInAnnotationInterface" value="false" />
+      <option name="m_ignoreInInterface" value="false" />
+    </inspection_tool>
+    
+    <!-- 控制流问题 -->
+    <inspection_tool class="ControlFlowStatementWithoutBraces" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 不必要的代码 -->
+    <inspection_tool class="UnnecessaryReturn" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UnnecessarySemicolon" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UnnecessaryLocalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
+    
+    <!-- 潜在问题 -->
+    <inspection_tool class="ConstantConditions" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="SUGGEST_NULLABLE_ANNOTATIONS" value="false" />
+      <option name="DONT_REPORT_TRUE_ASSERT_STATEMENTS" value="false" />
+    </inspection_tool>
+    
+    <!-- 可能的空指针异常 -->
+    <inspection_tool class="ConstantConditionalExpression" enabled="true" level="WARNING" enabled_by_default="true" />
+    
   </profile>
 </component>

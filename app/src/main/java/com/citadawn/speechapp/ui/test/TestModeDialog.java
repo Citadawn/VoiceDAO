@@ -131,7 +131,9 @@ public class TestModeDialog extends Dialog {
      * 更新测试按钮状态
      */
     private void updateButtonState() {
-        if (btnStartTest == null) return;
+        if (btnStartTest == null) {
+            return;
+        }
 
         // 统计选中的测试项数量
         int selectedCount = 0;
@@ -181,7 +183,9 @@ public class TestModeDialog extends Dialog {
      */
     private TextView getTextViewFromLayout() {
         // 获取根视图
-        if (getWindow() == null) return null;
+        if (getWindow() == null) {
+            return null;
+        }
         View rootView = getWindow().getDecorView();
         String targetText = getContext().getString(R.string.test_mode_dialog_title);
         return ViewHelper.findTextViewByTargetText(rootView, targetText);

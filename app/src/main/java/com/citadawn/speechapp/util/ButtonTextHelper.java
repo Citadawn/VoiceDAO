@@ -18,7 +18,9 @@ public class ButtonTextHelper {
      * @param button 要设置自动调整的按钮
      */
     public static void setupAutoTextSize(Button button) {
-        if (button == null) return;
+        if (button == null) {
+            return;
+        }
         // 保存原始文本大小
         final float originalTextSize = button.getTextSize();
 

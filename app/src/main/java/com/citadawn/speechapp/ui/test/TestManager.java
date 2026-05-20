@@ -99,7 +99,9 @@ public class TestManager {
     public List<TestCase> getSelectedTestCases() {
         List<TestCase> selected = new ArrayList<>();
         for (TestCase tc : testCases) {
-            if (tc.selected) selected.add(tc);
+            if (tc.selected) {
+                selected.add(tc);
+            }
         }
         return selected;
     }

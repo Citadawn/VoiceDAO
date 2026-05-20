@@ -67,7 +67,9 @@ public class DialogHelper {
                     }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    if (onCancel != null) onCancel.run();
+                    if (onCancel != null) {
+                        onCancel.run();
+                    }
                 })
                 .show();
     }
@@ -84,7 +86,9 @@ public class DialogHelper {
                 .setTitle(R.string.dialog_title_warning)
                 .setMessage(messageResId)
                 .setPositiveButton(R.string.dialog_button_cancel_save, (dialog, which) -> {
-                    if (onConfirm != null) onConfirm.run();
+                    if (onConfirm != null) {
+                        onConfirm.run();
+                    }
                 })
                 .setNegativeButton(R.string.dialog_button_cancel, null)
                 .show();

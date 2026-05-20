@@ -19,7 +19,9 @@ public class InfoIconPositionHelper {
      * @param percentage 文字高度的百分比（0.0-1.0）
      */
     public static void setIconPosition(ImageView imageView, TextView textView, float percentage) {
-        if (imageView == null || textView == null) return;
+        if (imageView == null || textView == null) {
+            return;
+        }
 
         // 获取TextView的实际文字大小（px）
         float textSizePx = textView.getTextSize();

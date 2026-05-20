@@ -274,8 +274,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (tts == null)
+            if (tts == null) {
                 return;
+            }
 
             ListView listView = holder.listView;
             listViews.put(position, listView);
@@ -443,8 +444,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             EditText searchEditText = view.findViewById(R.id.search_edit_text);
             ImageButton clearSearchButton = view.findViewById(R.id.clear_search_button);
 
-            if (searchEditText == null || clearSearchButton == null)
+            if (searchEditText == null || clearSearchButton == null) {
                 return;
+            }
 
             // 搜索文本变化监听
             searchEditText.addTextChangedListener(new android.text.TextWatcher() {

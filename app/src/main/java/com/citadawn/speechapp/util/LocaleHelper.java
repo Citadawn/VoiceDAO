@@ -101,7 +101,9 @@ public class LocaleHelper {
      * 将Locale转换为字符串
      */
     public static String localeToString(Locale locale) {
-        if (locale == null) return LOCALE_ZH_CN;
+        if (locale == null) {
+            return LOCALE_ZH_CN;
+        }
         String language = locale.getLanguage();
         String country = locale.getCountry();
         if (country.isEmpty()) {

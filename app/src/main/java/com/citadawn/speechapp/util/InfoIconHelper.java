@@ -26,7 +26,9 @@ public class InfoIconHelper {
      * @param infoIconConfigs 信息图标配置数组，每个元素包含 [ImageView, titleResId, contentResId]
      */
     public static void setupInfoIcons(Context context, Object[]... infoIconConfigs) {
-        if (context == null || infoIconConfigs == null) return;
+        if (context == null || infoIconConfigs == null) {
+            return;
+        }
         for (Object[] config : infoIconConfigs) {
             if (config.length >= 3) {
                 ImageView infoIcon = (ImageView) config[0];

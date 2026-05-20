@@ -71,6 +71,7 @@ import com.citadawn.speechapp.util.ViewHelper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -306,22 +307,27 @@ class VoiceAdapter extends BaseAdapter {
      */
     private boolean isMeaninglessFeature(String feature) {
         // 纯英文单词
-        if (feature.matches("^[A-Za-z]+$"))
+        if (feature.matches("^[A-Za-z]+$")) {
             return true;
+        }
         // 纯数字
-        if (feature.matches("^\\d+$"))
+        if (feature.matches("^\\d+$")) {
             return true;
+        }
         // 全大写或全小写且长度大于20
-        if ((feature.equals(feature.toUpperCase()) || feature.equals(feature.toLowerCase())) && feature.length() > 20)
+        if ((feature.equals(feature.toUpperCase()) || feature.equals(feature.toLowerCase())) && feature.length() > Constants.MAX_FEATURE_NAME_LENGTH) {
             return true;
+        }
         // 全为16进制且长度大于16
-        if (feature.matches("^[0-9A-Fa-f]+$") && feature.length() > 16)
+        if (feature.matches("^[0-9A-Fa-f]+$") && feature.length() > Constants.MAX_HEX_STRING_LENGTH) {
             return true;
+        }
         // 单字符
-        if (feature.length() == 1)
+        if (feature.length() == 1) {
             return true;
+        }
         // UUID
-        return feature.matches("^[0-9a-fA-F-]{32,}$");
+        return feature.matches("^[0-9a-fA-F-]{" + Constants.UUID_MIN_LENGTH + ",}$");
     }
 
     /**
@@ -331,11 +337,13 @@ class VoiceAdapter extends BaseAdapter {
      * @return 是否应该显示
      */
     private boolean shouldShowFeatures(Set<String> features) {
-        if (features == null || features.isEmpty())
+        if (features == null || features.isEmpty()) {
             return false;
+        }
         for (String f : features) {
-            if (!isMeaninglessFeature(f))
+            if (!isMeaninglessFeature(f)) {
                 return true;
+            }
         }
         return false;
     }
@@ -397,7 +405,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String PREFS_NAME = Constants.PREFS_NAME;
     private static final String KEY_SAVE_DIR_URI = Constants.KEY_SAVE_DIR_URI;
-    private static final int DOUBLE_BACK_EXIT_INTERVAL = 2000; // 2秒
     private final HashMap<Locale, Voice> languageDefaultVoices = new HashMap<>(); // 每个语言的默认发音人
     private final ArrayList<Locale> localeList = new ArrayList<>();
     private final ArrayList<Voice> voiceList = new ArrayList<>();
@@ -501,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 // 主界面双击返回键退出逻辑
                 long now = System.currentTimeMillis();
-                if (now - lastBackPressedTime < DOUBLE_BACK_EXIT_INTERVAL) {
+                if (now - lastBackPressedTime < Constants.DOUBLE_BACK_EXIT_INTERVAL) {
                     // 双击间隔内，退出应用
                     finish();
                 } else {
@@ -548,7 +555,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 添加触摸监听器到NestedScrollView，检测滑动时让输入框失去焦点
         scrollView.setOnTouchListener(new View.OnTouchListener() {
-            private static final float SCROLL_THRESHOLD = 15; // 滑动阈值，单位像素
             private float startY = 0;
             private float startX = 0;
             private boolean isScrolling = false;
@@ -568,7 +574,7 @@ public class MainActivity extends AppCompatActivity {
                         float deltaX = Math.abs(currentX - startX);
 
                         // 如果滑动距离超过阈值，标记为滑动状态
-                        if (deltaY > SCROLL_THRESHOLD || deltaX > SCROLL_THRESHOLD) {
+                        if (deltaY > Constants.SCROLL_THRESHOLD || deltaX > Constants.SCROLL_THRESHOLD) {
                             isScrolling = true;
                             // 如果输入框有焦点，让输入框失去焦点
                             if (editText.hasFocus()) {
@@ -761,8 +767,9 @@ public class MainActivity extends AppCompatActivity {
         btnSpeedMinus.setOnClickListener(v -> {
             float value = Float.parseFloat(textSpeechRateValue.getText().toString());
             value -= Constants.SPEECH_RATE_STEP;
-            if (value < Constants.SPEECH_RATE_MIN)
+            if (value < Constants.SPEECH_RATE_MIN) {
                 value = Constants.SPEECH_RATE_MIN;
+            }
             value = Math.round(value * 100f) / 100f; // 保留两位小数
             textSpeechRateValue.setText(String.format(Locale.US, "%.2f", value));
             speechRate = value;
@@ -783,8 +790,9 @@ public class MainActivity extends AppCompatActivity {
         btnSpeedPlus.setOnClickListener(v -> {
             float value = Float.parseFloat(textSpeechRateValue.getText().toString());
             value += Constants.SPEECH_RATE_STEP;
-            if (value > Constants.SPEECH_RATE_MAX)
+            if (value > Constants.SPEECH_RATE_MAX) {
                 value = Constants.SPEECH_RATE_MAX;
+            }
             value = Math.round(value * 100f) / 100f;
             textSpeechRateValue.setText(String.format(Locale.US, "%.2f", value));
             speechRate = value;
@@ -837,8 +845,9 @@ public class MainActivity extends AppCompatActivity {
         btnPitchMinus.setOnClickListener(v -> {
             float value = Float.parseFloat(textPitchValue.getText().toString());
             value -= Constants.PITCH_STEP;
-            if (value < Constants.PITCH_MIN)
+            if (value < Constants.PITCH_MIN) {
                 value = Constants.PITCH_MIN;
+            }
             value = Math.round(value * 100f) / 100f;
             textPitchValue.setText(String.format(Locale.US, "%.2f", value));
             pitch = value;
@@ -859,8 +868,9 @@ public class MainActivity extends AppCompatActivity {
         btnPitchPlus.setOnClickListener(v -> {
             float value = Float.parseFloat(textPitchValue.getText().toString());
             value += Constants.PITCH_STEP;
-            if (value > Constants.PITCH_MAX)
+            if (value > Constants.PITCH_MAX) {
                 value = Constants.PITCH_MAX;
+            }
             value = Math.round(value * 100f) / 100f;
             textPitchValue.setText(String.format(Locale.US, "%.2f", value));
             pitch = value;
@@ -899,8 +909,9 @@ public class MainActivity extends AppCompatActivity {
         spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isLangSpinnerInit)
+                if (!isLangSpinnerInit) {
                     return;
+                }
                 Locale selected = localeList.get(position);
                 currentLocale = selected;
                 tts.setLanguage(selected);
@@ -919,8 +930,9 @@ public class MainActivity extends AppCompatActivity {
         spinnerVoice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isVoiceSpinnerInit)
+                if (!isVoiceSpinnerInit) {
                     return;
+                }
                 Voice selected = voiceList.get(position);
                 tts.setVoice(selected);
                 updateResetButtons();
@@ -937,8 +949,9 @@ public class MainActivity extends AppCompatActivity {
         btnLangVoiceReset.setOnClickListener(v -> {
             if (defaultLocale != null) {
                 int idx = localeList.indexOf(defaultLocale);
-                if (idx >= 0)
+                if (idx >= 0) {
                     spinnerLanguage.setSelection(idx);
+                }
                 tts.setLanguage(defaultLocale);
                 updateVoiceList(defaultLocale, true);
                 updateResetButtons();
@@ -1114,8 +1127,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                if (logVoices)
+                if (logVoices) {
                     logTtsVoices();
+                }
             }
             ToastHelper.showShort(this, R.string.toast_read_task_submitted);
             pendingTtsAction = PendingTtsAction.PENDING_SPEAK;
@@ -1482,10 +1496,12 @@ public class MainActivity extends AppCompatActivity {
 
         DialogHelper.showInputDialog(this, R.string.input_audio_filename, defaultName,
                 name -> {
-                    if (name.isEmpty())
+                    if (name.isEmpty()) {
                         name = defaultName;
-                    if (!name.endsWith(".wav"))
+                    }
+                    if (!name.endsWith(".wav")) {
                         name += ".wav";
+                    }
                     currentAudioFileName = name;
                     ToastHelper.showShort(this, R.string.toast_save_task_submitted);
                     pendingTtsAction = PendingTtsAction.PENDING_SAVE;
@@ -1515,8 +1531,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean copyTempToSaveDir() {
         try {
             DocumentFile dir = DocumentFile.fromTreeUri(this, saveDirUri);
-            if (dir == null || !dir.canWrite())
+            if (dir == null || !dir.canWrite()) {
                 return false;
+            }
             // 先删除同名文件
             DocumentFile old = dir.findFile(currentAudioFileName);
             if (old != null) {
@@ -1526,17 +1543,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             DocumentFile newFile = dir.createFile("audio/wav", currentAudioFileName);
-            if (newFile == null)
+            if (newFile == null) {
                 return false;
+            }
             try (OutputStream os = getContentResolver().openOutputStream(newFile.getUri());
                  FileInputStream fis = new FileInputStream(tempAudioFile)) {
                 if (os == null) {
                     return false;
                 }
-                byte[] buf = new byte[4096];
+                byte[] buf = new byte[Constants.FILE_BUFFER_SIZE];
                 int len;
-                while ((len = fis.read(buf)) > 0)
+                while ((len = fis.read(buf)) > 0) {
                     os.write(buf, 0, len);
+                }
                 os.flush();
             }
             return true;
@@ -1551,8 +1570,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void cancelSaveAudio() {
         if (isSavingAudio) {
-            if (tts != null)
+            if (tts != null) {
                 tts.stop();
+            }
             if (tempAudioFile != null && tempAudioFile.exists()) {
                 boolean deleted = tempAudioFile.delete();
                 if (!deleted) {
@@ -1629,15 +1649,20 @@ public class MainActivity extends AppCompatActivity {
 
     // 将SAF Uri转为可读路径，仅主存储primary支持
     private String getReadablePathFromUri(Uri uri) {
-        if (uri == null)
+        if (uri == null) {
             return "";
+        }
         String uriStr = uri.toString();
         if (uriStr.startsWith("content://com.android.externalstorage.documents/tree/primary%3A")) {
             String subPath = uriStr.substring(uriStr.indexOf("%3A") + 3);
             try {
                 // 解码URL编码的字符，特别是中文字符
-                // 使用字符串参数而非StandardCharsets.UTF_8以保持API 24兼容性
-                String decodedPath = java.net.URLDecoder.decode(subPath, "UTF-8");
+                String decodedPath;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    decodedPath = java.net.URLDecoder.decode(subPath, StandardCharsets.UTF_8);
+                } else {
+                    decodedPath = java.net.URLDecoder.decode(subPath, "UTF-8");
+                }
                 return "/storage/emulated/0/" + decodedPath.replace("%2F", "/");
             } catch (Exception e) {
                 // 如果解码失败，返回原始路径
@@ -1652,30 +1677,39 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setupAllButtonsAutoTextSize() {
         // 主功能按钮
-        if (btnSpeak != null)
+        if (btnSpeak != null) {
             ButtonTextHelper.setupAutoTextSize(btnSpeak);
-        if (btnStop != null)
+        }
+        if (btnStop != null) {
             ButtonTextHelper.setupAutoTextSize(btnStop);
-        if (btnSaveAudio != null)
+        }
+        if (btnSaveAudio != null) {
             ButtonTextHelper.setupAutoTextSize(btnSaveAudio);
-        if (btnCancelSave != null)
+        }
+        if (btnCancelSave != null) {
             ButtonTextHelper.setupAutoTextSize(btnCancelSave);
+        }
 
         // 设置按钮
         Button btnSetSaveDir = findViewById(R.id.btnSetSaveDir);
-        if (btnSetSaveDir != null)
+        if (btnSetSaveDir != null) {
             ButtonTextHelper.setupAutoTextSize(btnSetSaveDir);
-        if (btnSpeedReset != null)
+        }
+        if (btnSpeedReset != null) {
             ButtonTextHelper.setupAutoTextSize(btnSpeedReset);
-        if (btnPitchReset != null)
+        }
+        if (btnPitchReset != null) {
             ButtonTextHelper.setupAutoTextSize(btnPitchReset);
-        if (btnLangVoiceReset != null)
+        }
+        if (btnLangVoiceReset != null) {
             ButtonTextHelper.setupAutoTextSize(btnLangVoiceReset);
+        }
 
         // 编辑器按钮
         Button btnOpenEditor = findViewById(R.id.btnOpenEditor);
-        if (btnOpenEditor != null)
+        if (btnOpenEditor != null) {
             ButtonTextHelper.setupAutoTextSize(btnOpenEditor);
+        }
     }
 
     /**
@@ -1761,8 +1795,9 @@ public class MainActivity extends AppCompatActivity {
      * 测试语速设置失败功能
      */
     private void testSpeedSettingFailure() {
-        if (!TestManager.getInstance().isTestMode())
+        if (!TestManager.getInstance().isTestMode()) {
             return;
+        }
 
         // 检查是否选中了相关测试项
         boolean hasSpeedPitchTest = false;
@@ -1773,8 +1808,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (!hasSpeedPitchTest)
+        if (!hasSpeedPitchTest) {
             return;
+        }
 
         // 模拟语速设置失败
         tvSpeedSetResult.setText(R.string.message_speed_set_failed);
@@ -1792,8 +1828,9 @@ public class MainActivity extends AppCompatActivity {
      * 测试音调设置失败功能
      */
     private void testPitchSettingFailure() {
-        if (!TestManager.getInstance().isTestMode())
+        if (!TestManager.getInstance().isTestMode()) {
             return;
+        }
 
         // 检查是否选中了相关测试项
         boolean hasSpeedPitchTest = false;
@@ -1804,8 +1841,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (!hasSpeedPitchTest)
+        if (!hasSpeedPitchTest) {
             return;
+        }
 
         // 模拟音调设置失败
         tvPitchSetResult.setText(R.string.message_pitch_set_failed);
@@ -1960,8 +1998,9 @@ public class MainActivity extends AppCompatActivity {
      * 输出TTS引擎所有语言和发音人信息到logcat，标注默认项
      */
     private void logTtsVoices() {
-        if (tts == null)
+        if (tts == null) {
             return;
+        }
         try {
             Locale defaultLang = tts.getDefaultVoice() != null ? tts.getDefaultVoice().getLocale()
                     : Locale.getDefault();
@@ -1986,8 +2025,9 @@ public class MainActivity extends AppCompatActivity {
                 String displayName = locale.getDisplayName(LocaleHelper.getCurrentLocale(this));
                 String languageTag = locale.toLanguageTag();
                 sb.append(getString(R.string.test_language_label)).append(" ").append(displayName).append(" (").append(languageTag).append(")");
-                if (locale.equals(defaultLang))
+                if (locale.equals(defaultLang)) {
                     sb.append("  <== ").append(getString(R.string.test_default_marker));
+                }
                 Log.i("TTS_TEST", sb.toString());
                 List<Voice> vlist = localeVoices.get(locale);
                 Voice langDefaultVoice = languageDefaultVoices.get(locale);
@@ -1995,10 +2035,12 @@ public class MainActivity extends AppCompatActivity {
                     for (Voice v : vlist) {
                         StringBuilder vinfo = new StringBuilder();
                         vinfo.append("    - ").append(getString(R.string.test_voice_label)).append(": ").append(v.toString());
-                        if (defaultVoice != null && v.getName().equals(defaultVoice.getName()))
+                        if (defaultVoice != null && v.getName().equals(defaultVoice.getName())) {
                             vinfo.append("  <== ").append(getString(R.string.test_default_marker));
-                        if (langDefaultVoice != null && v.getName().equals(langDefaultVoice.getName()))
+                        }
+                        if (langDefaultVoice != null && v.getName().equals(langDefaultVoice.getName())) {
                             vinfo.append("  <== ").append(getString(R.string.test_default_for_language));
+                        }
                         Log.i("TTS_TEST", vinfo.toString());
                     }
                 }
@@ -2128,8 +2170,8 @@ public class MainActivity extends AppCompatActivity {
             tts.setPitch(pitch);
 
             // 更新UI显示
-            seekBarSpeed.setProgress((int) ((speechRate - 0.5f) * 10));
-            seekBarPitch.setProgress((int) ((pitch - 0.5f) * 10));
+            seekBarSpeed.setProgress((int) ((speechRate - Constants.SPEECH_RATE_MIN) * Constants.SEEKBAR_PROGRESS_MULTIPLIER));
+            seekBarPitch.setProgress((int) ((pitch - Constants.PITCH_MIN) * Constants.SEEKBAR_PROGRESS_MULTIPLIER));
             textSpeechRateValue.setText(String.format(Locale.US, "%.2f", speechRate));
             textPitchValue.setText(String.format(Locale.US, "%.2f", pitch));
 

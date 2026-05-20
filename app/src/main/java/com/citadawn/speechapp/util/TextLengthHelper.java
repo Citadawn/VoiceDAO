@@ -25,7 +25,9 @@ public class TextLengthHelper {
      * @return true 如果文本超过限制，false 否则
      */
     public static boolean isTextTooLong(String text) {
-        if (text == null) return false;
+        if (text == null) {
+            return false;
+        }
         return text.length() > getMaxTextLength();
     }
 

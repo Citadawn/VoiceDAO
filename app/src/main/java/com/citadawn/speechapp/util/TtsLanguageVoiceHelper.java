@@ -103,8 +103,12 @@ public class TtsLanguageVoiceHelper {
         Locale currentLocale = com.citadawn.speechapp.util.LocaleHelper.getCurrentLocale(context);
         sortedLocales.sort((l1, l2) -> {
             // 默认语言始终排在最前面
-            if (l1.equals(defaultLocale)) return -1;
-            if (l2.equals(defaultLocale)) return 1;
+            if (l1.equals(defaultLocale)) {
+                return -1;
+            }
+            if (l2.equals(defaultLocale)) {
+                return 1;
+            }
 
             // 其他语言按显示名称排序，使用当前界面语言
             return collator.compare(l1.getDisplayName(currentLocale), l2.getDisplayName(currentLocale));
@@ -145,8 +149,12 @@ public class TtsLanguageVoiceHelper {
         if (defaultVoice != null) {
             sortedVoices.sort((v1, v2) -> {
                 // 默认发音人排在最前面
-                if (v1.equals(defaultVoice)) return -1;
-                if (v2.equals(defaultVoice)) return 1;
+                if (v1.equals(defaultVoice)) {
+                    return -1;
+                }
+                if (v2.equals(defaultVoice)) {
+                    return 1;
+                }
 
                 // 其他发音人按名称排序
                 return v1.getName().compareTo(v2.getName());
@@ -195,8 +203,12 @@ public class TtsLanguageVoiceHelper {
         if (defaultEngineName != null) {
             sortedEngines.sort((e1, e2) -> {
                 // 默认引擎始终排在最前面
-                if (e1.name.equals(defaultEngineName)) return -1;
-                if (e2.name.equals(defaultEngineName)) return 1;
+                if (e1.name.equals(defaultEngineName)) {
+                    return -1;
+                }
+                if (e2.name.equals(defaultEngineName)) {
+                    return 1;
+                }
 
                 // 其他引擎按显示名称排序
                 String label1 = e1.label != null ? e1.label : e1.name;
@@ -223,7 +235,9 @@ public class TtsLanguageVoiceHelper {
      * @return 清理后的发音人名称
      */
     public static String cleanVoiceName(String voiceName) {
-        if (voiceName == null) return "";
+        if (voiceName == null) {
+            return "";
+        }
         // 去除下划线及后缀数字
         return voiceName.replaceAll("_[0-9]+$", "");
     }
@@ -236,25 +250,32 @@ public class TtsLanguageVoiceHelper {
      * @return 是否为无意义特性
      */
     public static boolean isMeaninglessFeature(String feature) {
-        if (feature == null || feature.isEmpty()) return true;
+        if (feature == null || feature.isEmpty()) {
+            return true;
+        }
 
         // 纯英文单词
-        if (feature.matches("^[A-Za-z]+$"))
+        if (feature.matches("^[A-Za-z]+$")) {
             return true;
+        }
         // 纯数字
-        if (feature.matches("^\\d+$"))
+        if (feature.matches("^\\d+$")) {
             return true;
+        }
         // 全大写或全小写且长度大于20
-        if ((feature.equals(feature.toUpperCase()) || feature.equals(feature.toLowerCase())) && feature.length() > 20)
+        if ((feature.equals(feature.toUpperCase()) || feature.equals(feature.toLowerCase())) && feature.length() > Constants.MAX_FEATURE_NAME_LENGTH) {
             return true;
+        }
         // 全为16进制且长度大于16
-        if (feature.matches("^[0-9A-Fa-f]+$") && feature.length() > 16)
+        if (feature.matches("^[0-9A-Fa-f]+$") && feature.length() > Constants.MAX_HEX_STRING_LENGTH) {
             return true;
+        }
         // 单字符
-        if (feature.length() == 1)
+        if (feature.length() == 1) {
             return true;
+        }
         // UUID
-        return feature.matches("^[0-9a-fA-F-]{32,}$");
+        return feature.matches("^[0-9a-fA-F-]{" + Constants.UUID_MIN_LENGTH + ",}$");
     }
 
     /**
@@ -265,11 +286,13 @@ public class TtsLanguageVoiceHelper {
      * @return 是否应该显示
      */
     public static boolean shouldShowFeatures(Set<String> features) {
-        if (features == null || features.isEmpty())
+        if (features == null || features.isEmpty()) {
             return false;
+        }
         for (String f : features) {
-            if (!isMeaninglessFeature(f))
+            if (!isMeaninglessFeature(f)) {
                 return true;
+            }
         }
         return false;
     }

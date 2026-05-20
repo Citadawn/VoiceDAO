@@ -19,7 +19,9 @@ public class ViewHelper {
      * @return 找到的TextView，如果没找到返回null
      */
     public static TextView findTextViewByText(Activity activity, String text) {
-        if (activity == null || text == null) return null;
+        if (activity == null || text == null) {
+            return null;
+        }
 
         View rootView = activity.findViewById(android.R.id.content);
         if (rootView instanceof ViewGroup) {
@@ -36,7 +38,9 @@ public class ViewHelper {
      * @return 找到的TextView，如果没找到返回null
      */
     public static TextView findTextViewInViewGroup(ViewGroup viewGroup, String text) {
-        if (viewGroup == null || text == null) return null;
+        if (viewGroup == null || text == null) {
+            return null;
+        }
 
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);
@@ -62,7 +66,9 @@ public class ViewHelper {
      * @return 找到的TextView，如果没找到返回null
      */
     public static TextView findTextViewByTargetText(View rootView, String targetText) {
-        if (rootView == null || targetText == null) return null;
+        if (rootView == null || targetText == null) {
+            return null;
+        }
 
         if (rootView instanceof ViewGroup) {
             return findTextViewInViewGroupByTargetText((ViewGroup) rootView, targetText);
@@ -78,7 +84,9 @@ public class ViewHelper {
      * @return 找到的TextView，如果没找到返回null
      */
     public static TextView findTextViewInViewGroupByTargetText(ViewGroup viewGroup, String targetText) {
-        if (viewGroup == null || targetText == null) return null;
+        if (viewGroup == null || targetText == null) {
+            return null;
+        }
 
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);

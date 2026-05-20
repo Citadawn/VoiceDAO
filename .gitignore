@@ -40,12 +40,16 @@ replay_pid*.log
 # Android Studio captures folder
 captures/
 
-# IDE configuration
+# IDE configuration (Android Studio)
+# Ignore all .idea/ except team-shared inspection profiles
 .idea/
-!.idea/codeStyles/
-!.idea/codeStyles/*
 !.idea/inspectionProfiles/
-!.idea/inspectionProfiles/*
+!.idea/inspectionProfiles/**
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/shelf/
+.idea/**/dictionaries/
 *.iml
 .vscode/
 

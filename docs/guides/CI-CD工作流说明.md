@@ -127,7 +127,7 @@ versionCode = 主版本 * 10000 + 次版本 * 100 + 修订版本
 
 Release APK 使用正式密钥签名，配置说明请参考：
 
-- [应用签名与 GitHub Actions 配置指南](./release-signing.md)
+- [应用签名与 GitHub Actions 配置指南](./应用签名与%20GitHub%20Actions%20配置指南.md)
 
 ## 常见问题
 
@@ -149,5 +149,5 @@ A: Debug APK artifacts 保留 7 天。Release APK 会永久保存在 GitHub Rele
 
 ## 相关文档
 
-- [应用签名与 GitHub Actions 配置指南](./release-signing.md) - 详细的签名配置和 Secrets 设置说明
+- [应用签名与 GitHub Actions 配置指南](./应用签名与%20GitHub%20Actions%20配置指南.md) - 详细的签名配置和 Secrets 设置说明
 - [文档索引](../文档索引.md) - 项目文档导航中心

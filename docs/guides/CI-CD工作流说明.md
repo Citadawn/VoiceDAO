@@ -6,15 +6,15 @@
 
 GitHub Actions 在以下情况下会自动运行：
 
-- **Push 到 main 分支**：自动运行测试和构建
-- **Pull Request**：自动运行测试和构建（用于代码审查）
-- **推送 tag（格式：`vX.Y.Z`）**：自动构建 release APK 并创建 GitHub Release
+- **Push 到 main 分支**：运行 Lint 与单元测试
+- **Pull Request**：运行 Lint 与单元测试（合并前检查）
+- **推送 tag（格式：`vX.Y.Z`）**：构建 Release APK 并创建 GitHub Release
 
 ## 工作流程详解
 
 ### Push/PR 触发时
 
-当代码推送到 main 分支或创建 Pull Request 时，workflow 会执行以下步骤：
+当代码推送到 main 分支或创建 Pull Request 时，workflow 执行：
 
 1. **环境设置**
    
@@ -24,25 +24,20 @@ GitHub Actions 在以下情况下会自动运行：
 
 2. **代码质量检查**
    
-   - 运行单元测试（`./gradlew test`）
-   - 运行 Lint 检查（`./gradlew lint`）
+   - 单元测试（`./gradlew test`）：执行 `src/test` 下的单元测试
+   - Lint（`./gradlew lint`）：按 Android Lint 规则扫描资源、Manifest、API 用法等
 
-3. **构建 Debug APK**
+3. **产物范围**
    
-   - 构建 debug 版本的 APK（使用调试密钥签名）
-   - 上传 debug APK 作为 artifact（保留 7 天）
+   - CI 不构建 APK；安装包在本机通过 `./gradlew assembleDebug` 或 `./gradlew assembleRelease` 生成
 
-**用途**：用于开发测试和代码审查验证
+### 依赖管理
 
-### Dependabot（已关闭）
-
-本项目**未启用** [Dependabot](https://docs.github.com/en/code-security/dependabot)。依赖与 GitHub Actions 版本由维护者按需手动升级，避免自动 PR 干扰日常开发。
-
-若需重新启用，可在 `.github/dependabot.yml` 中恢复配置（当前仓库已删除该文件）。
+仓库**未包含** `.github/dependabot.yml`，不启用 Dependabot 自动升级 PR。Gradle 依赖与 GitHub Actions 版本由维护者按需手动更新。
 
 ### Tag 触发时（创建 Release）
 
-当推送以 `v` 开头的 tag（如 `v1.0.0`）时，workflow 会执行以下步骤：
+当推送以 `v` 开头的 tag（如 `v1.0.0`）时，workflow 执行：
 
 1. **环境设置**
    
@@ -53,50 +48,48 @@ GitHub Actions 在以下情况下会自动运行：
 2. **版本号处理**
    
    - 验证 tag 格式（必须是 `vX.Y.Z`，如 `v1.2.3`）
-   - 从 tag 自动提取版本号（`v1.2.3` → `1.2.3`）
-   - 自动更新 `app/build.gradle` 中的 `versionName`
-   - 自动计算并更新 `versionCode`（计算公式见下方）
+   - 从 tag 提取版本号（`v1.2.3` → `1.2.3`）
+   - 更新 `app/build.gradle` 中的 `versionName`
+   - 按下方公式计算并更新 `versionCode`
 
 3. **签名配置**
    
-   - 从 GitHub Secrets 恢复正式 keystore
-   - 注入签名配置到 `gradle.properties`
+   - 从 GitHub Secrets 载入正式 keystore 到 runner
+   - 将签名相关项写入 `gradle.properties`
 
 4. **构建 Release APK**
    
-   - 使用正式密钥签名构建 release APK
-   - 验证 APK 签名（确保使用正式密钥而非调试密钥）
+   - 使用正式密钥执行 `assembleRelease`
+   - 校验 APK 签名（须为正式密钥，非调试密钥）
 
 5. **创建 GitHub Release**
    
-   - 自动创建 GitHub Release
-   - 上传 release APK 作为附件
-   - 自动生成 Release notes（基于 commits）
-   - 设置 Release 标题为 "VoiceDAO X.Y.Z" 格式
+   - 创建 GitHub Release
+   - 附上 Release APK
+   - 根据 commits 生成 Release notes
+   - Release 标题格式：`VoiceDAO X.Y.Z`
 
-**注意**：Tag 触发时**不会**构建 debug APK，只构建 release APK。
+Tag 流程仅产出 Release APK；正式包保存在 GitHub Release，不使用 Actions Artifacts。
 
 ## 版本管理
 
 ### 版本号格式
 
-- **Tag 格式**：必须遵循语义化版本规范 `vX.Y.Z`
+- **Tag 格式**：语义化版本 `vX.Y.Z`
   
-  - `X`：主版本号（重大变更）
-  - `Y`：次版本号（新功能）
-  - `Z`：修订版本号（bug 修复）
+  - `X`：主版本号
+  - `Y`：次版本号
+  - `Z`：修订版本号
   - 示例：`v1.0.0`、`v2.1.3`、`v1.2.0`
 
-- **验证规则**：如果 tag 格式不正确，构建会失败并提示错误
+- **校验**：tag 不符合 `vX.Y.Z` 时，workflow 在步骤「Validate and extract version from tag」失败，不创建 GitHub Release
 
 ### 版本号自动同步
 
-- **versionName**：从 tag 自动提取（`v1.2.3` → `1.2.3`）
-- **versionCode**：根据版本号自动计算
+- **versionName**：从 tag 提取（`v1.2.3` → `1.2.3`）
+- **versionCode**：按下列公式计算
 
 ### versionCode 计算公式
-
-**本项目使用的公式**（自定义）：
 
 ```
 versionCode = 主版本 * 10000 + 次版本 * 100 + 修订版本
@@ -104,64 +97,63 @@ versionCode = 主版本 * 10000 + 次版本 * 100 + 修订版本
 
 **示例**：
 
-- `v1.0.0` → `versionCode = 1 * 10000 + 0 * 100 + 0 = 10000`
-- `v2.0.0` → `versionCode = 2 * 10000 + 0 * 100 + 0 = 20000`
-- `v1.2.3` → `versionCode = 1 * 10000 + 2 * 100 + 3 = 10203`
-- `v2.1.0` → `versionCode = 2 * 10000 + 1 * 100 + 0 = 20100`
+- `v1.0.0` → `10000`
+- `v2.0.0` → `20000`
+- `v1.2.3` → `10203`
+- `v2.1.0` → `20100`
 
-**说明**：
+**约束**：
 
-- 这是**项目自定义**的计算方式，不是 Android 官方标准
-- Android 的 `versionCode` 只是一个递增整数，没有官方计算公式
-- 不同项目有不同的计算方式，常见的有：
-  - **简单递增**：1, 2, 3, 4...（最简单，但无法从 versionCode 反推版本号）
-  - **时间戳**：使用构建时间戳（如 `20240101`）
-  - **版本号转换**：将版本号转换为数字（本项目采用此方式）
-  - **其他公式**：如 `major*1000 + minor*100 + patch`（更紧凑，但限制更大）
+- 项目自定义公式；Android 仅要求 `versionCode` 为单调递增的整数
+- `minor`、`patch` 宜小于 100，避免与相邻版本撞号
 
-### 版本号更新流程
+### 发版流程
 
-1. 在 `app/build.gradle` 中手动更新版本号（可选，用于本地构建）
-2. 提交代码并推送到 main 分支
+1. 可选：在 `app/build.gradle` 中填写版本号（便于本地构建）
+2. 提交并推送到 main
 3. 创建并推送 tag：`git tag v1.2.3 && git push origin v1.2.3`
-4. GitHub Actions 自动：
-   - 验证 tag 格式
-   - 从 tag 提取版本号并更新 `build.gradle`
-   - 构建并发布
+4. Actions 校验 tag、更新 `build.gradle`、构建并发布 Release
 
 ## 签名配置
 
-Release APK 使用正式密钥签名，配置说明请参考：
-
-- [应用签名与 GitHub Actions 配置指南](./应用签名与%20GitHub%20Actions%20配置指南.md)
+Release APK 使用正式密钥签名，配置见 [应用签名与 GitHub Actions 配置指南](./应用签名与%20GitHub%20Actions%20配置指南.md)。
 
 ## 常见问题
 
-### Q: 为什么 tag 触发时不构建 debug APK？
+### Q: Push/PR 的 CI 包含哪些步骤？
 
-A: Release 是正式发布版本，只需要 release APK。Debug APK 仅用于开发和测试，在 Push/PR 时构建即可。
+A: 仅 `clean`、`lint`、`test`。APK 在本机构建；正式发布通过 tag 触发 Release 构建。
 
-### Q: 如果 tag 格式错误会怎样？
+### Q: 如何关闭 Lint / test？
 
-A: 构建会失败，**不会**创建 GitHub Release。在 Actions 日志的步骤「Validate and extract version from tag」中可看到**中文**提示，例如：
+A: 在 `.github/workflows/android-ci.yml` 中移除或调整 `Run unit tests and lint` 步骤。移除后 Push/PR 不再执行 Gradle 质量检查；tag 发版流程在 `assembleRelease` 前仍会执行该步骤（除非同步修改 tag 分支逻辑）。
+
+### Q: tag 格式错误时有什么提示？
+
+A: workflow 失败，不创建 GitHub Release。在 Actions 日志「Validate and extract version from tag」中查看中文提示，例如：
 
 ```text
 ❌ 错误：标签格式无效。要求格式：vX.Y.Z（例如 v1.2.3）
 当前标签：……
 解析出的版本号：……
+说明：仅当标签为 v主版本.次版本.修订号 时才会构建 Release 并创建 GitHub Release。
 ```
 
-必须使用 `vX.Y.Z` 格式（如 `v1.2.3`）。错误的 tag 若已推送，需在 GitHub 或本地自行删除后重新打正确标签。
+须使用 `vX.Y.Z`（如 `v1.2.3`）。错误 tag 需先在 GitHub 或本地删除，再推送正确 tag。
 
-### Q: 如何查看 workflow 执行日志？
+### Q: 如何查看 workflow 日志？
 
-A: 在 GitHub 仓库页面，点击 "Actions" 标签页，选择对应的 workflow 运行记录即可查看详细日志。
+A: 仓库 **Actions** 页 → 选择对应运行记录。
 
-### Q: Artifacts 会保留多久？
+### Q: GitHub Actions 如何计费？
 
-A: Debug APK artifacts 保留 7 天。Release APK 会永久保存在 GitHub Release 中。
+A: 按托管 runner 上的**运行分钟数**计费。公开仓库通常可免费使用（以 GitHub 当前政策为准）；私有仓库有每月免费分钟额度。本 workflow：Push/PR 仅 lint/test；tag 发版才构建 Release，用于控制单次运行时长。
+
+### Q: Release APK 在哪里下载？
+
+A: 仓库 **Releases** 页，附件为正式签名的 Release APK。
 
 ## 相关文档
 
-- [应用签名与 GitHub Actions 配置指南](./应用签名与%20GitHub%20Actions%20配置指南.md) - 详细的签名配置和 Secrets 设置说明
-- [文档索引](../文档索引.md) - 项目文档导航中心
+- [应用签名与 GitHub Actions 配置指南](./应用签名与%20GitHub%20Actions%20配置指南.md)
+- [文档索引](../文档索引.md)

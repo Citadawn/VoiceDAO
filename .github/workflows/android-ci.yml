@@ -84,18 +84,6 @@ jobs:
       - name: Run unit tests and lint
         run: ./gradlew clean lint test
 
-      - name: Assemble debug APK
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        run: ./gradlew assembleDebug
-
-      - name: Upload debug APK
-        if: ${{ success() && github.actor != 'dependabot[bot]' && !startsWith(github.ref, 'refs/tags/') }}
-        uses: actions/upload-artifact@v5
-        with:
-          name: app-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          retention-days: 7
-
       - name: Validate and extract version from tag
         if: startsWith(github.ref, 'refs/tags/')
         id: version

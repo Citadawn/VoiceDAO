@@ -62,10 +62,6 @@ android {
             enableSplit = false
         }
     }
-    lint {
-        abortOnError true
-        warningsAsErrors false
-    }
 
 }
 

@@ -91,7 +91,7 @@ public class TtsEngineManager {
       - 便于统一管理和维护
   - **低频使用**（1-2次）：可以硬编码
     - 如果只使用一次且不太可能复用，可以直接硬编码
-    - lint 会警告，但不会阻止构建
+    - IDE 会显示警告，但不会阻止构建
 
 - **如何判断使用频率**：
   
@@ -110,7 +110,7 @@ public class TtsEngineManager {
     - 如果将来需要调整，只需修改一处
   - **低频使用**（1-2次）：可以硬编码
     - 如果只使用一次且不太可能复用，可以直接硬编码
-    - lint 会警告，但不会阻止构建
+    - IDE 会显示警告，但不会阻止构建
     - 这样可以让项目更简洁，避免不必要的资源文件
 
 - **如何判断使用频率**：
@@ -162,21 +162,16 @@ textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
 
 - 统一使用 `gradle/libs.versions.toml` 管理依赖版本
 - 定期升级 Android Gradle Plugin 和核心库
-- 及时修复过时 API 的警告（lint 会检查，但警告不阻止构建）
+- 及时修复过时 API 的警告
 - 使用 `implementation` 而非 `api` 依赖（除非必要）
 
-### Lint 配置
+### 代码检查
 
-项目采用 Android 官方推荐的标准 lint 配置：
+Android Studio 会实时检查代码问题并显示警告（黄色波浪线）：
 
-- **错误检查**：严重错误会阻止构建（`abortOnError true`）
-- **警告处理**：警告不会阻止构建（`warningsAsErrors false`），但建议及时修复
-- **检查范围**：检查所有 lint 规则，确保代码质量
-- **开发建议**：
-  - 严重错误必须修复
-  - 警告建议修复，但不强制
-  - **尺寸/颜色/字体**：对于只使用一次的硬编码值，可以接受 lint 警告（在代码审查时说明原因）
-  - **字符串**：硬编码字符串的警告必须修复，因为会影响国际化
+- **字符串硬编码**：必须修复，所有用户可见文本必须使用 `@string/*` 资源
+- **尺寸/颜色硬编码**：低频使用（1-2次）可以接受警告，高频使用（3次以上）必须使用资源
+- **魔法数字**：建议定义为常量，提高代码可读性
 
 ## 国际化规范
 
@@ -355,7 +350,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHold
 
 提交 PR 前，请确保：
 
-- [ ] 代码编译通过，无错误（警告建议修复，但不强制）
+- [ ] 代码编译通过，无错误
 - [ ] 所有测试通过
 - [ ] 遵循项目代码风格
 - [ ] 添加必要的注释和文档
@@ -363,7 +358,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHold
 - [ ] 检查资源文件是否国际化
 - [ ] 验证 UI 在不同屏幕尺寸下的表现
 - [ ] 检查内存泄漏和性能问题
-- [ ] 运行 lint 检查，修复严重错误（警告建议修复）
+- [ ] 修复代码检查中的严重错误
 
 ## 相关资源
 

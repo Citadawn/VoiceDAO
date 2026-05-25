@@ -278,8 +278,11 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 return;
             }
 
+            // 立即获取当前位置用于数据绑定
+            final int currentPos = position;
+            
             ListView listView = holder.listView;
-            listViews.put(position, listView);
+            listViews.put(currentPos, listView);
 
             // 添加滚动监听器，实时保存滚动位置
             listView.setOnScrollListener(new android.widget.AbsListView.OnScrollListener() {
@@ -287,9 +290,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 public void onScrollStateChanged(android.widget.AbsListView view, int scrollState) {
                     // 滚动状态改变时保存位置
                     if (scrollState == android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                        int currentPosition = holder.getAdapterPosition();
-                        if (currentPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
-                            saveScrollPosition(listView, currentPosition);
+                        int adapterPosition = holder.getAdapterPosition();
+                        if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                            saveScrollPosition(listView, adapterPosition);
                         }
 
                         // 确保滚动状态正确重置
@@ -305,28 +308,28 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 public void onScroll(android.widget.AbsListView view, int firstVisibleItem,
                                      int visibleItemCount, int totalItemCount) {
                     // 滚动时实时保存位置
-                    int currentPosition = holder.getAdapterPosition();
-                    if (currentPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
-                        saveScrollPosition(listView, currentPosition);
+                    int adapterPosition = holder.getAdapterPosition();
+                    if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                        saveScrollPosition(listView, adapterPosition);
                     }
                 }
             });
 
             // 如果是语言发音人页面，设置搜索功能
-            if (position == 1) {
+            if (currentPos == 1) {
                 setupSearchFunctionality(holder.itemView);
             }
 
             // 如果适配器已存在，直接使用；否则创建新的
-            BaseAdapter adapter = adapters.get(position);
+            BaseAdapter adapter = adapters.get(currentPos);
             if (adapter == null) {
-                adapter = switch (position) {
+                adapter = switch (currentPos) {
                     case 0 -> createEngineAdapter();
                     case 1 -> createLanguageVoiceAdapter();
                     default -> null;
                 };
                 if (adapter != null) {
-                    adapters.put(position, adapter);
+                    adapters.put(currentPos, adapter);
                 }
             }
 
@@ -334,7 +337,12 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 listView.setAdapter(adapter);
 
                 // 延迟恢复滚动位置，确保适配器完全加载
-                listView.post(() -> restoreScrollPosition(listView, position));
+                listView.post(() -> {
+                    int adapterPosition = holder.getAdapterPosition();
+                    if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                        restoreScrollPosition(listView, adapterPosition);
+                    }
+                });
             }
         }
 

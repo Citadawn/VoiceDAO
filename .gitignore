@@ -41,10 +41,7 @@ replay_pid*.log
 captures/
 
 # IDE configuration (Android Studio)
-# Ignore all .idea/ except team-shared inspection profiles
 .idea/
-!.idea/inspectionProfiles/
-!.idea/inspectionProfiles/**
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -52,6 +49,13 @@ captures/
 .idea/**/dictionaries/
 *.iml
 .vscode/
+
+# AI coding assistants
+.cursor/
+.kiro/
+.aider/
+.copilot/
+.windsurf/
 
 # Editor files
 *.swp
@@ -84,12 +88,6 @@ fastlane/readme.md
 
 # Version control
 vcs.xml
-
-# lint
-lint/intermediates/
-lint/generated/
-lint/outputs/
-lint/tmp/
 
 # Android Profiling
 *.hprof

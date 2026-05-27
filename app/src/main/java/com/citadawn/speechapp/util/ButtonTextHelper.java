@@ -4,6 +4,9 @@ import android.graphics.Paint;
 import android.util.TypedValue;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * 按钮文本自动调整工具类
  * 提供按钮文本大小自动调整功能，确保文本完全显示在按钮内
@@ -17,7 +20,7 @@ public class ButtonTextHelper {
      *
      * @param button 要设置自动调整的按钮
      */
-    public static void setupAutoTextSize(Button button) {
+    public static void setupAutoTextSize(@Nullable Button button) {
         if (button == null) {
             return;
         }
@@ -31,7 +34,7 @@ public class ButtonTextHelper {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     adjustTextSize(button, s.toString(), originalTextSize);
                 } else {
@@ -59,7 +62,7 @@ public class ButtonTextHelper {
      * @param text             要显示的文本
      * @param originalTextSize 原始文本大小
      */
-    public static void adjustTextSize(Button button, String text, float originalTextSize) {
+    public static void adjustTextSize(@NonNull Button button, String text, float originalTextSize) {
         button.post(() -> {
             int buttonWidth = button.getWidth() - button.getPaddingLeft() - button.getPaddingRight();
             if (buttonWidth <= 0) {
@@ -90,7 +93,7 @@ public class ButtonTextHelper {
      * @param button 要设置的按钮
      * @param text   要设置的文本
      */
-    public static void setTextWithAutoSize(Button button, String text) {
+    public static void setTextWithAutoSize(@NonNull Button button, String text) {
         button.setText(text);
         // 文本变化监听器会自动调整大小
     }
@@ -101,7 +104,7 @@ public class ButtonTextHelper {
      * @param button    要设置的按钮
      * @param textResId 文本资源ID
      */
-    public static void setTextWithAutoSize(Button button, int textResId) {
+    public static void setTextWithAutoSize(@NonNull Button button, int textResId) {
         setTextWithAutoSize(button, button.getContext().getString(textResId));
     }
 

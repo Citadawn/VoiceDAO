@@ -3,6 +3,7 @@ package com.citadawn.speechapp.util;
 import android.content.Context;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.text.HtmlCompat;
 
@@ -25,7 +26,7 @@ public class InfoIconHelper {
      * @param context         上下文
      * @param infoIconConfigs 信息图标配置数组，每个元素包含 [ImageView, titleResId, contentResId]
      */
-    public static void setupInfoIcons(Context context, Object[]... infoIconConfigs) {
+    public static void setupInfoIcons(@Nullable Context context, @Nullable Object[]... infoIconConfigs) {
         if (context == null || infoIconConfigs == null) {
             return;
         }
@@ -50,7 +51,7 @@ public class InfoIconHelper {
      * @param titleResId   标题字符串资源ID
      * @param contentResId 内容字符串资源ID
      */
-    public static void setupInfoIcon(Context context, ImageView infoIcon, int titleResId, int contentResId) {
+    public static void setupInfoIcon(@Nullable Context context, @Nullable ImageView infoIcon, int titleResId, int contentResId) {
         if (infoIcon != null && context != null) {
             infoIcon.setOnClickListener(v -> showInfoDialog(context, titleResId, contentResId));
         }
@@ -66,7 +67,7 @@ public class InfoIconHelper {
      * @param titleResId   标题字符串资源ID
      * @param contentResId 内容字符串资源ID
      */
-    public static void showInfoDialog(Context context, int titleResId, int contentResId) {
+    public static void showInfoDialog(@Nullable Context context, int titleResId, int contentResId) {
         if (context != null) {
             new AlertDialog.Builder(context)
                     .setTitle(titleResId)

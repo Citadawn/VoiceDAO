@@ -166,7 +166,7 @@ public class TestModeDialog extends Dialog {
     /**
      * 使用统一工具类设置信息图标位置
      */
-    private void setIconPosition(ImageView imageView) {
+    private void setIconPosition(@NonNull ImageView imageView) {
         // 延迟执行，确保布局完成
         imageView.post(() -> {
             // 获取TextView的实际文字大小
@@ -181,6 +181,7 @@ public class TestModeDialog extends Dialog {
     /**
      * 从布局中获取TextView
      */
+    @Nullable
     private TextView getTextViewFromLayout() {
         // 获取根视图
         if (getWindow() == null) {

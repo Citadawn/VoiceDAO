@@ -358,7 +358,6 @@ private static void showCustomToast(Context context, String message, int duratio
 ---
 
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) - 项目协作规范
-- [信息图标开发指南](./信息图标开发指南.md) - 信息图标的标准模板和使用方法
 - [状态信息区块开发说明](./状态信息区块开发说明.md) - 主界面状态信息的开发规范
 - [测试模式添加测试项指南](./测试模式添加测试项指南.md) - 为测试模式新增测试项的步骤
 - [README.md](../../README.md) - 项目说明文档

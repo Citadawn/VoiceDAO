@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class TtsEngineHelper {
      * @param iconView 图标视图（可为null）
      * @return 引擎显示名称
      */
-    public static String getTtsEngineInfo(TextToSpeech tts, Context context, android.widget.ImageView iconView) {
+    public static String getTtsEngineInfo(@Nullable TextToSpeech tts, @NonNull Context context, @Nullable android.widget.ImageView iconView) {
         if (tts == null) {
             if (iconView != null) {
                 iconView.setVisibility(android.view.View.GONE);
@@ -79,7 +81,7 @@ public class TtsEngineHelper {
      * @param iconView   图标视图
      * @param context    上下文
      */
-    private static void loadEngineIcon(String engineName, int iconResId, android.widget.ImageView iconView, Context context) {
+    private static void loadEngineIcon(String engineName, int iconResId, @NonNull android.widget.ImageView iconView, @NonNull Context context) {
         try {
             // 跨包加载图标
             Context engineContext = context.createPackageContext(engineName, 0);
@@ -98,7 +100,7 @@ public class TtsEngineHelper {
      * @param tts TTS实例
      * @return 默认引擎包名，如果获取失败返回null
      */
-    public static String getDefaultEngineName(TextToSpeech tts) {
+    public static String getDefaultEngineName(@Nullable TextToSpeech tts) {
         if (tts == null) {
             return null;
         }
@@ -117,7 +119,8 @@ public class TtsEngineHelper {
      * @param tts TTS实例
      * @return 排序后的引擎列表，如果获取失败返回空列表
      */
-    public static List<TextToSpeech.EngineInfo> getSortedEngines(TextToSpeech tts) {
+    @NonNull
+    public static List<TextToSpeech.EngineInfo> getSortedEngines(@Nullable TextToSpeech tts) {
         if (tts == null) {
             return new java.util.ArrayList<>();
         }
@@ -138,7 +141,7 @@ public class TtsEngineHelper {
      * @param tts TTS实例
      * @return 默认语言Locale，如果获取失败返回null
      */
-    public static java.util.Locale getDefaultLanguage(TextToSpeech tts) {
+    public static java.util.Locale getDefaultLanguage(@Nullable TextToSpeech tts) {
         if (tts == null) {
             return null;
         }
@@ -161,7 +164,7 @@ public class TtsEngineHelper {
      * @param tts TTS实例
      * @return 包含语言和发音人的数组，如果获取失败返回null
      */
-    public static Object[] getAvailableLanguagesAndVoices(TextToSpeech tts) {
+    public static Object[] getAvailableLanguagesAndVoices(@Nullable TextToSpeech tts) {
         if (tts == null) {
             return null;
         }

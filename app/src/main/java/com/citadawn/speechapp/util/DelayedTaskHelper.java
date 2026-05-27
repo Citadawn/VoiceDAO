@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -22,7 +24,7 @@ public class DelayedTaskHelper {
      * @param delayMillis 延迟时间（毫秒）
      * @param task        要执行的任务
      */
-    public static void postDelayed(View view, long delayMillis, Runnable task) {
+    public static void postDelayed(View view, long delayMillis, @NonNull Runnable task) {
         WeakReference<View> viewRef = new WeakReference<>(view);
         mainHandler.postDelayed(() -> {
             View v = viewRef.get();
@@ -38,7 +40,7 @@ public class DelayedTaskHelper {
      * @param textView    要清除的文本视图
      * @param delayMillis 延迟时间（毫秒）
      */
-    public static void clearTextDelayed(android.widget.TextView textView, long delayMillis) {
+    public static void clearTextDelayed(@NonNull android.widget.TextView textView, long delayMillis) {
         postDelayed(textView, delayMillis, () -> textView.setText(""));
     }
 

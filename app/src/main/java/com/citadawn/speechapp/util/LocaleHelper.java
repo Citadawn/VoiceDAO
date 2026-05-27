@@ -6,6 +6,9 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.Locale;
 
 /**
@@ -27,7 +30,7 @@ public class LocaleHelper {
     /**
      * 获取当前应用的语言设置
      */
-    public static Locale getCurrentLocale(Context context) {
+    public static Locale getCurrentLocale(@NonNull Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
         int languageMode = prefs.getInt(KEY_LANGUAGE_MODE, MODE_FOLLOW_SYSTEM);
         if (languageMode == MODE_FOLLOW_SYSTEM) {
@@ -41,7 +44,7 @@ public class LocaleHelper {
     /**
      * 获取当前语言模式
      */
-    public static int getLanguageMode(Context context) {
+    public static int getLanguageMode(@NonNull Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getInt(KEY_LANGUAGE_MODE, MODE_FOLLOW_SYSTEM);
     }
@@ -59,14 +62,14 @@ public class LocaleHelper {
     /**
      * 设置应用语言
      */
-    public static void setLocale(Context context, Locale locale) {
+    public static void setLocale(@NonNull Context context, @NonNull Locale locale) {
         updateResources(context, locale);
     }
 
     /**
      * 设置语言模式
      */
-    public static void setLanguageMode(Context context, int mode, Locale locale) {
+    public static void setLanguageMode(@NonNull Context context, int mode, @Nullable Locale locale) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(KEY_LANGUAGE_MODE, mode);
@@ -84,7 +87,7 @@ public class LocaleHelper {
     /**
      * 更新资源配置
      */
-    private static void updateResources(Context context, Locale locale) {
+    private static void updateResources(@NonNull Context context, @NonNull Locale locale) {
         try {
             Resources resources = context.getResources();
             Configuration configuration = new Configuration(resources.getConfiguration());
@@ -100,7 +103,8 @@ public class LocaleHelper {
     /**
      * 将Locale转换为字符串
      */
-    public static String localeToString(Locale locale) {
+    @NonNull
+    public static String localeToString(@Nullable Locale locale) {
         if (locale == null) {
             return LOCALE_ZH_CN;
         }
@@ -116,7 +120,8 @@ public class LocaleHelper {
     /**
      * 解析字符串为Locale
      */
-    public static Locale parseLocaleString(String localeString) {
+    @NonNull
+    public static Locale parseLocaleString(@Nullable String localeString) {
         if (localeString == null || localeString.isEmpty()) {
             return new Locale("zh", "CN");
         }
@@ -131,14 +136,14 @@ public class LocaleHelper {
     /**
      * 检查是否为中文
      */
-    public static boolean isChinese(Locale locale) {
+    public static boolean isChinese(@Nullable Locale locale) {
         return locale != null && "zh".equals(locale.getLanguage());
     }
 
     /**
      * 检查是否为英文
      */
-    public static boolean isEnglish(Locale locale) {
+    public static boolean isEnglish(@Nullable Locale locale) {
         return locale != null && "en".equals(locale.getLanguage());
     }
     // endregion

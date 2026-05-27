@@ -17,15 +17,17 @@
     <string name="dialog_title_about" tools:ignore="MissingTranslation">About</string>
     <string name="dialog_message_about" tools:ignore="MissingTranslation">(Content to be added)</string>
     <string name="dialog_button_ok" tools:ignore="MissingTranslation">OK</string>
-    <string name="message_speed_set_failed" tools:ignore="MissingTranslation">Failed to set speed</string>
-    <string name="message_pitch_set_failed" tools:ignore="MissingTranslation">Failed to set pitch</string>
     <string name="message_save_failed" tools:ignore="MissingTranslation">Save failed: %s</string>
     <string name="status_info_title" tools:ignore="MissingTranslation">Status Info</string>
     <string name="tip_reset_lang_voice" tools:ignore="MissingTranslation">Restore default language and voice</string>
     <string name="btn_set_save_dir" tools:ignore="MissingTranslation">Set Save Directory</string>
+    <string name="btn_set_tts_info_dir" tools:ignore="MissingTranslation">Set TTS Info Directory</string>
+    <string name="btn_output_tts_info_now" tools:ignore="MissingTranslation">Output TTS Info</string>
     <string name="btn_cancel_save" tools:ignore="MissingTranslation">Cancel Save</string>
     <string name="toast_save_dir_set_success" tools:ignore="MissingTranslation">Save directory set successfully</string>
     <string name="toast_save_dir_set_fail" tools:ignore="MissingTranslation">Failed to set save directory</string>
+    <string name="toast_tts_info_dir_set_success" tools:ignore="MissingTranslation">TTS info directory set successfully</string>
+    <string name="toast_tts_info_dir_set_fail" tools:ignore="MissingTranslation">Failed to set TTS info directory</string>
     <string name="toast_no_save_dir" tools:ignore="MissingTranslation">Please set the save directory first</string>
     <string name="toast_cancel_save_success" tools:ignore="MissingTranslation">Save cancelled, file deleted</string>
     <string name="toast_saving_audio" tools:ignore="MissingTranslation">Saving audio, please wait…</string>
@@ -60,6 +62,7 @@ It is recommended to organize your text content in this editor before returning 
     <string name="btn_save_audio" tools:ignore="MissingTranslation">Save as Audio</string>
     <string name="label_tts_engine_status" tools:ignore="MissingTranslation">TTS Engine Status:</string>
     <string name="label_audio_save_dir" tools:ignore="MissingTranslation">Audio Save Directory:</string>
+    <string name="label_tts_info_save_dir" tools:ignore="MissingTranslation">TTS Info Directory:</string>
     <string name="label_tts_speak_status" tools:ignore="MissingTranslation">Speech Synthesis Status:</string>
     <string name="title_text_editor" tools:ignore="MissingTranslation">Text Editor</string>
     <string name="hint_input_editor" tools:ignore="MissingTranslation">Please enter or paste the large text to edit…</string>
@@ -158,7 +161,7 @@ It is recommended to organize your text content in this editor before returning 
     <string name="tts_idle" tools:ignore="MissingTranslation">Idle</string>
     <string name="char_count" tools:ignore="MissingTranslation">Char count: %1$d/%2$d</string>
     <string name="clear">Clear</string>
-    <string name="clear_again">Click again to clear</string>
+    <string name="clear_again">Confirm\nClear</string>
     <string name="tts_prepare_read">Preparing to start reading…</string>
     <string name="tts_prepare_save">Preparing to start saving audio…</string>
     <string name="tts_reading">Reading</string>
@@ -174,23 +177,9 @@ It is recommended to organize your text content in this editor before returning 
     <string name="none">None</string>
     <string name="tts_support_info_title" tools:ignore="MissingTranslation">Language Instructions</string>
     <string name="tts_support_info_content" tools:ignore="MissingTranslation"><![CDATA[
-        <b>Language Selection Overview</b><br/><br/>
-        Language selection allows you to choose different languages for text-to-speech. Each TTS engine has a default language configured in system TTS settings, and deep background indicates the currently selected language.<br/><br/>
+        Language selection tells the TTS engine the primary language of the text. It is recommended to select the corresponding language based on the text content for the best pronunciation.<br/><br/>
         
-        <b>Usage:</b><br/>
-        • Click the language dropdown to view all available languages<br/>
-        • Color bars on the left indicate TTS engine support level for each language<br/>
-        • Select your desired language for speech synthesis<br/><br/>
-        
-        <b>Support Status Guide:</b><br/>
-        • <b>🟢 Available:</b> Fully supported language and region, ready to use<br/>
-        • <b>🟣 Country Available:</b> Supports language and country, but not necessarily specific regions<br/>
-        • <b>🔵 Variant Available:</b> Supports language, country and specific variants<br/>
-        • <b>🟡 Missing Data:</b> Missing language data package, need to download in system TTS settings<br/>
-        • <b>⚪ Not Supported:</b> TTS engine does not support this language<br/>
-        • <b>⚪ Unknown:</b> Unable to determine support status<br/><br/>
-        
-
+        <b>Note:</b> Chinese voices can also read English, but the pronunciation may not be standard.
     ]]></string>
     <string name="tts_support_info_button" tools:ignore="MissingTranslation">OK</string>
     <string name="menu_test_mode" tools:ignore="MissingTranslation">Test Mode</string>
@@ -206,13 +195,9 @@ It is recommended to organize your text content in this editor before returning 
     <string name="test_mode_btn_expand_all_desc_tooltip" tools:ignore="MissingTranslation">Expand all test case descriptions</string>
     <string name="test_mode_btn_collapse_all_desc_tooltip" tools:ignore="MissingTranslation">Collapse all test case descriptions</string>
 
-    <!-- 测试模式 - 语速音调设置失败测试 -->
-    <string name="test_case_speed_pitch_failure" tools:ignore="MissingTranslation">Speed/Pitch Setting Failure Test</string>
-    <string name="test_case_speed_pitch_failure_desc" tools:ignore="MissingTranslation">Test: Simulate speed/pitch setting failure scenarios to verify warning display functionality. Tests include invalid parameter values and TTS engine error responses. Logs are recorded in Logcat with tag "TTS_TEST" for debugging.</string>
-
     <!-- 测试模式 - 发音人信息 -->
     <string name="test_case_log_tts_voices" tools:ignore="MissingTranslation">Log TTS Engine Voices</string>
-    <string name="test_case_log_tts_voices_desc" tools:ignore="MissingTranslation">When enabled, every time you click "Speak", all supported languages and voices of the TTS engine will be printed to logcat, with default language, default voice, and the current TTS instance\'s voice marked.</string>
+    <string name="test_case_log_tts_voices_desc" tools:ignore="MissingTranslation">When enabled, click the "Output TTS Info" button to save all supported languages and voices of the TTS engine to a file (filename format: tts_info_[engine_name].txt), with default language, default voice, and the current TTS instance\'s voice marked. The file path will be displayed after saving.</string>
 
     <!-- 测试模式信息 -->
     <string name="test_mode_info_title" tools:ignore="MissingTranslation">Test Mode Instructions</string>
@@ -225,7 +210,6 @@ It is recommended to organize your text content in this editor before returning 
         • The interface will change to indicate test mode is active<br/><br/>
         <b>Test Features:</b><br/>
         • Tests simulate specific scenarios to verify functionality<br/>
-        • Test logs are recorded in Logcat with tag "TTS_TEST"<br/>
         • You can exit test mode anytime from the menu<br/>
         • Test mode does not affect normal app functionality
     ]]></string>
@@ -235,22 +219,14 @@ It is recommended to organize your text content in this editor before returning 
     <string name="speed_info_content" tools:ignore="MissingTranslation"><![CDATA[
         Speed controls how fast the text is read.<br/><br/>
         <b>Range:</b> 0.5x - 2.0x<br/>
-        <b>Default:</b> 1.0x (normal speed)<br/><br/>
-        <b>Usage Tips:</b><br/>
-        • 0.5x-0.8x: Slow reading, suitable for learning<br/>
-        • 1.0x: Normal speed, daily use<br/>
-        • 1.2x-2.0x: Fast reading, time-saving
+        <b>Default:</b> 1.0x (normal speed)
     ]]></string>
 
     <string name="pitch_info_title" tools:ignore="MissingTranslation">Pitch Instructions</string>
     <string name="pitch_info_content" tools:ignore="MissingTranslation"><![CDATA[
         Pitch controls the highness or lowness of the voice.<br/><br/>
         <b>Range:</b> 0.5x - 2.0x<br/>
-        <b>Default:</b> 1.0x (normal pitch)<br/><br/>
-        <b>Usage Tips:</b><br/>
-        • 0.5x-0.8x: Low pitch, deep voice<br/>
-        • 1.0x: Normal pitch, natural voice<br/>
-        • 1.2x-2.0x: High pitch, sharp voice
+        <b>Default:</b> 1.0x (normal pitch)
     ]]></string>
 
     <!-- 发音人信息 -->
@@ -287,6 +263,9 @@ It is recommended to organize your text content in this editor before returning 
     <string name="test_voice_label" tools:ignore="MissingTranslation">Voice</string>
     <string name="test_default_marker" tools:ignore="MissingTranslation">DEFAULT</string>
     <string name="test_default_for_language" tools:ignore="MissingTranslation">DEFAULT for this language</string>
+    <string name="test_tts_not_ready" tools:ignore="MissingTranslation">TTS engine not ready</string>
+    <string name="test_save_success" tools:ignore="MissingTranslation">TTS info saved to file</string>
+    <string name="test_save_failed" tools:ignore="MissingTranslation">Save failed</string>
 
 
 </resources> 

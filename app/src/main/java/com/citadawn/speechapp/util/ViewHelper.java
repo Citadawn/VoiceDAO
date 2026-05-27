@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 /**
  * View辅助工具类
  * 提供通用的View查找和操作功能
@@ -18,7 +20,7 @@ public class ViewHelper {
      * @param text     要查找的文本内容
      * @return 找到的TextView，如果没找到返回null
      */
-    public static TextView findTextViewByText(Activity activity, String text) {
+    public static TextView findTextViewByText(@Nullable Activity activity, @Nullable String text) {
         if (activity == null || text == null) {
             return null;
         }
@@ -37,7 +39,7 @@ public class ViewHelper {
      * @param text      要查找的文本内容
      * @return 找到的TextView，如果没找到返回null
      */
-    public static TextView findTextViewInViewGroup(ViewGroup viewGroup, String text) {
+    public static TextView findTextViewInViewGroup(@Nullable ViewGroup viewGroup, @Nullable String text) {
         if (viewGroup == null || text == null) {
             return null;
         }
@@ -65,7 +67,7 @@ public class ViewHelper {
      * @param targetText 目标文本内容
      * @return 找到的TextView，如果没找到返回null
      */
-    public static TextView findTextViewByTargetText(View rootView, String targetText) {
+    public static TextView findTextViewByTargetText(@Nullable View rootView, @Nullable String targetText) {
         if (rootView == null || targetText == null) {
             return null;
         }
@@ -83,7 +85,7 @@ public class ViewHelper {
      * @param targetText 目标文本内容
      * @return 找到的TextView，如果没找到返回null
      */
-    public static TextView findTextViewInViewGroupByTargetText(ViewGroup viewGroup, String targetText) {
+    public static TextView findTextViewInViewGroupByTargetText(@Nullable ViewGroup viewGroup, @Nullable String targetText) {
         if (viewGroup == null || targetText == null) {
             return null;
         }

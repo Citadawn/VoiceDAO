@@ -138,6 +138,55 @@ textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
 
 ### 代码质量
 
+#### 语言列表去重
+
+项目在显示 TTS 语言列表时会自动去除显示名称重复的语言：
+
+- **去重原则**：当多个 `Locale` 对象（如 `zh-Hans-CN` 和 `zh-CN`）显示名称相同时，只保留一个
+- **优先级规则**：
+  1. 默认语言始终保留
+  2. 优先保留有更多发音人的 Locale
+  3. 发音人数量相同时，优先保留更简洁的 Locale（如 `zh-CN` 优先于 `zh-Hans-CN`）
+- **实现位置**：`TtsLanguageVoiceHelper.sortLocalesByDisplayName()` 方法
+
+这样可以避免用户看到重复的语言选项，提升用户体验。
+
+#### 信息图标规范
+
+项目使用 Material Design 标准信息图标，已标准化：
+
+- **页面内容区域**：灰色，14dp，使用 `@drawable/ic_info_content`，图标与文字紧挨着（无需设置 marginStart，使用默认值 0dp），必须使用动态定位放在文字右上角
+- **工具栏区域**：白色，24dp，使用 `@drawable/ic_info_toolbar`
+
+**动态定位实现**：
+
+```java
+// 在 setupInfoIconPositions() 中添加
+findViewById(android.R.id.content).post(() -> {
+    TextView tvLabel = ViewHelper.findTextViewByText(this, getString(R.string.your_label));
+    ImageView ivInfo = findViewById(R.id.ivYourInfo);
+    if (ivInfo != null && tvLabel != null) {
+        InfoIconPositionHelper.setIconPosition(ivInfo, tvLabel);
+    }
+});
+```
+
+动态定位让图标偏移到文字高度的 60% 位置，像上标一样对齐。
+
+**布局模板**：
+
+```xml
+<ImageView
+    android:id="@+id/ivYourInfo"
+    android:layout_width="14dp"
+    android:layout_height="14dp"
+    android:layout_marginStart="1dp"
+    android:src="@drawable/ic_info_content"
+    android:contentDescription="@string/your_info_title"
+    android:clickable="true"
+    android:focusable="true" />
+```
+
 #### 代码优化原则
 
 - 提取重复代码到工具类
@@ -365,7 +414,6 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHold
 ---
 
 - [项目主页](./README.md) - 项目概述和快速开始
-- [信息图标开发指南](./docs/guides/信息图标开发指南.md) - 信息图标的标准模板
 - [状态信息区块开发说明](./docs/guides/状态信息区块开发说明.md) - 状态信息开发规范
 - [测试模式添加测试项指南](./docs/guides/测试模式添加测试项指南.md) - 测试项开发步骤
 - [API 参考文档](./docs/reference/) - 详细的 API 文档

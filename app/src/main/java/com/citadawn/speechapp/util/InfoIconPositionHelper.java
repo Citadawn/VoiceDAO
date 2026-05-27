@@ -5,6 +5,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 /**
  * 信息图标位置辅助工具类
  * 统一处理信息图标的动态定位
@@ -18,7 +20,7 @@ public class InfoIconPositionHelper {
      * @param textView   对应的文字视图
      * @param percentage 文字高度的百分比（0.0-1.0）
      */
-    public static void setIconPosition(ImageView imageView, TextView textView, float percentage) {
+    public static void setIconPosition(@Nullable ImageView imageView, @Nullable TextView textView, float percentage) {
         if (imageView == null || textView == null) {
             return;
         }

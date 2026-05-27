@@ -29,6 +29,7 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
     /**
      * 记录每个item描述是否展开
      */
+    @NonNull
     private final boolean[] descExpanded;
     /**
      * 选择状态变化监听器
@@ -44,7 +45,7 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
      *
      * @param testCases 测试用例列表
      */
-    public TestCaseAdapter(List<TestCase> testCases) {
+    public TestCaseAdapter(@NonNull List<TestCase> testCases) {
         this.testCases = testCases;
         this.descExpanded = new boolean[testCases.size()];
     }
@@ -165,7 +166,7 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
          *
          * @param itemView 列表项视图
          */
-        ViewHolder(View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             cbTestCase = itemView.findViewById(R.id.cbTestCase);
             tvTestCaseDesc = itemView.findViewById(R.id.tvTestCaseDesc);

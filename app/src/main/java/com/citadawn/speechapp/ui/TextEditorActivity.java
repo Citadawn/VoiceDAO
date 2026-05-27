@@ -4,13 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.citadawn.speechapp.R;
 import com.citadawn.speechapp.util.ButtonTextHelper;
@@ -59,8 +66,23 @@ public class TextEditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_editor);
 
-        // 设置状态栏文字颜色为黑色
+        // 设置状态栏为透明，让内容延伸到状态栏下方
+        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
         StatusBarHelper.setupStatusBar(getWindow());
+
+        // 动态设置状态栏占位区域的高度
+        View statusBarBackground = findViewById(R.id.statusBarBackground);
+        View rootContainer = findViewById(R.id.rootContainer);
+        ViewCompat.setOnApplyWindowInsetsListener(rootContainer, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            ViewGroup.LayoutParams params = statusBarBackground.getLayoutParams();
+            if (params instanceof ConstraintLayout.LayoutParams) {
+                params.height = systemBars.top;
+                statusBarBackground.setLayoutParams(params);
+            }
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         Toolbar toolbar = findViewById(R.id.editorToolbar);
         setSupportActionBar(toolbar);
@@ -94,7 +116,7 @@ public class TextEditorActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
                 btnEditorClear.setEnabled(s.length() > 0);
                 btnEditorOk.setEnabled(!s.toString().equals(originalText));
                 updateCharCount();
@@ -143,7 +165,7 @@ public class TextEditorActivity extends AppCompatActivity {
      * @return 是否已处理
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_editor_info) {
             DialogHelper.showInfoDialog(this,
                     R.string.dialog_title_editor_info, R.string.dialog_message_editor_info);

@@ -25,12 +25,11 @@
 
         <ImageView
             android:id="@+id/ivLanguageInfo"
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_20"
-            android:layout_marginStart="@dimen/dp_2"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
             android:clickable="true"
             android:contentDescription="@string/language_selection_info_title"
             android:focusable="true"
-            android:src="@drawable/ic_info_white_20dp" />
+            android:src="@drawable/ic_info_content" />
     </LinearLayout>
 </LinearLayout> 

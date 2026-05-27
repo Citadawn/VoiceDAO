@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -71,7 +71,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
     /**
      * 启动 TTS 浏览器界面
      */
-    public static void start(Context context) {
+    public static void start(@NonNull Context context) {
         Intent intent = new Intent(context, TtsBrowserActivity.class);
         context.startActivity(intent);
     }
@@ -79,7 +79,6 @@ public class TtsBrowserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tts_browser);
 
         initViews();
@@ -117,7 +116,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
     // region 公开方法
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
@@ -144,13 +143,23 @@ public class TtsBrowserActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(R.string.tts_browser_title);
         }
 
-        // 设置状态栏背景色和文字颜色
+        // 设置状态栏为透明，让内容延伸到状态栏下方
+        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+        
+        // 设置状态栏文字为白色
         StatusBarHelper.setupStatusBar(getWindow());
 
-        // 处理系统窗口插入，避免与状态栏重叠
+        // 动态设置状态栏占位区域的高度
+        View statusBarBackground = findViewById(R.id.statusBarBackground);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_container), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            
+            // 设置状态栏占位区域的高度为状态栏高度
+            ViewGroup.LayoutParams params = statusBarBackground.getLayoutParams();
+            params.height = systemBars.top;
+            statusBarBackground.setLayoutParams(params);
+            
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
             return insets;
         });
 
@@ -287,7 +296,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 添加滚动监听器，实时保存滚动位置
             listView.setOnScrollListener(new android.widget.AbsListView.OnScrollListener() {
                 @Override
-                public void onScrollStateChanged(android.widget.AbsListView view, int scrollState) {
+                public void onScrollStateChanged(@NonNull android.widget.AbsListView view, int scrollState) {
                     // 滚动状态改变时保存位置
                     if (scrollState == android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                         int adapterPosition = holder.getAdapterPosition();
@@ -351,6 +360,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
             return 2;
         }
 
+        @NonNull
         private BaseAdapter createEngineAdapter() {
             // 使用工具类获取排序后的引擎列表
             List<TextToSpeech.EngineInfo> sortedEngines = TtsEngineHelper.getSortedEngines(tts);
@@ -359,6 +369,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
             return new EngineAdapter(activity, sortedEngines, defaultEngine);
         }
 
+        @Nullable
         private BaseAdapter createLanguageVoiceAdapter() {
             // 使用工具类获取语言和发音人
             Object[] result = TtsEngineHelper.getAvailableLanguagesAndVoices(tts);
@@ -375,7 +386,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
         /**
          * 保存当前ListView的滚动位置
          */
-        private void saveScrollPosition(ListView listView, int position) {
+        private void saveScrollPosition(@Nullable ListView listView, int position) {
             if (listView != null) {
                 int firstVisiblePosition = listView.getFirstVisiblePosition();
                 View firstVisibleView = listView.getChildAt(0);
@@ -390,7 +401,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
         /**
          * 恢复ListView的滚动位置
          */
-        private void restoreScrollPosition(ListView listView, int position) {
+        private void restoreScrollPosition(@Nullable ListView listView, int position) {
             if (listView != null) {
                 Integer scrollPosition = activity.scrollPositions.get(position);
                 Integer scrollOffset = activity.scrollOffsets.get(position);
@@ -448,7 +459,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
         /**
          * 设置搜索功能
          */
-        private void setupSearchFunctionality(View view) {
+        private void setupSearchFunctionality(@NonNull View view) {
             EditText searchEditText = view.findViewById(R.id.search_edit_text);
             ImageButton clearSearchButton = view.findViewById(R.id.clear_search_button);
 
@@ -467,7 +478,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void afterTextChanged(android.text.Editable s) {
+                public void afterTextChanged(@NonNull android.text.Editable s) {
                     String query = s.toString().trim();
 
                     // 显示/隐藏清除按钮
@@ -495,7 +506,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
         /**
          * 执行搜索
          */
-        private void performSearch(String query) {
+        private void performSearch(@NonNull String query) {
             ListView targetListView = listViews.get(1);
             if (targetListView != null) {
                 BaseAdapter adapter = (BaseAdapter) targetListView.getAdapter();
@@ -547,8 +558,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             return position;
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.item_engine, parent, false);
@@ -620,17 +632,20 @@ public class TtsBrowserActivity extends AppCompatActivity {
     private static class LanguageVoiceAdapter extends BaseAdapter implements android.widget.SectionIndexer {
 
         private final Context context;
+        @NonNull
         private final List<LanguageVoiceItem> allItems; // 所有原始数据
+        @NonNull
         private final List<LanguageVoiceItem> items; // 当前显示的数据
         private final LayoutInflater inflater;
         private final TextToSpeech tts;
+        @NonNull
         private String currentFilter = ""; // 当前搜索关键词
 
         // 快速滚动索引相关
         private String[] sections;
         private Integer[] sectionPositions;
 
-        public LanguageVoiceAdapter(Context context, Set<Locale> languages, Set<Voice> voices, TextToSpeech tts) {
+        public LanguageVoiceAdapter(Context context, @NonNull Set<Locale> languages, Set<Voice> voices, TextToSpeech tts) {
             this.context = context;
             this.tts = tts;
             this.inflater = LayoutInflater.from(context);
@@ -647,7 +662,8 @@ public class TtsBrowserActivity extends AppCompatActivity {
          * 构建语言和发音人数据项
          * 使用工具类改进版本：智能选择默认发音人，提供更好的用户体验
          */
-        private List<LanguageVoiceItem> buildLanguageVoiceItems(Set<Locale> languages, Set<Voice> voices) {
+        @NonNull
+        private List<LanguageVoiceItem> buildLanguageVoiceItems(@NonNull Set<Locale> languages, Set<Voice> voices) {
             List<LanguageVoiceItem> items = new ArrayList<>();
 
             // 使用工具类获取默认语言
@@ -717,8 +733,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             return position;
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.item_language_voice, parent, false);
@@ -828,6 +845,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
             return convertView;
         }
 
+        @NonNull
         private String getQualityText(int quality) {
             return switch (quality) {
                 case Voice.QUALITY_VERY_LOW -> context.getString(R.string.quality_very_low);
@@ -839,6 +857,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
             };
         }
 
+        @NonNull
         private String getLatencyText(int latency) {
             return switch (latency) {
                 case Voice.LATENCY_VERY_LOW -> context.getString(R.string.latency_very_low);
@@ -855,7 +874,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
          *
          * @param query 搜索关键词
          */
-        public void filter(String query) {
+        public void filter(@NonNull String query) {
             String newFilter = query.toLowerCase().trim();
 
             // 如果过滤条件没有变化，不需要重新过滤
@@ -955,22 +974,16 @@ public class TtsBrowserActivity extends AppCompatActivity {
             TextView voiceView;
         }
 
-        private static class LanguageVoiceItem {
-            final Locale locale;
-            final Voice voice;
-            final Voice defaultVoice; // 该语言的默认发音人
-            final boolean isDefaultLanguage; // 是否为系统默认语言
+        /**
+         * @param defaultVoice      该语言的默认发音人
+         * @param isDefaultLanguage 是否为系统默认语言
+         */
+        private record LanguageVoiceItem(Locale locale, Voice voice, Voice defaultVoice,
+                                         boolean isDefaultLanguage) {
+                    public LanguageVoiceItem(Locale locale, Voice voice, Voice defaultVoice) {
+                        this(locale, voice, defaultVoice, false);
+                    }
 
-            public LanguageVoiceItem(Locale locale, Voice voice, Voice defaultVoice) {
-                this(locale, voice, defaultVoice, false);
-            }
-
-            public LanguageVoiceItem(Locale locale, Voice voice, Voice defaultVoice, boolean isDefaultLanguage) {
-                this.locale = locale;
-                this.voice = voice;
-                this.defaultVoice = defaultVoice;
-                this.isDefaultLanguage = isDefaultLanguage;
-            }
         }
     }
 

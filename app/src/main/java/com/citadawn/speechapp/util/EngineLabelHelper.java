@@ -7,6 +7,9 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.LocaleList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.Locale;
 
 /**
@@ -25,7 +28,8 @@ public final class EngineLabelHelper {
      * @param packageName 引擎包名
      * @return 本地化的人类可读名称；异常或获取失败时返回包名本身
      */
-    public static String getLocalizedAppLabel(Context context, String packageName) {
+    @Nullable
+    public static String getLocalizedAppLabel(@NonNull Context context, @NonNull String packageName) {
         try {
             PackageManager pm = context.getPackageManager();
             ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);

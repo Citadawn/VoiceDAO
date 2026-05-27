@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * TTS引擎变化检测助手工具类
  * 用于检测系统TTS引擎是否发生变化，并提供相应处理方法
@@ -28,7 +31,7 @@ public class TtsEngineChangeHelper {
      * @param tts     TTS实例，用于获取当前引擎信息
      * @return 如果引擎发生变化返回true，否则返回false
      */
-    public static boolean hasEngineChanged(Context context, TextToSpeech tts) {
+    public static boolean hasEngineChanged(@NonNull Context context, @Nullable TextToSpeech tts) {
         if (tts == null) {
             Log.w(TAG, "TTS instance is null, cannot check engine change");
             return false;
@@ -63,7 +66,8 @@ public class TtsEngineChangeHelper {
      * @param tts TTS实例
      * @return 当前TTS引擎的包名，如果获取失败返回"unknown"
      */
-    public static String getCurrentTtsEngine(TextToSpeech tts) {
+    @NonNull
+    public static String getCurrentTtsEngine(@Nullable TextToSpeech tts) {
         if (tts == null) {
             return "unknown";
         }
@@ -83,7 +87,7 @@ public class TtsEngineChangeHelper {
      * @param context 上下文
      * @param engine  当前TTS引擎包名
      */
-    public static void saveCurrentTtsEngine(Context context, String engine) {
+    public static void saveCurrentTtsEngine(@NonNull Context context, String engine) {
         try {
             SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             prefs.edit().putString(KEY_LAST_TTS_ENGINE, engine).apply();
@@ -99,7 +103,8 @@ public class TtsEngineChangeHelper {
      * @param context 上下文
      * @return 上次记录的TTS引擎包名，如果未记录返回null
      */
-    public static String getLastTtsEngine(Context context) {
+    @Nullable
+    public static String getLastTtsEngine(@NonNull Context context) {
         try {
             SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             return prefs.getString(KEY_LAST_TTS_ENGINE, null);

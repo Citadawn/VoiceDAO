@@ -24,13 +24,12 @@
 
         <ImageView
             android:id="@+id/ivTestModeInfo"
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_20"
-            android:layout_marginStart="@dimen/dp_4"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
             android:clickable="true"
             android:contentDescription="@string/test_mode_info_title"
             android:focusable="true"
-            android:src="@drawable/ic_info_white_20dp" />
+            android:src="@drawable/ic_info_content" />
     </LinearLayout>
 
     <LinearLayout

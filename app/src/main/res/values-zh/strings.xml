@@ -20,15 +20,17 @@
     <string name="dialog_title_about">关于</string>
     <string name="dialog_message_about">（内容待补充）</string>
     <string name="dialog_button_ok">确定</string>
-    <string name="message_speed_set_failed">语速设置失败</string>
-    <string name="message_pitch_set_failed">音调设置失败</string>
     <string name="message_save_failed">保存失败: %s</string>
     <string name="status_info_title">状态信息</string>
     <string name="tip_reset_lang_voice">恢复默认语言和发音人</string>
     <string name="btn_set_save_dir">设置保存目录</string>
+    <string name="btn_set_tts_info_dir">设置TTS信息保存目录</string>
+    <string name="btn_output_tts_info_now">输出TTS信息</string>
     <string name="btn_cancel_save">取消保存</string>
     <string name="toast_save_dir_set_success">保存目录设置成功</string>
     <string name="toast_save_dir_set_fail">保存目录设置失败</string>
+    <string name="toast_tts_info_dir_set_success">TTS信息保存目录设置成功</string>
+    <string name="toast_tts_info_dir_set_fail">TTS信息保存目录设置失败</string>
     <string name="toast_no_save_dir">请先设置保存目录</string>
     <string name="toast_cancel_save_success">保存已取消，文件已删除</string>
     <string name="toast_saving_audio">正在保存音频，请稍候…</string>
@@ -63,6 +65,7 @@
     <string name="btn_save_audio">保存为音频</string>
     <string name="label_tts_engine_status">TTS引擎状态：</string>
     <string name="label_audio_save_dir">音频保存目录：</string>
+    <string name="label_tts_info_save_dir">TTS信息保存目录：</string>
     <string name="label_tts_speak_status">语音合成状态：</string>
     <string name="title_text_editor">文本编辑器</string>
     <string name="hint_input_editor">请输入或粘贴要编辑的大段文本……</string>
@@ -91,7 +94,7 @@
     <string name="tts_idle">空闲</string>
     <string name="char_count">字数：%1$d/%2$d</string>
     <string name="clear">清空</string>
-    <string name="clear_again">再次点击清空</string>
+    <string name="clear_again">确认\n清空</string>
     <string name="tts_prepare_read">准备开始朗读…</string>
     <string name="tts_prepare_save">准备开始保存音频…</string>
     <string name="tts_reading">正在朗读</string>
@@ -178,23 +181,9 @@
     <string name="none">无</string>
     <string name="tts_support_info_title">语言说明</string>
     <string name="tts_support_info_content"><![CDATA[
-        <b>语言选择概述</b><br/><br/>
-        语言选择允许您为文本转语音选择不同的语言。每个TTS引擎在系统TTS设置中配置有默认语言，深色背景表示当前选中的语言。<br/><br/>
+        语言选择用于告诉 TTS 引擎文本的主要语言。建议根据文本内容选择对应语言以获得最佳发音效果。<br/><br/>
         
-        <b>使用方法：</b><br/>
-        • 点击语言下拉列表查看所有可用语言<br/>
-        • 左侧颜色条表示TTS引擎对每种语言的支持级别<br/>
-        • 选择您需要的语言进行朗读<br/><br/>
-        
-        <b>支持情况说明：</b><br/>
-        • <b>🟢 完全支持：</b>完全支持该语言和地区，可直接使用<br/>
-        • <b>🟣 国家支持：</b>支持该语言和国家，但不一定支持具体地区<br/>
-        • <b>🔵 变体支持：</b>支持该语言、国家和特定变体<br/>
-        • <b>🟡 缺少数据：</b>缺少该语言的数据包，需在系统TTS设置中下载<br/>
-        • <b>⚪ 不支持：</b>TTS引擎不支持该语言<br/>
-        • <b>⚪ 未知：</b>无法确定支持情况<br/><br/>
-        
-
+        <b>注意：</b>中文发音人也可以朗读英文，但发音可能不标准。
     ]]></string>
     <string name="tts_support_info_button">确定</string>
     <string name="menu_test_mode">测试模式</string>
@@ -210,15 +199,10 @@
     <string name="test_mode_btn_expand_all_desc_tooltip">展开全部测试项描述</string>
     <string name="test_mode_btn_collapse_all_desc_tooltip">收起全部测试项描述</string>
 
-    <!-- 测试模式 - 语速音调设置失败测试 -->
-    <string name="test_case_speed_pitch_failure">语速音调设置失败测试</string>
-    <string name="test_case_speed_pitch_failure_desc">
-        测试：模拟语速和音调设置失败场景，验证警告显示功能。测试包括无效参数值和TTS引擎错误响应。测试日志记录在Logcat中，标签为"TTS_TEST"，便于调试。</string>
-
     <!-- 测试模式 - 输出TTS引擎语言和发音人 -->
     <string name="test_case_log_tts_voices">输出TTS引擎语言和发音人</string>
     <string name="test_case_log_tts_voices_desc">
-        启用后，每次点击“朗读”按钮时，会在logcat中输出TTS引擎支持的所有语言及其发音人，并标注默认语言、默认发音人和当前TTS实例的voice对象。</string>
+        启用后，点击“朗读”按钮，会将TTS引擎支持的所有语言及其发音人保存到文件（文件名格式：tts_info_[引擎名称].txt），并标注默认语言、默认发音人和当前TTS实例的voice对象。保存完成后会显示文件路径。</string>
 
     <!-- 测试模式信息 -->
     <string name="test_mode_info_title">测试模式说明</string>
@@ -241,22 +225,14 @@
     <string name="speed_info_content"><![CDATA[
         语速控制朗读的速度快慢。<br/><br/>
         <b>设置范围：</b>0.5x - 2.0x<br/>
-        <b>默认值：</b>1.0x（正常速度）<br/><br/>
-        <b>使用建议：</b><br/>
-        • 0.5x-0.8x：慢速朗读，适合学习<br/>
-        • 1.0x：正常速度，日常使用<br/>
-        • 1.2x-2.0x：快速朗读，节省时间
+        <b>默认值：</b>1.0x（正常速度）
     ]]></string>
 
     <string name="pitch_info_title">音调说明</string>
     <string name="pitch_info_content"><![CDATA[
         音调控制朗读声音的高低。<br/><br/>
         <b>设置范围：</b>0.5x - 2.0x<br/>
-        <b>默认值：</b>1.0x（正常音调）<br/><br/>
-        <b>使用建议：</b><br/>
-        • 0.5x-0.8x：低音调，声音低沉<br/>
-        • 1.0x：正常音调，自然声音<br/>
-        • 1.2x-2.0x：高音调，声音尖锐
+        <b>默认值：</b>1.0x（正常音调）
     ]]></string>
 
     <!-- 发音人信息 -->
@@ -293,6 +269,9 @@
     <string name="test_voice_label">发音人</string>
     <string name="test_default_marker">默认</string>
     <string name="test_default_for_language">该语言的默认发音人</string>
+    <string name="test_tts_not_ready">TTS引擎未就绪</string>
+    <string name="test_save_success">TTS信息已保存到文件</string>
+    <string name="test_save_failed">保存失败</string>
 
 
 </resources>

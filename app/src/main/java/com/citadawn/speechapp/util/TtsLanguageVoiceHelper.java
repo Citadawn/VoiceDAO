@@ -4,6 +4,9 @@ import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,7 +31,8 @@ public class TtsLanguageVoiceHelper {
      * @param voices    可用发音人集合
      * @return 语言到发音人列表的映射
      */
-    public static Map<Locale, List<Voice>> buildLanguageVoicesMap(Set<Locale> languages, Set<Voice> voices) {
+    @NonNull
+    public static Map<Locale, List<Voice>> buildLanguageVoicesMap(@NonNull Set<Locale> languages, @NonNull Set<Voice> voices) {
         Map<Locale, List<Voice>> languageVoicesMap = new HashMap<>();
 
         // 初始化语言映射
@@ -60,9 +64,10 @@ public class TtsLanguageVoiceHelper {
      * @param globalDefaultVoice 全局默认发音人（可选）
      * @return 语言到默认发音人的映射
      */
+    @NonNull
     public static Map<Locale, Voice> determineLanguageDefaultVoices(
-            Map<Locale, List<Voice>> languageVoicesMap,
-            Voice globalDefaultVoice) {
+            @NonNull Map<Locale, List<Voice>> languageVoicesMap,
+            @Nullable Voice globalDefaultVoice) {
 
         Map<Locale, Voice> languageDefaultVoices = new HashMap<>();
 
@@ -90,17 +95,80 @@ public class TtsLanguageVoiceHelper {
 
     /**
      * 按语言名称排序语言列表
+     * 会自动去除显示名称重复的语言（保留有发音人的或默认语言）
      *
      * @param locales       语言集合
      * @param defaultLocale 默认语言（将排在第一位）
      * @param context       上下文，用于获取当前界面语言
-     * @return 排序后的语言列表
+     * @param voices        可用发音人集合（用于判断哪个Locale有发音人）
+     * @return 排序后且去重的语言列表
      */
-    public static List<Locale> sortLocalesByDisplayName(Set<Locale> locales, Locale defaultLocale, Context context) {
-        List<Locale> sortedLocales = new ArrayList<>(locales);
-
-        Collator collator = Collator.getInstance();
+    @NonNull
+    public static List<Locale> sortLocalesByDisplayName(@NonNull Set<Locale> locales, Locale defaultLocale, @NonNull Context context, @Nullable Set<Voice> voices) {
         Locale currentLocale = com.citadawn.speechapp.util.LocaleHelper.getCurrentLocale(context);
+        
+        // 统计每个Locale的发音人数量
+        Map<Locale, Integer> localeVoiceCount = new java.util.HashMap<>();
+        if (voices != null) {
+            for (Voice voice : voices) {
+                Locale voiceLocale = voice.getLocale();
+                localeVoiceCount.put(voiceLocale, localeVoiceCount.getOrDefault(voiceLocale, 0) + 1);
+            }
+        }
+        
+        // 按显示名称分组，去除重复
+        Map<String, Locale> displayNameToLocale = new java.util.LinkedHashMap<>();
+        
+        for (Locale locale : locales) {
+            String displayName = locale.getDisplayName(currentLocale);
+            
+            // 如果是默认语言，直接保留
+            if (locale.equals(defaultLocale)) {
+                displayNameToLocale.put(displayName, locale);
+                continue;
+            }
+            
+            // 如果显示名称已存在，比较两个Locale，保留更合适的
+            if (displayNameToLocale.containsKey(displayName)) {
+                Locale existing = displayNameToLocale.get(displayName);
+                
+                // 如果已存在的是默认语言，跳过当前的
+                if (existing.equals(defaultLocale)) {
+                    continue;
+                }
+                
+                // 优先保留有发音人的Locale
+                int existingVoiceCount = localeVoiceCount.getOrDefault(existing, 0);
+                int currentVoiceCount = localeVoiceCount.getOrDefault(locale, 0);
+                
+                if (currentVoiceCount > existingVoiceCount) {
+                    // 当前的有更多发音人，替换
+                    displayNameToLocale.put(displayName, locale);
+                } else if (currentVoiceCount == existingVoiceCount) {
+                    // 发音人数量相同，优先保留没有script标签的Locale（如zh-CN优先于zh-Hans-CN）
+                    String existingTag = existing.toLanguageTag();
+                    String currentTag = locale.toLanguageTag();
+                    
+                    // 计算标签中的分隔符数量，数量少的更简洁
+                    int existingParts = existingTag.split("-").length;
+                    int currentParts = currentTag.split("-").length;
+                    
+                    if (currentParts < existingParts) {
+                        // 当前的更简洁，替换
+                        displayNameToLocale.put(displayName, locale);
+                    }
+                }
+                // 否则保留已存在的
+            } else {
+                // 显示名称不存在，直接添加
+                displayNameToLocale.put(displayName, locale);
+            }
+        }
+        
+        // 从去重后的Map中获取Locale列表并排序
+        List<Locale> sortedLocales = new ArrayList<>(displayNameToLocale.values());
+        
+        Collator collator = Collator.getInstance();
         sortedLocales.sort((l1, l2) -> {
             // 默认语言始终排在最前面
             if (l1.equals(defaultLocale)) {
@@ -116,6 +184,19 @@ public class TtsLanguageVoiceHelper {
 
         return sortedLocales;
     }
+    
+    /**
+     * 按语言名称排序语言列表（兼容旧版本，不考虑发音人）
+     *
+     * @param locales       语言集合
+     * @param defaultLocale 默认语言（将排在第一位）
+     * @param context       上下文，用于获取当前界面语言
+     * @return 排序后且去重的语言列表
+     */
+    @NonNull
+    public static List<Locale> sortLocalesByDisplayName(@NonNull Set<Locale> locales, Locale defaultLocale, @NonNull Context context) {
+        return sortLocalesByDisplayName(locales, defaultLocale, context, null);
+    }
 
     /**
      * 按语言名称排序语言列表（无默认语言）
@@ -124,7 +205,8 @@ public class TtsLanguageVoiceHelper {
      * @param context 上下文，用于获取当前界面语言
      * @return 排序后的语言列表
      */
-    public static List<Locale> sortLocalesByDisplayName(Set<Locale> locales, Context context) {
+    @NonNull
+    public static List<Locale> sortLocalesByDisplayName(@NonNull Set<Locale> locales, @NonNull Context context) {
         List<Locale> sortedLocales = new ArrayList<>(locales);
 
         Collator collator = Collator.getInstance();
@@ -143,7 +225,8 @@ public class TtsLanguageVoiceHelper {
      * @param defaultVoice 默认发音人（将排在第一位）
      * @return 排序后的发音人列表
      */
-    public static List<Voice> sortVoicesByDefault(List<Voice> voices, Voice defaultVoice) {
+    @NonNull
+    public static List<Voice> sortVoicesByDefault(@NonNull List<Voice> voices, @Nullable Voice defaultVoice) {
         List<Voice> sortedVoices = new ArrayList<>(voices);
 
         if (defaultVoice != null) {
@@ -174,7 +257,8 @@ public class TtsLanguageVoiceHelper {
      * @param targetLocale 目标语言
      * @return 指定语言的发音人列表
      */
-    public static List<Voice> getVoicesForLanguage(Set<Voice> voices, Locale targetLocale) {
+    @NonNull
+    public static List<Voice> getVoicesForLanguage(@NonNull Set<Voice> voices, Locale targetLocale) {
         List<Voice> result = new ArrayList<>();
 
         for (Voice voice : voices) {
@@ -194,9 +278,10 @@ public class TtsLanguageVoiceHelper {
      * @param defaultEngineName 默认引擎包名
      * @return 排序后的引擎列表
      */
+    @NonNull
     public static List<TextToSpeech.EngineInfo> sortEnginesByDefault(
-            List<TextToSpeech.EngineInfo> engines,
-            String defaultEngineName) {
+            @NonNull List<TextToSpeech.EngineInfo> engines,
+            @Nullable String defaultEngineName) {
 
         List<TextToSpeech.EngineInfo> sortedEngines = new ArrayList<>(engines);
 
@@ -234,7 +319,8 @@ public class TtsLanguageVoiceHelper {
      * @param voiceName 原始发音人名称
      * @return 清理后的发音人名称
      */
-    public static String cleanVoiceName(String voiceName) {
+    @NonNull
+    public static String cleanVoiceName(@Nullable String voiceName) {
         if (voiceName == null) {
             return "";
         }
@@ -249,7 +335,7 @@ public class TtsLanguageVoiceHelper {
      * @param feature 特性字符串
      * @return 是否为无意义特性
      */
-    public static boolean isMeaninglessFeature(String feature) {
+    public static boolean isMeaninglessFeature(@Nullable String feature) {
         if (feature == null || feature.isEmpty()) {
             return true;
         }
@@ -285,7 +371,7 @@ public class TtsLanguageVoiceHelper {
      * @param features 特性集合
      * @return 是否应该显示
      */
-    public static boolean shouldShowFeatures(Set<String> features) {
+    public static boolean shouldShowFeatures(@Nullable Set<String> features) {
         if (features == null || features.isEmpty()) {
             return false;
         }

@@ -4,14 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_48"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
-
-    <View
-        android:id="@+id/viewSupportBar"
-        android:layout_width="6dp"
-        android:layout_height="@dimen/dp_32"
-        android:layout_marginEnd="@dimen/dp_12"
-        android:background="@color/tts_support_full" />
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/dp_16"
+    android:paddingEnd="@dimen/dp_16">
 
     <TextView
         android:id="@+id/tvLanguageName"

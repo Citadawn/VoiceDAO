@@ -11,6 +11,8 @@
     <color name="text_secondary_dark">#333333</color>
     <color name="text_highlight">#1A272727</color>
     <color name="accent_warning">#FF5722</color>
+    <color name="btn_warning_bg">#E53935</color> <!-- 红色警告按钮 -->
+    <color name="btn_warning_pressed">#C62828</color> <!-- 按下时的深红色 -->
 
 
     <!-- 主题色相关颜色 -->

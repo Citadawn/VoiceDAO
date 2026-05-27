@@ -2,6 +2,8 @@ package com.citadawn.speechapp.util;
 
 import android.speech.tts.TextToSpeech;
 
+import androidx.annotation.Nullable;
+
 /**
  * 文本长度检查工具类
  * 提供统一的文本长度验证功能，使用 TTS API 动态获取最大字数限制
@@ -24,7 +26,7 @@ public class TextLengthHelper {
      * @param text 要检查的文本
      * @return true 如果文本超过限制，false 否则
      */
-    public static boolean isTextTooLong(String text) {
+    public static boolean isTextTooLong(@Nullable String text) {
         if (text == null) {
             return false;
         }

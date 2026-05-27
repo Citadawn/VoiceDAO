@@ -2,9 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
+
+    <!-- 状态栏占位区域，与 Toolbar 同色 -->
+    <View
+        android:id="@+id/statusBarBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/main_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -14,7 +25,7 @@
         android:titleTextColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusBarBackground"
         app:title="@string/app_name" />
 
     <androidx.core.widget.NestedScrollView
@@ -133,13 +144,12 @@
 
                         <ImageView
                             android:id="@+id/ivSpeedInfo"
-                            android:layout_width="@dimen/dp_20"
-                            android:layout_height="@dimen/dp_20"
-                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
                             android:clickable="true"
                             android:contentDescription="@string/speed_info_title"
                             android:focusable="true"
-                            android:src="@drawable/ic_info_white_20dp" />
+                            android:src="@drawable/ic_info_content" />
                     </LinearLayout>
 
                     <TextView
@@ -168,8 +178,8 @@
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnSpeedReset"
-                        android:layout_width="@dimen/dp_44"
-                        android:layout_height="@dimen/dp_28"
+                        android:layout_width="@dimen/dp_32"
+                        android:layout_height="@dimen/dp_24"
                         android:background="@drawable/btn_main_bg"
                         android:gravity="center"
                         android:stateListAnimator="@animator/btn_scale_animator"
@@ -220,17 +230,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvSpeedSetResult"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_4"
-                android:text=""
-                android:textColor="@color/accent_warning"
-                android:textSize="@dimen/sp_12"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutSpeedBlock" />
-
             <!-- 音调调节区块：用于调节语音朗读音调。参见术语表PitchBlock -->
             <LinearLayout
                 android:id="@+id/layoutPitchBlock"
@@ -240,7 +239,7 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvSpeedSetResult">
+                app:layout_constraintTop_toBottomOf="@id/layoutSpeedBlock">
 
                 <!-- 第一行：标题、数值、重置 -->
                 <LinearLayout
@@ -264,13 +263,12 @@
 
                         <ImageView
                             android:id="@+id/ivPitchInfo"
-                            android:layout_width="@dimen/dp_20"
-                            android:layout_height="@dimen/dp_20"
-                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
                             android:clickable="true"
                             android:contentDescription="@string/test_mode_info_title"
                             android:focusable="true"
-                            android:src="@drawable/ic_info_white_20dp" />
+                            android:src="@drawable/ic_info_content" />
                     </LinearLayout>
 
                     <TextView
@@ -299,8 +297,8 @@
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnPitchReset"
-                        android:layout_width="@dimen/dp_44"
-                        android:layout_height="@dimen/dp_28"
+                        android:layout_width="@dimen/dp_32"
+                        android:layout_height="@dimen/dp_24"
                         android:background="@drawable/btn_main_bg"
                         android:gravity="center"
                         android:stateListAnimator="@animator/btn_scale_animator"
@@ -351,17 +349,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvPitchSetResult"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_4"
-                android:text=""
-                android:textColor="@color/accent_warning"
-                android:textSize="@dimen/sp_12"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutPitchBlock" />
-
             <!-- 语言选择区块：用于选择朗读语言。参见术语表LanguageBlock -->
             <!-- 发音人选择区块：用于选择朗读发音人。参见术语表VoiceBlock -->
             <LinearLayout
@@ -372,7 +359,7 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvPitchSetResult">
+                app:layout_constraintTop_toBottomOf="@id/layoutPitchBlock">
 
                 <!-- 第一行：语言 -->
                 <LinearLayout
@@ -397,13 +384,12 @@
 
                         <ImageView
                             android:id="@+id/ivLangSupportInfo"
-                            android:layout_width="@dimen/dp_20"
-                            android:layout_height="@dimen/dp_20"
-                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
                             android:clickable="true"
                             android:contentDescription="@string/tts_support_info_title"
                             android:focusable="true"
-                            android:src="@drawable/ic_info_white_20dp" />
+                            android:src="@drawable/ic_info_content" />
                     </LinearLayout>
 
                     <Spinner
@@ -440,13 +426,12 @@
 
                         <ImageView
                             android:id="@+id/ivVoiceSupportInfo"
-                            android:layout_width="@dimen/dp_20"
-                            android:layout_height="@dimen/dp_20"
-                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
                             android:clickable="true"
                             android:contentDescription="@string/tts_support_info_title"
                             android:focusable="true"
-                            android:src="@drawable/ic_info_white_20dp" />
+                            android:src="@drawable/ic_info_content" />
                     </LinearLayout>
 
                     <Spinner
@@ -463,8 +448,8 @@
                 <!-- 第三行：重置按钮 -->
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnLangVoiceReset"
-                    android:layout_width="@dimen/dp_44"
-                    android:layout_height="@dimen/dp_28"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_24"
                     android:layout_gravity="end"
                     android:background="@drawable/btn_main_bg"
                     android:gravity="center"
@@ -562,6 +547,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layoutSaveAudioRow" />
 
+            <!-- 设置TTS信息保存目录按钮：仅在测试模式下显示 -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSetTtsInfoDir"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_48"
+                android:layout_marginTop="@dimen/dp_16"
+                android:background="@drawable/btn_main_bg"
+                android:stateListAnimator="@animator/btn_scale_animator"
+                android:text="@string/btn_set_tts_info_dir"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnSetSaveDir" />
+
+            <!-- 立即输出TTS信息按钮：仅在测试模式下显示 -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnOutputTtsInfoNow"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_48"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@drawable/btn_main_bg"
+                android:stateListAnimator="@animator/btn_scale_animator"
+                android:text="@string/btn_output_tts_info_now"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnSetTtsInfoDir" />
+
             <!-- 状态信息区块：展示TTS引擎状态、音频保存目录、朗读状态等信息。参见术语表StatusInfoBlock -->
             <LinearLayout
                 android:layout_width="0dp"
@@ -573,7 +590,7 @@
                 android:padding="@dimen/dp_16"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnSetSaveDir">
+                app:layout_constraintTop_toBottomOf="@id/btnOutputTtsInfoNow">
 
                 <!-- 状态大标题 -->
                 <TextView
@@ -678,6 +695,44 @@
                         android:src="@drawable/ic_copy"
                         android:visibility="gone" />
                 </LinearLayout>
+                
+                <!-- TTS信息保存目录区块：仅测试模式下显示 -->
+                <LinearLayout
+                    android:id="@+id/layoutTtsInfoDir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_tts_info_save_dir"
+                        android:textColor="@color/text_secondary_dark"
+                        android:textSize="@dimen/sp_13"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvTtsInfoSaveDir"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:textColor="@color/gray_666"
+                        android:textSize="@dimen/sp_13" />
+
+                    <ImageButton
+                        android:id="@+id/btnCopyTtsInfoDir"
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_marginStart="@dimen/dp_8"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/btn_copy_path"
+                        android:src="@drawable/ic_copy"
+                        android:visibility="gone" />
+                </LinearLayout>
+                
                 <!-- 语音合成状态区块：显示当前朗读/保存状态 -->
                 <LinearLayout
                     android:layout_width="match_parent"

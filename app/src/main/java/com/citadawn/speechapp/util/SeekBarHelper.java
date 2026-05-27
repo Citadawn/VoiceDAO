@@ -2,6 +2,9 @@ package com.citadawn.speechapp.util;
 
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * SeekBar 工具类
  * 提供简化的 SeekBar 监听器设置方法，统一管理 SeekBar 交互逻辑
@@ -17,10 +20,10 @@ public class SeekBarHelper {
      * @param onStartTrackingTouch 开始触摸回调
      * @param onStopTrackingTouch  停止触摸回调
      */
-    public static void setSeekBarListener(SeekBar seekBar,
-                                          OnProgressChangedListener onProgressChanged,
-                                          OnTrackingTouchListener onStartTrackingTouch,
-                                          OnTrackingTouchListener onStopTrackingTouch) {
+    public static void setSeekBarListener(@NonNull SeekBar seekBar,
+                                          @Nullable OnProgressChangedListener onProgressChanged,
+                                          @Nullable OnTrackingTouchListener onStartTrackingTouch,
+                                          @Nullable OnTrackingTouchListener onStopTrackingTouch) {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -51,7 +54,7 @@ public class SeekBarHelper {
      * @param seekBar           要设置监听器的 SeekBar
      * @param onProgressChanged 进度变化回调
      */
-    public static void setSeekBarListener(SeekBar seekBar, OnProgressChangedListener onProgressChanged) {
+    public static void setSeekBarListener(@NonNull SeekBar seekBar, OnProgressChangedListener onProgressChanged) {
         setSeekBarListener(seekBar, onProgressChanged, null, null);
     }
 

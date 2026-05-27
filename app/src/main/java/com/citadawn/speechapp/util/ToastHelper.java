@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.citadawn.speechapp.R;
 
 /**
@@ -23,7 +25,7 @@ public class ToastHelper {
      * @param context      上下文
      * @param messageResId 消息资源ID
      */
-    public static void showShort(Context context, int messageResId) {
+    public static void showShort(@NonNull Context context, int messageResId) {
         showCustomToast(context, context.getString(messageResId));
     }
 
@@ -34,7 +36,7 @@ public class ToastHelper {
      * @param messageResId 消息资源ID
      * @param formatArgs   格式化参数
      */
-    public static void showShort(Context context, int messageResId, Object... formatArgs) {
+    public static void showShort(@NonNull Context context, int messageResId, Object... formatArgs) {
         showCustomToast(context, context.getString(messageResId, formatArgs));
     }
 
@@ -44,7 +46,7 @@ public class ToastHelper {
      * @param context 上下文
      * @param message 消息文本
      */
-    public static void showShort(Context context, String message) {
+    public static void showShort(@NonNull Context context, String message) {
         showCustomToast(context, message);
     }
 
@@ -54,7 +56,7 @@ public class ToastHelper {
      * @param context 上下文
      * @param message 消息文本
      */
-    private static void showCustomToast(Context context, String message) {
+    private static void showCustomToast(@NonNull Context context, String message) {
         // 创建自定义 Toast
         Toast toast = new Toast(context);
 

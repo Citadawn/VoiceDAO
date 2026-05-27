@@ -3,6 +3,8 @@ package com.citadawn.speechapp.util;
 import android.content.Context;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.citadawn.speechapp.R;
@@ -21,7 +23,7 @@ public class DialogHelper {
      * @param titleResId   标题资源ID
      * @param messageResId 消息资源ID
      */
-    public static void showInfoDialog(Context context, int titleResId, int messageResId) {
+    public static void showInfoDialog(@NonNull Context context, int titleResId, int messageResId) {
         // 获取消息文本并检查是否包含HTML标签
         String message = context.getString(messageResId);
         boolean isHtml = message.contains("<") && message.contains(">");
@@ -50,8 +52,8 @@ public class DialogHelper {
      * @param onConfirm   确认回调，参数为输入的文本
      * @param onCancel    取消回调
      */
-    public static void showInputDialog(Context context, int titleResId, String defaultText,
-                                       InputDialogCallback onConfirm, Runnable onCancel) {
+    public static void showInputDialog(@NonNull Context context, int titleResId, @Nullable String defaultText,
+                                       @Nullable InputDialogCallback onConfirm, @Nullable Runnable onCancel) {
         EditText input = new EditText(context);
         input.setText(defaultText);
         if (defaultText != null) {
@@ -81,7 +83,7 @@ public class DialogHelper {
      * @param messageResId 消息资源ID
      * @param onConfirm    确认回调
      */
-    public static void showConfirmCancelDialog(Context context, int messageResId, Runnable onConfirm) {
+    public static void showConfirmCancelDialog(@NonNull Context context, int messageResId, @Nullable Runnable onConfirm) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.dialog_title_warning)
                 .setMessage(messageResId)

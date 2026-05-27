@@ -1,5 +1,7 @@
 package com.citadawn.speechapp.ui.test;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +41,7 @@ public class TestManager {
      */
     private TestManager() {
         // 添加测试用例 - 使用资源ID，在MainActivity中动态设置
-        testCases.add(new TestCase("speed_pitch_failure", "", ""));
         testCases.add(new TestCase("log_tts_voices", "", ""));
-        // 删除彩蛋测试项，无需保留
     }
 
     // endregion
@@ -53,6 +53,7 @@ public class TestManager {
      *
      * @return TestManager实例
      */
+    @NonNull
     public static TestManager getInstance() {
         if (instance == null) {
             instance = new TestManager();
@@ -69,6 +70,7 @@ public class TestManager {
      *
      * @return 测试用例列表
      */
+    @NonNull
     public List<TestCase> getTestCases() {
         return testCases;
     }
@@ -96,6 +98,7 @@ public class TestManager {
      *
      * @return 已选中的测试用例列表
      */
+    @NonNull
     public List<TestCase> getSelectedTestCases() {
         List<TestCase> selected = new ArrayList<>();
         for (TestCase tc : testCases) {

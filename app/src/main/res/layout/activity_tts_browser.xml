@@ -4,8 +4,15 @@
     android:id="@+id/main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     android:orientation="vertical">
+
+    <!-- 状态栏占位区域，与 Toolbar 同色 -->
+    <View
+        android:id="@+id/statusBarBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/main_dark" />
 
     <!-- 工具栏 -->
     <androidx.appcompat.widget.Toolbar

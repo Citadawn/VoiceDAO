@@ -24,23 +24,12 @@ public class DialogHelper {
      * @param messageResId 消息资源ID
      */
     public static void showInfoDialog(@NonNull Context context, int titleResId, int messageResId) {
-        // 获取消息文本并检查是否包含HTML标签
         String message = context.getString(messageResId);
-        boolean isHtml = message.contains("<") && message.contains(">");
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+        new AlertDialog.Builder(context)
                 .setTitle(titleResId)
-                .setPositiveButton(R.string.dialog_button_ok, null);
-
-        if (isHtml) {
-            // 如果包含HTML标签，使用HTML格式显示
-            builder.setMessage(android.text.Html.fromHtml(message, android.text.Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            // 普通文本显示
-            builder.setMessage(messageResId);
-        }
-
-        builder.show();
+                .setMessage(HtmlBulletHelper.formatInfoMessage(context, message))
+                .setPositiveButton(R.string.dialog_button_ok, null)
+                .show();
     }
 
     /**

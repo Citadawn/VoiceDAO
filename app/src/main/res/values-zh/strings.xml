@@ -22,10 +22,11 @@
     <string name="dialog_button_ok">确定</string>
     <string name="message_save_failed">保存失败: %s</string>
     <string name="status_info_title">状态信息</string>
+    <string name="status_debug_section_title">调试信息</string>
     <string name="tip_reset_lang_voice">恢复默认语言和发音人</string>
     <string name="btn_set_save_dir">设置保存目录</string>
     <string name="btn_set_tts_info_dir">设置TTS信息保存目录</string>
-    <string name="btn_output_tts_info_now">输出TTS信息</string>
+    <string name="btn_output_tts_info_now">输出 TTS 引擎信息</string>
     <string name="btn_cancel_save">取消保存</string>
     <string name="toast_save_dir_set_success">保存目录设置成功</string>
     <string name="toast_save_dir_set_fail">保存目录设置失败</string>
@@ -44,17 +45,17 @@
     <string name="dialog_button_cancel_save">取消保存</string>
     <string name="dialog_message_cancel_save">确定要取消音频保存并删除文件吗？</string>
     <string name="dialog_title_editor_info">使用说明</string>
-    <string name="dialog_message_editor_info"><![CDATA[<b>📝 文本编辑功能</b><br/><br/>
+    <string name="dialog_message_editor_info"><![CDATA[<b>文本编辑功能</b><br/><br/>
 • 支持编辑、粘贴、整理大段文本<br/>
 • 便于朗读或保存音频文件<br/>
 • 支持多行滚动、复制、粘贴等操作<br/><br/>
 
-<b>🔘 按钮说明</b><br/><br/>
+<b>按钮说明</b><br/><br/>
 • <b>确定</b>：仅在内容修改后可用，点击后返回主界面<br/>
 • <b>清空</b>：需连续两次点击才真正清空，防止误操作<br/>
 • <b>返回</b>：不保存内容，直接退出编辑器<br/><br/>
 
-<b>💡 使用提示</b><br/><br/>
+<b>使用提示</b><br/><br/>
 建议在此编辑器中整理好文本内容，再返回主界面进行朗读或保存操作。]]></string>
     <string name="btn_clear">清空</string>
     <string name="btn_open_editor">编辑器</string>
@@ -65,6 +66,10 @@
     <string name="btn_save_audio">保存为音频</string>
     <string name="label_tts_engine_status">TTS引擎状态：</string>
     <string name="label_audio_save_dir">音频保存目录：</string>
+    <string name="btn_copy_path">复制路径</string>
+    <string name="btn_copy_text">复制文本</string>
+    <string name="toast_path_copied">路径已复制到剪贴板</string>
+    <string name="toast_text_copied">已复制到剪贴板</string>
     <string name="label_tts_info_save_dir">TTS信息保存目录：</string>
     <string name="label_tts_speak_status">语音合成状态：</string>
     <string name="title_text_editor">文本编辑器</string>
@@ -76,15 +81,13 @@
     <string name="menu_about">关于</string>
     <string name="menu_language">语言</string>
     <string name="dialog_title_language">选择语言</string>
-    <string name="language_follow_system">跟随系统</string>
+    <!-- 语言选项自称：各界面语言下均显示原文，不翻译 -->
     <string name="language_chinese">中文（简体）</string>
     <string name="language_english">English</string>
     <string name="toast_language_changed">语言切换成功</string>
     <string name="default_speed_value">1.00</string>
     <string name="default_pitch_value">1.00</string>
     <string name="colon">：</string>
-    <string name="btn_copy_path">复制路径</string>
-    <string name="toast_path_copied">路径已复制到剪贴板</string>
     <string name="label_tts_engine_info">TTS引擎：</string>
     <string name="tts_engine_unknown">未知</string>
     <string name="tts_engine_icon">TTS引擎图标</string>
@@ -95,10 +98,29 @@
     <string name="char_count">字数：%1$d/%2$d</string>
     <string name="clear">清空</string>
     <string name="clear_again">确认\n清空</string>
-    <string name="tts_prepare_read">准备开始朗读…</string>
-    <string name="tts_prepare_save">准备开始保存音频…</string>
-    <string name="tts_reading">正在朗读</string>
-    <string name="tts_saving">正在保存音频</string>
+    <string name="tts_status_engine_not_ready">引擎未就绪</string>
+    <string name="tts_status_idle">空闲</string>
+    <string name="tts_status_preparing_speak">准备朗读（已提交任务）…</string>
+    <string name="tts_status_preparing_save">准备保存音频（已提交任务）…</string>
+    <string name="tts_status_speaking">正在朗读</string>
+    <string name="tts_status_synthesizing">正在合成音频</string>
+    <string name="tts_status_copying">正在写入保存目录…</string>
+    <string name="tts_status_stopped_user">已手动停止</string>
+    <string name="tts_status_stopped_interrupted">朗读/合成已中断</string>
+    <string name="tts_status_error_speak">朗读失败：%1$s</string>
+    <string name="tts_status_error_save">合成失败：%1$s</string>
+    <string name="tts_status_error_copy">写入保存目录失败</string>
+    <string name="tts_status_error_generic">失败：%1$s</string>
+    <string name="tts_error_unknown">未知错误</string>
+    <string name="tts_error_network_timeout">网络超时</string>
+    <string name="tts_error_network">网络错误</string>
+    <string name="tts_error_invalid_request">无效请求</string>
+    <string name="tts_error_not_initialized">引擎未初始化</string>
+    <string name="tts_error_output">输出错误</string>
+    <string name="tts_error_service">服务错误</string>
+    <string name="tts_error_synthesis">合成错误</string>
+    <string name="tts_error_language_not_supported">语言不支持</string>
+    <string name="tts_error_voice_not_found">未找到发音人</string>
 
     <!-- TTS 浏览器相关字符串 -->
     <string name="tts_browser_title">TTS 浏览器</string>
@@ -138,36 +160,36 @@
     <string name="tts_browser_info">TTS浏览器信息</string>
     <string name="tts_browser_info_title">TTS浏览器</string>
     <string name="tts_browser_info_content"><![CDATA[
-        <b>🔍 TTS浏览器概述</b><br/><br/>
-        此TTS浏览器显示您设备上安装的所有可用TTS引擎，以及当前默认TTS引擎支持的语言和发音人。<br/><br/>
-        
-        <b>📋 功能特性：</b><br/>
-        • <b>引擎选项卡：</b>浏览所有已安装的TTS引擎，包括图标、名称和包信息<br/>
-        • <b>语言和发音人选项卡：</b>查看当前默认TTS引擎支持的语言、发音人详情和搜索功能<br/>
+        <b>TTS 浏览器概述</b><br/><br/>
+        此 TTS 浏览器显示您设备上安装的所有可用 TTS 引擎，以及当前默认 TTS 引擎支持的语言和发音人。<br/><br/>
+
+        <b>功能特性</b><br/>
+        • <b>引擎选项卡：</b>浏览所有已安装的 TTS 引擎，包括图标、名称和包信息<br/>
+        • <b>语言和发音人选项卡：</b>查看当前默认 TTS 引擎支持的语言、发音人详情和搜索功能<br/>
         • <b>搜索：</b>通过语言名称或语言标签快速查找特定语言<br/>
         • <b>智能排序：</b>默认引擎、语言和发音人会自动标记并优先显示<br/><br/>
-        
-        <b>🎵 音质等级说明：</b><br/>
+
+        <b>音质等级说明</b><br/>
         • <b>极低（100）：</b>可理解但不自然，机械感强<br/>
         • <b>低（200）：</b>不太像真人，但基本可用<br/>
         • <b>正常（300）：</b>标准音质，日常使用足够<br/>
         • <b>高（400）：</b>接近真人发音，自然度较高<br/>
         • <b>极高（500）：</b>几乎无法区分真人，最高质量<br/><br/>
-        
-        <b>⚡ 延迟等级说明：</b><br/>
+
+        <b>延迟等级说明</b><br/>
         • <b>极低（100）：</b>&lt;20ms，适合实时对话、游戏等<br/>
-        • <b>低（200）：</b>约20ms，适合交互式应用<br/>
-        • <b>正常（300）：</b>约50ms，适合一般朗读应用<br/>
-        • <b>高（400）：</b>约200ms，网络合成，质量优先<br/>
+        • <b>低（200）：</b>约 20ms，适合交互式应用<br/>
+        • <b>正常（300）：</b>约 50ms，适合一般朗读应用<br/>
+        • <b>高（400）：</b>约 200ms，网络合成，质量优先<br/>
         • <b>极高（500）：</b>&gt;200ms，网络合成，高质量<br/><br/>
-        
-        <b>🌐 支持情况说明：</b><br/>
-        • <b>🟢 完全支持：</b>完全支持该语言和地区，可直接使用<br/>
-        • <b>🟣 国家支持：</b>支持该语言和国家，但不一定支持具体地区<br/>
-        • <b>🔵 变体支持：</b>支持该语言、国家和特定变体<br/>
-        • <b>🟡 缺少数据：</b>缺少该语言的数据包，需在系统TTS设置中下载<br/>
-        • <b>⚪ 不支持：</b>TTS引擎不支持该语言<br/>
-        • <b>⚪ 未知：</b>无法确定支持情况
+
+        <b>支持情况说明</b><br/>
+        • <b>完全支持：</b>完全支持该语言和地区，可直接使用<br/>
+        • <b>国家支持：</b>支持该语言和国家，但不一定支持具体地区<br/>
+        • <b>变体支持：</b>支持该语言、国家和特定变体<br/>
+        • <b>缺少数据：</b>缺少该语言的数据包，需在系统 TTS 设置中下载<br/>
+        • <b>不支持：</b>TTS 引擎不支持该语言<br/>
+        • <b>未知：</b>无法确定支持情况
         ]]></string>
 
     <string name="not_set">未设置</string>
@@ -186,38 +208,57 @@
         <b>注意：</b>中文发音人也可以朗读英文，但发音可能不标准。
     ]]></string>
     <string name="tts_support_info_button">确定</string>
-    <string name="menu_test_mode">测试模式</string>
-    <string name="test_mode_title">测试模式</string>
-    <string name="test_mode_dialog_title">选择测试项</string>
-    <string name="test_mode_btn_start">测试</string>
+    <string name="test_mode_title">调试模式</string>
+    <string name="test_mode_dialog_title">调试面板</string>
+    <string name="test_mode_dialog_subtitle">勾选要启用的调试项，然后点击「启用」</string>
+    <string name="test_mode_btn_expand_all_short">展开全部说明</string>
+    <string name="test_mode_btn_collapse_all_short">收起全部说明</string>
+    <string name="test_mode_btn_start">启用</string>
+    <string name="test_mode_btn_start_with_count">启用（%1$d）</string>
     <string name="test_mode_btn_cancel">取消</string>
-    <string name="test_mode_toolbar_suffix">（测试模式）</string>
-    <string name="test_mode_exit">退出测试模式</string>
-    <string name="test_mode_exit_toast">已退出测试模式</string>
+    <string name="test_mode_toolbar_suffix">（调试模式）</string>
+    <string name="test_mode_exit">退出调试模式</string>
+    <string name="test_mode_exit_toast">已退出调试模式</string>
     <string name="test_mode_btn_expand_all_desc">展开全部描述</string>
     <string name="test_mode_btn_collapse_all_desc">收起全部描述</string>
-    <string name="test_mode_btn_expand_all_desc_tooltip">展开全部测试项描述</string>
-    <string name="test_mode_btn_collapse_all_desc_tooltip">收起全部测试项描述</string>
+    <string name="test_mode_btn_expand_all_desc_tooltip">展开全部调试项描述</string>
+    <string name="test_mode_btn_collapse_all_desc_tooltip">收起全部调试项描述</string>
 
-    <!-- 测试模式 - 输出TTS引擎语言和发音人 -->
-    <string name="test_case_log_tts_voices">输出TTS引擎语言和发音人</string>
+    <string name="debug_mode_tap_remaining">再点击 %1$d 次打开调试面板</string>
+
+    <!-- 调试模式 - 输出 TTS 引擎信息 -->
+    <string name="test_case_log_tts_voices">输出 TTS 引擎信息</string>
     <string name="test_case_log_tts_voices_desc">
-        启用后，点击“朗读”按钮，会将TTS引擎支持的所有语言及其发音人保存到文件（文件名格式：tts_info_[引擎名称].txt），并标注默认语言、默认发音人和当前TTS实例的voice对象。保存完成后会显示文件路径。</string>
+        启用后，主界面会显示「设置TTS信息保存目录」与「输出 TTS 引擎信息」按钮。点击「输出 TTS 引擎信息」将同时生成两个文件：tts_info_[引擎名称].txt（语言与发音人清单、默认语言/发音人及各语言默认发音人）与 tts_locales_[引擎名称].txt（各 Locale 的方法字段详情，供对象诊断）。display* 使用 LocaleHelper.getCurrentLocale()，与界面语言一致。保存目录见状态信息区块「TTS信息保存目录」。</string>
 
-    <!-- 测试模式信息 -->
-    <string name="test_mode_info_title">测试模式说明</string>
+    <!-- 调试模式 - 一键填入测试文本 -->
+    <string name="test_case_fill_test_text">一键填入测试文本</string>
+    <string name="test_case_fill_test_text_desc">启用后，主界面文本框下方会显示「一键填入测试文本」按钮。点击后将用内置长文中文样例替换当前输入，便于快速试读。</string>
+    <string name="btn_fill_test_text">一键填入测试文本</string>
+    <string name="toast_test_text_filled">已填入测试文本</string>
+    <!-- 调试模式 - 显示当前朗读 Voice -->
+    <string name="test_case_show_current_voice">显示当前 Voice</string>
+    <string name="test_case_show_current_voice_desc">启用后，在状态信息区块实时显示 TextToSpeech.getVoice() 返回的 Voice 对象（toString）。TTS 就绪后可见；切换发音人后自动更新。值右侧提供复制按钮。</string>
+    <string name="label_current_voice_debug">当前 Voice 对象：</string>
+    <string name="voice_debug_tts_not_ready">TTS 未就绪</string>
+    <string name="voice_debug_get_voice_null">getVoice() 返回 null</string>
+
+    <string name="debug_test_text_sample">叶凡注视他远去，忍不住一叹，古来多少人杰踏天路、寻长生，前仆后继，无怨无悔，可是而今却没有一个人成功，大都死在了途中。\n强大如他，而今也不过是在摸索，并没有真正不朽，只是在这条路上走的较远一些而已。\n不过正是这样一群无悔的人才让长生路绚烂多彩，帝尊号令神话时代，天皇太古万族称尊，狠人惊艳绝古今，无始大帝横扫九天十地，更有段德这样的大毅力者，一世又一世的肉身渡劫，要活出九世不同的人生，开创真正的轮回。\n他们或身死，或悲凉落幕，或依旧执着，或还在路上，绽放出了最为璀璨的光，在这条路上奏出了一曲铿锵战歌。\n宇宙空旷而寂静，却葬不下成仙路上的万古悲歌，遥望过去，一代又一代惊艳的人杰倒在了这条路上。\n仙路多悲歌！</string>
+
+    <!-- 调试模式信息 -->
+    <string name="test_mode_info_title">调试模式说明</string>
     <string name="test_mode_info_content"><![CDATA[
-        测试模式允许开发者测试应用程序的特定功能。<br/><br/>
+        调试模式允许开发者启用特定的诊断与调试功能。<br/><br/>
         <b>使用流程：</b><br/>
-        • 通过勾选复选框选择一个或多个测试项<br/>
-        • 测试按钮显示已选择的测试项数量<br/>
-        • 点击"测试"按钮开始选定的测试<br/>
-        • 界面会改变以指示测试模式已激活<br/><br/>
-        <b>测试功能：</b><br/>
-        • 测试模拟特定场景以验证功能<br/>
-        • 测试日志记录在Logcat中，标签为"TTS_TEST"<br/>
-        • 您可以随时从菜单退出测试模式<br/>
-        • 测试模式不影响正常的应用程序功能
+        • 在主界面左上角连续点击应用名称「语道」7 次，打开调试面板<br/>
+        • 通过勾选复选框选择一个或多个调试项<br/>
+        • 启用按钮显示已选择的调试项数量<br/>
+        • 点击「启用」按钮进入调试模式；已进入后仍可连点应用名称 7 次重新打开调试面板<br/>
+        • 界面会改变以指示调试模式已激活<br/><br/>
+        <b>调试功能：</b><br/>
+        • 可模拟特定场景或输出诊断信息<br/>
+        • 点击右上角 ⋮ 溢出菜单中的<b>退出调试模式</b>可退出<br/>
+        • 调试模式不影响正常的应用程序功能
     ]]></string>
 
     <!-- 语速和音调信息 -->
@@ -250,28 +291,32 @@
     ]]></string>
     <string name="icon_expand">▼</string>
     <string name="icon_collapse">▲</string>
-    <string name="label_selected_test_cases">当前选择的测试项：</string>
-    <string name="language_selection_info_title">语言选择说明</string>
-    <string name="language_selection_info_message">
-        当中文（简体）或English与系统语言相同时，该选项将被禁用。您仍可选择"跟随系统"来使用系统语言。</string>
+    <string name="label_selected_test_cases">当前启用的调试项：</string>
     <string name="toast_double_back_exit">再按一次返回键退出应用</string>
-    <string name="test_case_name">测试项名称</string>
-    <string name="test_case_description">测试项描述</string>
+    <string name="test_case_name">调试项名称</string>
+    <string name="test_case_description">调试项描述</string>
     <string name="toast_tts_engine_changed">TTS引擎已更改，正在重新初始化…</string>
 
-    <!-- TTS测试输出标签 -->
+    <!-- TTS 调试输出标签 -->
     <string name="test_header_separator">==== TTS引擎支持的语言和发音人 ====</string>
     <string name="test_footer_separator">===============================================</string>
     <string name="test_default_language">默认语言</string>
     <string name="test_default_voice">默认发音人</string>
-    <string name="test_current_tts_voice">当前TTS发音人</string>
     <string name="test_language_label">[语言]</string>
     <string name="test_voice_label">发音人</string>
     <string name="test_default_marker">默认</string>
     <string name="test_default_for_language">该语言的默认发音人</string>
     <string name="test_tts_not_ready">TTS引擎未就绪</string>
-    <string name="test_save_success">TTS信息已保存到文件</string>
+    <string name="test_save_success">TTS信息已保存</string>
+    <string name="test_save_engine_debug_both">已保存 tts_info 与 tts_locales 两个文件</string>
+    <string name="test_save_engine_debug_info_only">仅 tts_info 保存成功，tts_locales 保存失败</string>
+    <string name="test_save_engine_debug_locales_only">仅 tts_locales 保存成功，tts_info 保存失败</string>
     <string name="test_save_failed">保存失败</string>
+    <string name="test_locales_header">==== getAvailableLanguages() · Locale 字段详情 ====</string>
+    <string name="test_locales_app_locale_note">本文件与 tts_info 分文件存放。display* (getXxx(Locale)) 使用 LocaleHelper.getCurrentLocale：%1$s</string>
+    <string name="test_locales_footer">===============================================</string>
+    <string name="test_locales_count">数量：%1$d</string>
+    <string name="test_locales_section_available">--- getAvailableLanguages() ---</string>
 
 
 </resources>

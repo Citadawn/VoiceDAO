@@ -2,20 +2,27 @@
     <dimen name="dp_2">2dp</dimen>
     <dimen name="dp_4">4dp</dimen>
     <dimen name="dp_8">8dp</dimen>
+    <!-- 调试面板列表：滚动条宽度与右侧留白（滚动条在卡片边框外侧） -->
+    <dimen name="debug_panel_scrollbar_width">4dp</dimen>
+    <dimen name="debug_panel_list_scroll_gutter">10dp</dimen>
     <dimen name="dp_12">12dp</dimen>
     <dimen name="dp_16">16dp</dimen>
     <dimen name="dp_20">20dp</dimen>
     <dimen name="dp_28">28dp</dimen>
     <dimen name="dp_24">24dp</dimen>
     <dimen name="dp_32">32dp</dimen>
+    <dimen name="dp_36">36dp</dimen>
 
     <dimen name="dp_64">64dp</dimen>
+    <dimen name="dp_120">120dp</dimen>
     <dimen name="dp_44">44dp</dimen>
     <dimen name="dp_48">48dp</dimen>
     <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_13">13sp</dimen>
     <dimen name="sp_14">14sp</dimen>
+    <dimen name="sp_15">15sp</dimen>
     <dimen name="sp_16">16sp</dimen>
     <dimen name="sp_18">18sp</dimen>
+    <dimen name="sp_20">20sp</dimen>
     <dimen name="sp_22">22sp</dimen>
 </resources> 

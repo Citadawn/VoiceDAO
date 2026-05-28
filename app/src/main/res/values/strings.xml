@@ -19,10 +19,11 @@
     <string name="dialog_button_ok" tools:ignore="MissingTranslation">OK</string>
     <string name="message_save_failed" tools:ignore="MissingTranslation">Save failed: %s</string>
     <string name="status_info_title" tools:ignore="MissingTranslation">Status Info</string>
+    <string name="status_debug_section_title" tools:ignore="MissingTranslation">Debug Info</string>
     <string name="tip_reset_lang_voice" tools:ignore="MissingTranslation">Restore default language and voice</string>
     <string name="btn_set_save_dir" tools:ignore="MissingTranslation">Set Save Directory</string>
     <string name="btn_set_tts_info_dir" tools:ignore="MissingTranslation">Set TTS Info Directory</string>
-    <string name="btn_output_tts_info_now" tools:ignore="MissingTranslation">Output TTS Info</string>
+    <string name="btn_output_tts_info_now" tools:ignore="MissingTranslation">Export TTS Engine Info</string>
     <string name="btn_cancel_save" tools:ignore="MissingTranslation">Cancel Save</string>
     <string name="toast_save_dir_set_success" tools:ignore="MissingTranslation">Save directory set successfully</string>
     <string name="toast_save_dir_set_fail" tools:ignore="MissingTranslation">Failed to set save directory</string>
@@ -41,17 +42,17 @@
     <string name="dialog_button_cancel_save" tools:ignore="MissingTranslation">Cancel Save</string>
     <string name="dialog_message_cancel_save" tools:ignore="MissingTranslation">Are you sure you want to cancel audio saving and delete the file?</string>
     <string name="dialog_title_editor_info" tools:ignore="MissingTranslation">Instructions</string>
-    <string name="dialog_message_editor_info" tools:ignore="MissingTranslation"><![CDATA[<b>📝 Text Editing Features</b><br/><br/>
+    <string name="dialog_message_editor_info" tools:ignore="MissingTranslation"><![CDATA[<b>Text Editing Features</b><br/><br/>
 • Edit, paste, and organize large texts<br/>
 • Convenient for reading or saving audio files<br/>
 • Supports multi-line scrolling, copy, paste, and other operations<br/><br/>
 
-<b>🔘 Button Instructions</b><br/><br/>
+<b>Button Instructions</b><br/><br/>
 • <b>OK</b>: Only available after content is modified, returns content to main screen<br/>
 • <b>Clear</b>: Requires two consecutive clicks to actually clear, prevents accidental operation<br/>
 • <b>Back</b>: Does not save content, exits editor directly<br/><br/>
 
-<b>💡 Usage Tips</b><br/><br/>
+<b>Usage Tips</b><br/><br/>
 It is recommended to organize your text content in this editor before returning to the main screen for reading or saving operations.]]></string>
     <string name="btn_clear" tools:ignore="MissingTranslation">Clear</string>
     <string name="btn_open_editor" tools:ignore="MissingTranslation">Editor</string>
@@ -62,6 +63,10 @@ It is recommended to organize your text content in this editor before returning 
     <string name="btn_save_audio" tools:ignore="MissingTranslation">Save as Audio</string>
     <string name="label_tts_engine_status" tools:ignore="MissingTranslation">TTS Engine Status:</string>
     <string name="label_audio_save_dir" tools:ignore="MissingTranslation">Audio Save Directory:</string>
+    <string name="btn_copy_path" tools:ignore="MissingTranslation">Copy path</string>
+    <string name="btn_copy_text" tools:ignore="MissingTranslation">Copy text</string>
+    <string name="toast_path_copied" tools:ignore="MissingTranslation">Path copied to clipboard</string>
+    <string name="toast_text_copied" tools:ignore="MissingTranslation">Copied to clipboard</string>
     <string name="label_tts_info_save_dir" tools:ignore="MissingTranslation">TTS Info Directory:</string>
     <string name="label_tts_speak_status" tools:ignore="MissingTranslation">Speech Synthesis Status:</string>
     <string name="title_text_editor" tools:ignore="MissingTranslation">Text Editor</string>
@@ -73,8 +78,8 @@ It is recommended to organize your text content in this editor before returning 
     <string name="menu_about" tools:ignore="MissingTranslation">About</string>
     <string name="menu_language" tools:ignore="MissingTranslation">Language</string>
     <string name="dialog_title_language" tools:ignore="MissingTranslation">Select Language</string>
-    <string name="language_follow_system" tools:ignore="MissingTranslation">Follow System</string>
-    <string name="language_chinese" tools:ignore="MissingTranslation">Chinese (Simplified)</string>
+    <!-- 语言选项自称：各界面语言下均显示原文，不翻译 -->
+    <string name="language_chinese" tools:ignore="MissingTranslation">中文（简体）</string>
     <string name="language_english" tools:ignore="MissingTranslation">English</string>
     <string name="toast_language_changed" tools:ignore="MissingTranslation">Language changed successfully</string>
 
@@ -109,8 +114,6 @@ It is recommended to organize your text content in this editor before returning 
     <string name="default_speed_value" tools:ignore="MissingTranslation">1.00</string>
     <string name="default_pitch_value" tools:ignore="MissingTranslation">1.00</string>
     <string name="colon" tools:ignore="MissingTranslation">:</string>
-    <string name="btn_copy_path" tools:ignore="MissingTranslation">Copy Path</string>
-    <string name="toast_path_copied" tools:ignore="MissingTranslation">Path copied to clipboard</string>
     <string name="label_tts_engine_info" tools:ignore="MissingTranslation">TTS Engine:</string>
     <string name="tts_engine_unknown" tools:ignore="MissingTranslation">Unknown</string>
     <string name="tts_engine_icon" tools:ignore="MissingTranslation">TTS Engine Icon</string>
@@ -124,36 +127,36 @@ It is recommended to organize your text content in this editor before returning 
     <string name="tts_browser_info" tools:ignore="MissingTranslation">TTS Browser Info</string>
     <string name="tts_browser_info_title" tools:ignore="MissingTranslation">TTS Browser</string>
     <string name="tts_browser_info_content" tools:ignore="MissingTranslation"><![CDATA[
-        <b>🔍 TTS Browser Overview</b><br/><br/>
+        <b>TTS Browser Overview</b><br/><br/>
         This TTS Browser displays all available TTS engines installed on your device, as well as languages and voices supported by the current default TTS engine.<br/><br/>
-        
-        <b>📋 Features:</b><br/>
+
+        <b>Features</b><br/>
         • <b>Engines Tab:</b> Browse all installed TTS engines with their icons, names, and package information<br/>
         • <b>Languages &amp; Voices Tab:</b> View languages and voices supported by the current default TTS engine, including details and search functionality<br/>
         • <b>Search:</b> Quickly find specific languages by language name or language tag<br/>
         • <b>Smart Sorting:</b> Default engines, languages, and voices are automatically marked and prioritized<br/><br/>
-        
-        <b>🎵 Quality Level Guide:</b><br/>
+
+        <b>Quality Level Guide</b><br/>
         • <b>Very Low (100):</b> Understandable but unnatural, mechanical<br/>
         • <b>Low (200):</b> Not very human-like, but usable<br/>
         • <b>Normal (300):</b> Standard quality, sufficient for daily use<br/>
         • <b>High (400):</b> Close to human speech, more natural<br/>
         • <b>Very High (500):</b> Almost indistinguishable from human, highest quality<br/><br/>
-        
-        <b>⚡ Latency Level Guide:</b><br/>
+
+        <b>Latency Level Guide</b><br/>
         • <b>Very Low (100):</b> &lt;20ms, suitable for real-time conversations, games<br/>
         • <b>Low (200):</b> ~20ms, suitable for interactive applications<br/>
         • <b>Normal (300):</b> ~50ms, suitable for general reading applications<br/>
         • <b>High (400):</b> ~200ms, network synthesis, quality priority<br/>
         • <b>Very High (500):</b> &gt;200ms, network synthesis, high quality<br/><br/>
-        
-        <b>🌐 Support Status Guide:</b><br/>
-        • <b>🟢 Available:</b> Fully supported language and region, ready to use<br/>
-        • <b>🟣 Country Available:</b> Supports language and country, but not necessarily specific regions<br/>
-        • <b>🔵 Variant Available:</b> Supports language, country and specific variants<br/>
-        • <b>🟡 Missing Data:</b> Missing language data package, need to download in system TTS settings<br/>
-        • <b>⚪ Not Supported:</b> TTS engine does not support this language<br/>
-        • <b>⚪ Unknown:</b> Unable to determine support status
+
+        <b>Support Status Guide</b><br/>
+        • <b>Available:</b> Fully supported language and region, ready to use<br/>
+        • <b>Country Available:</b> Supports language and country, but not necessarily specific regions<br/>
+        • <b>Variant Available:</b> Supports language, country and specific variants<br/>
+        • <b>Missing Data:</b> Missing language data package, need to download in system TTS settings<br/>
+        • <b>Not Supported:</b> TTS engine does not support this language<br/>
+        • <b>Unknown:</b> Unable to determine support status
     ]]></string>
 
     <string name="minus" tools:ignore="MissingTranslation">-</string>
@@ -162,10 +165,29 @@ It is recommended to organize your text content in this editor before returning 
     <string name="char_count" tools:ignore="MissingTranslation">Char count: %1$d/%2$d</string>
     <string name="clear">Clear</string>
     <string name="clear_again">Confirm\nClear</string>
-    <string name="tts_prepare_read">Preparing to start reading…</string>
-    <string name="tts_prepare_save">Preparing to start saving audio…</string>
-    <string name="tts_reading">Reading</string>
-    <string name="tts_saving">Saving audio</string>
+    <string name="tts_status_engine_not_ready" tools:ignore="MissingTranslation">Engine not ready</string>
+    <string name="tts_status_idle" tools:ignore="MissingTranslation">Idle</string>
+    <string name="tts_status_preparing_speak" tools:ignore="MissingTranslation">Preparing speech (submitted)…</string>
+    <string name="tts_status_preparing_save" tools:ignore="MissingTranslation">Preparing save (submitted)…</string>
+    <string name="tts_status_speaking" tools:ignore="MissingTranslation">Speaking</string>
+    <string name="tts_status_synthesizing" tools:ignore="MissingTranslation">Synthesizing audio</string>
+    <string name="tts_status_copying" tools:ignore="MissingTranslation">Writing to save directory…</string>
+    <string name="tts_status_stopped_user" tools:ignore="MissingTranslation">Stopped manually</string>
+    <string name="tts_status_stopped_interrupted" tools:ignore="MissingTranslation">Speech/synthesis interrupted</string>
+    <string name="tts_status_error_speak" tools:ignore="MissingTranslation">Speech failed: %1$s</string>
+    <string name="tts_status_error_save" tools:ignore="MissingTranslation">Synthesis failed: %1$s</string>
+    <string name="tts_status_error_copy" tools:ignore="MissingTranslation">Failed to write to save directory</string>
+    <string name="tts_status_error_generic" tools:ignore="MissingTranslation">Failed: %1$s</string>
+    <string name="tts_error_unknown" tools:ignore="MissingTranslation">Unknown error</string>
+    <string name="tts_error_network_timeout" tools:ignore="MissingTranslation">Network timeout</string>
+    <string name="tts_error_network" tools:ignore="MissingTranslation">Network error</string>
+    <string name="tts_error_invalid_request" tools:ignore="MissingTranslation">Invalid request</string>
+    <string name="tts_error_not_initialized" tools:ignore="MissingTranslation">Engine not initialized</string>
+    <string name="tts_error_output" tools:ignore="MissingTranslation">Output error</string>
+    <string name="tts_error_service" tools:ignore="MissingTranslation">Service error</string>
+    <string name="tts_error_synthesis" tools:ignore="MissingTranslation">Synthesis error</string>
+    <string name="tts_error_language_not_supported" tools:ignore="MissingTranslation">Language not supported</string>
+    <string name="tts_error_voice_not_found" tools:ignore="MissingTranslation">Voice not found</string>
     <string name="not_set">Not set</string>
     <string name="input_audio_filename">Input audio file name</string>
     <string name="save">Save</string>
@@ -182,36 +204,56 @@ It is recommended to organize your text content in this editor before returning 
         <b>Note:</b> Chinese voices can also read English, but the pronunciation may not be standard.
     ]]></string>
     <string name="tts_support_info_button" tools:ignore="MissingTranslation">OK</string>
-    <string name="menu_test_mode" tools:ignore="MissingTranslation">Test Mode</string>
-    <string name="test_mode_title" tools:ignore="MissingTranslation">Test Mode</string>
-    <string name="test_mode_dialog_title" tools:ignore="MissingTranslation">Select Test Items</string>
-    <string name="test_mode_btn_start" tools:ignore="MissingTranslation">Test</string>
+    <string name="test_mode_title" tools:ignore="MissingTranslation">Debug Mode</string>
+    <string name="test_mode_dialog_title" tools:ignore="MissingTranslation">Debug Panel</string>
+    <string name="test_mode_dialog_subtitle" tools:ignore="MissingTranslation">Select debug items to enable, then tap Enable</string>
+    <string name="test_mode_btn_expand_all_short" tools:ignore="MissingTranslation">Expand all details</string>
+    <string name="test_mode_btn_collapse_all_short" tools:ignore="MissingTranslation">Collapse all details</string>
+    <string name="test_mode_btn_start" tools:ignore="MissingTranslation">Enable</string>
+    <string name="test_mode_btn_start_with_count" tools:ignore="MissingTranslation">Enable (%1$d)</string>
     <string name="test_mode_btn_cancel" tools:ignore="MissingTranslation">Cancel</string>
-    <string name="test_mode_toolbar_suffix" tools:ignore="MissingTranslation">(Test Mode)</string>
-    <string name="test_mode_exit" tools:ignore="MissingTranslation">Exit Test Mode</string>
-    <string name="test_mode_exit_toast" tools:ignore="MissingTranslation">Exited test mode</string>
+    <string name="test_mode_toolbar_suffix" tools:ignore="MissingTranslation">(Debug Mode)</string>
+    <string name="test_mode_exit" tools:ignore="MissingTranslation">Exit Debug Mode</string>
+    <string name="test_mode_exit_toast" tools:ignore="MissingTranslation">Exited debug mode</string>
     <string name="test_mode_btn_expand_all_desc" tools:ignore="MissingTranslation">Expand All Descriptions</string>
     <string name="test_mode_btn_collapse_all_desc" tools:ignore="MissingTranslation">Collapse All Descriptions</string>
-    <string name="test_mode_btn_expand_all_desc_tooltip" tools:ignore="MissingTranslation">Expand all test case descriptions</string>
-    <string name="test_mode_btn_collapse_all_desc_tooltip" tools:ignore="MissingTranslation">Collapse all test case descriptions</string>
+    <string name="test_mode_btn_expand_all_desc_tooltip" tools:ignore="MissingTranslation">Expand all debug item descriptions</string>
+    <string name="test_mode_btn_collapse_all_desc_tooltip" tools:ignore="MissingTranslation">Collapse all debug item descriptions</string>
 
-    <!-- 测试模式 - 发音人信息 -->
-    <string name="test_case_log_tts_voices" tools:ignore="MissingTranslation">Log TTS Engine Voices</string>
-    <string name="test_case_log_tts_voices_desc" tools:ignore="MissingTranslation">When enabled, click the "Output TTS Info" button to save all supported languages and voices of the TTS engine to a file (filename format: tts_info_[engine_name].txt), with default language, default voice, and the current TTS instance\'s voice marked. The file path will be displayed after saving.</string>
+    <string name="debug_mode_tap_remaining" tools:ignore="MissingTranslation">%1$d more taps to open debug panel</string>
 
-    <!-- 测试模式信息 -->
-    <string name="test_mode_info_title" tools:ignore="MissingTranslation">Test Mode Instructions</string>
+    <!-- Debug mode - log TTS engine voices -->
+    <string name="test_case_log_tts_voices" tools:ignore="MissingTranslation">Export TTS Engine Info</string>
+    <string name="test_case_log_tts_voices_desc" tools:ignore="MissingTranslation">When enabled, the main screen shows Set TTS Info Directory and Export TTS Engine Info. One tap writes tts_info_[engine_name].txt (language and voice catalog with defaults) and tts_locales_[engine_name].txt (Locale method field details). display* uses LocaleHelper.getCurrentLocale(). See TTS Info Directory in the status block.</string>
+
+    <!-- Debug mode - fill test text -->
+    <string name="test_case_fill_test_text" tools:ignore="MissingTranslation">Fill Test Text</string>
+    <string name="test_case_fill_test_text_desc" tools:ignore="MissingTranslation">When enabled, the main screen shows Fill Test Text below the input field. Tap it to replace the current text with a built-in long English literary sample for quick TTS checks.</string>
+    <string name="btn_fill_test_text" tools:ignore="MissingTranslation">Fill Test Text</string>
+    <string name="toast_test_text_filled" tools:ignore="MissingTranslation">Test text filled</string>
+    <!-- Debug mode - show current speak Voice -->
+    <string name="test_case_show_current_voice" tools:ignore="MissingTranslation">Show Current Voice</string>
+    <string name="test_case_show_current_voice_desc" tools:ignore="MissingTranslation">When enabled, the status block shows Voice from TextToSpeech.getVoice() (toString) in real time after TTS is ready; updates when you change the voice. A copy button appears beside the value.</string>
+    <string name="label_current_voice_debug" tools:ignore="MissingTranslation">Current Voice object:</string>
+    <string name="voice_debug_tts_not_ready" tools:ignore="MissingTranslation">TTS not ready</string>
+    <string name="voice_debug_get_voice_null" tools:ignore="MissingTranslation">getVoice() returned null</string>
+
+    <string name="debug_test_text_sample" tools:ignore="MissingTranslation">Ye Fan watched him recede and could not help but sigh. Since antiquity, how many heroes have walked the path to heaven and sought immortality, pressing on one after another without regret—yet not one has succeeded today; most have died along the way.\nEven one as powerful as he is only groping forward now, not truly immortal, merely farther along this road than most.\nYet it is such unrepentant souls who have made the road to eternal life resplendent: the Emperor commanded the Mythic Age; the Heavenly Sovereign reigned when all clans of primordial times paid homage; the ruthless one astonished past and present; the Great Emperor Wu Shi swept the Nine Heavens and Ten Lands; and there was Duan De, a man of immense resolve, who crossed tribulation lifetime after lifetime in the flesh, seeking nine different lives to forge a true cycle of reincarnation.\nSome died; some ended in sorrow; some remain steadfast; some are still on the road—yet all burst forth with the most brilliant light, sounding a valiant anthem upon this path.\nThe cosmos is vast and silent, yet it cannot bury the eternal dirge along the path to divinity. Looking back, generation after generation of dazzling heroes have fallen upon this road.\nThe road to immortality is full of dirges!</string>
+
+    <!-- Debug mode info -->
+    <string name="test_mode_info_title" tools:ignore="MissingTranslation">Debug Mode Instructions</string>
     <string name="test_mode_info_content" tools:ignore="MissingTranslation"><![CDATA[
-        Test Mode allows developers to test specific functionality of the application.<br/><br/>
-        <b>Usage Process:</b><br/>
-        • Select one or more test items by checking the checkboxes<br/>
-        • The test button shows the number of selected items<br/>
-        • Click "Test" to start the selected tests<br/>
-        • The interface will change to indicate test mode is active<br/><br/>
-        <b>Test Features:</b><br/>
-        • Tests simulate specific scenarios to verify functionality<br/>
-        • You can exit test mode anytime from the menu<br/>
-        • Test mode does not affect normal app functionality
+        Debug Mode lets developers enable specific diagnostic and debugging features.<br/><br/>
+        <b>Usage:</b><br/>
+        • Tap the app name in the top-left corner 7 times to open the debug panel<br/>
+        • Select one or more debug items by checking the checkboxes<br/>
+        • The Enable button shows the number of selected items<br/>
+        • Tap Enable to enter debug mode; while active, tap the app name 7 times again to reopen the debug panel<br/>
+        • The interface changes to indicate debug mode is active<br/><br/>
+        <b>Debug features:</b><br/>
+        • Simulate specific scenarios or output diagnostic information<br/>
+        • Tap <b>Exit Debug Mode</b> in the top-right overflow menu (⋮) to leave debug mode<br/>
+        • Debug mode does not affect normal app functionality
     ]]></string>
 
     <!-- 语速和音调信息 -->
@@ -245,27 +287,32 @@ It is recommended to organize your text content in this editor before returning 
 
     <string name="icon_expand" tools:ignore="MissingTranslation">▼</string>
     <string name="icon_collapse" tools:ignore="MissingTranslation">▲</string>
-    <string name="label_selected_test_cases" tools:ignore="MissingTranslation">Selected Test Cases: </string>
-    <string name="language_selection_info_title" tools:ignore="MissingTranslation">Language Selection Info</string>
-    <string name="language_selection_info_message" tools:ignore="MissingTranslation">When Chinese (Simplified) or English matches the system language, that option will be disabled. You can still choose "Follow System" to use the system language.</string>
+    <string name="label_selected_test_cases" tools:ignore="MissingTranslation">Enabled debug items: </string>
     <string name="toast_double_back_exit" tools:ignore="MissingTranslation">Press back again to exit</string>
-    <string name="test_case_name">Test Case Name</string>
-    <string name="test_case_description">Test case description</string>
+    <string name="test_case_name">Debug Item Name</string>
+    <string name="test_case_description">Debug item description</string>
     <string name="toast_tts_engine_changed" tools:ignore="MissingTranslation">TTS engine changed, reinitializing…</string>
 
-    <!-- TTS测试输出标签 -->
+    <!-- TTS debug output labels -->
     <string name="test_header_separator" tools:ignore="MissingTranslation">==== TTS Engine Supported Languages and Voices ====</string>
     <string name="test_footer_separator" tools:ignore="MissingTranslation">===============================================</string>
     <string name="test_default_language" tools:ignore="MissingTranslation">Default Language</string>
     <string name="test_default_voice" tools:ignore="MissingTranslation">Default Voice</string>
-    <string name="test_current_tts_voice" tools:ignore="MissingTranslation">Current TTS Voice</string>
     <string name="test_language_label" tools:ignore="MissingTranslation">[Language]</string>
     <string name="test_voice_label" tools:ignore="MissingTranslation">Voice</string>
     <string name="test_default_marker" tools:ignore="MissingTranslation">DEFAULT</string>
     <string name="test_default_for_language" tools:ignore="MissingTranslation">DEFAULT for this language</string>
     <string name="test_tts_not_ready" tools:ignore="MissingTranslation">TTS engine not ready</string>
-    <string name="test_save_success" tools:ignore="MissingTranslation">TTS info saved to file</string>
+    <string name="test_save_success" tools:ignore="MissingTranslation">TTS info saved</string>
+    <string name="test_save_engine_debug_both" tools:ignore="MissingTranslation">Saved tts_info and tts_locales</string>
+    <string name="test_save_engine_debug_info_only" tools:ignore="MissingTranslation">tts_info saved; tts_locales failed</string>
+    <string name="test_save_engine_debug_locales_only" tools:ignore="MissingTranslation">tts_locales saved; tts_info failed</string>
     <string name="test_save_failed" tools:ignore="MissingTranslation">Save failed</string>
+    <string name="test_locales_header" tools:ignore="MissingTranslation">==== getAvailableLanguages() · Locale Field Details ====</string>
+    <string name="test_locales_app_locale_note" tools:ignore="MissingTranslation">Paired with tts_info in a separate file. display* uses LocaleHelper.getCurrentLocale: %1$s</string>
+    <string name="test_locales_footer" tools:ignore="MissingTranslation">===============================================</string>
+    <string name="test_locales_count" tools:ignore="MissingTranslation">Count: %1$d</string>
+    <string name="test_locales_section_available" tools:ignore="MissingTranslation">--- getAvailableLanguages() ---</string>
 
 
 </resources> 

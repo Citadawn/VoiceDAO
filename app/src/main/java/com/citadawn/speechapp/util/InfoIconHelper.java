@@ -5,8 +5,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.text.HtmlCompat;
-
 import com.citadawn.speechapp.R;
 
 /**
@@ -69,11 +67,7 @@ public class InfoIconHelper {
      */
     public static void showInfoDialog(@Nullable Context context, int titleResId, int contentResId) {
         if (context != null) {
-            new AlertDialog.Builder(context)
-                    .setTitle(titleResId)
-                    .setMessage(HtmlCompat.fromHtml(context.getString(contentResId), HtmlCompat.FROM_HTML_MODE_LEGACY))
-                    .setPositiveButton(R.string.tts_support_info_button, null)
-                    .show();
+            DialogHelper.showInfoDialog(context, titleResId, contentResId);
         }
     }
     // endregion

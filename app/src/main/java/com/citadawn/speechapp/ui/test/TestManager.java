@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 测试管理器单例类
- * 负责管理测试用例的创建、选择和状态控制
+ * 调试项管理器单例类
+ * 负责管理调试项的创建、选择和调试模式状态
  */
 public class TestManager {
 
@@ -23,12 +23,12 @@ public class TestManager {
     // region 成员变量
 
     /**
-     * 所有测试用例列表
+     * 所有调试项列表
      */
     private final List<TestCase> testCases = new ArrayList<>();
 
     /**
-     * 测试模式状态
+     * 调试模式状态
      */
     private boolean testMode = false;
 
@@ -37,11 +37,13 @@ public class TestManager {
     // region 构造方法
 
     /**
-     * 私有构造函数，初始化测试用例
+     * 私有构造函数，初始化调试项
      */
     private TestManager() {
-        // 添加测试用例 - 使用资源ID，在MainActivity中动态设置
+        // 添加调试项 - 使用资源 ID，在 MainActivity 中动态设置名称与描述
         testCases.add(new TestCase("log_tts_voices", "", ""));
+        testCases.add(new TestCase("fill_test_text", "", ""));
+        testCases.add(new TestCase("show_current_voice", "", ""));
     }
 
     // endregion
@@ -66,9 +68,9 @@ public class TestManager {
     // region 公开方法
 
     /**
-     * 获取所有测试用例列表
+     * 获取所有调试项列表
      *
-     * @return 测试用例列表
+     * @return 调试项列表
      */
     @NonNull
     public List<TestCase> getTestCases() {
@@ -76,27 +78,27 @@ public class TestManager {
     }
 
     /**
-     * 检查是否处于测试模式
+     * 检查是否处于调试模式
      *
-     * @return 是否处于测试模式
+     * @return 是否处于调试模式
      */
     public boolean isTestMode() {
         return testMode;
     }
 
     /**
-     * 设置测试模式状态
+     * 设置调试模式状态
      *
-     * @param enabled 是否启用测试模式
+     * @param enabled 是否启用调试模式
      */
     public void setTestMode(boolean enabled) {
         this.testMode = enabled;
     }
 
     /**
-     * 获取已选中的测试用例列表
+     * 获取已选中的调试项列表
      *
-     * @return 已选中的测试用例列表
+     * @return 已选中的调试项列表
      */
     @NonNull
     public List<TestCase> getSelectedTestCases() {
@@ -110,7 +112,7 @@ public class TestManager {
     }
 
     /**
-     * 重置所有测试用例的选择状态和测试模式
+     * 重置所有调试项的选择状态和调试模式
      */
     public void resetAll() {
         for (TestCase tc : testCases) {

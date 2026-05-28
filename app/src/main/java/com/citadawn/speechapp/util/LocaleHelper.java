@@ -18,9 +18,11 @@ import java.util.Locale;
 public class LocaleHelper {
     public static final String KEY_LANGUAGE_MODE = "language_mode";
     public static final String KEY_SELECTED_LOCALE = "selected_locale";
-    public static final int MODE_FOLLOW_SYSTEM = 0; // 跟随系统
-    public static final int MODE_MANUAL = 1; // 手动选择
-    public static final String LOCALE_ZH_CN = "zh-CN"; // 中文（简体）
+    /** 偏好值 0：读取时迁移为 {@link #MODE_MANUAL} 并映射为 zh-CN 或 en-US */
+    public static final int MODE_FOLLOW_SYSTEM = 0;
+    public static final int MODE_MANUAL = 1;
+    public static final String LOCALE_ZH_CN = "zh-CN";
+    public static final String LOCALE_EN_US = "en-US";
     // region 常量与模式
     private static final String TAG = "LocaleHelper";
     // endregion
@@ -32,13 +34,17 @@ public class LocaleHelper {
      */
     public static Locale getCurrentLocale(@NonNull Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
-        int languageMode = prefs.getInt(KEY_LANGUAGE_MODE, MODE_FOLLOW_SYSTEM);
+        int languageMode = prefs.getInt(KEY_LANGUAGE_MODE, MODE_MANUAL);
         if (languageMode == MODE_FOLLOW_SYSTEM) {
-            return getSystemLocale();
-        } else {
-            String localeString = prefs.getString(KEY_SELECTED_LOCALE, LOCALE_ZH_CN);
-            return parseLocaleString(localeString);
+            Locale migrated = resolveAppLocale(getSystemLocale());
+            prefs.edit()
+                    .putInt(KEY_LANGUAGE_MODE, MODE_MANUAL)
+                    .putString(KEY_SELECTED_LOCALE, localeToString(migrated))
+                    .apply();
+            return migrated;
         }
+        String localeString = prefs.getString(KEY_SELECTED_LOCALE, LOCALE_ZH_CN);
+        return parseLocaleString(localeString);
     }
 
     /**
@@ -46,7 +52,7 @@ public class LocaleHelper {
      */
     public static int getLanguageMode(@NonNull Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getInt(KEY_LANGUAGE_MODE, MODE_FOLLOW_SYSTEM);
+        return prefs.getInt(KEY_LANGUAGE_MODE, MODE_MANUAL);
     }
 
     /**
@@ -72,12 +78,13 @@ public class LocaleHelper {
     public static void setLanguageMode(@NonNull Context context, int mode, @Nullable Locale locale) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(KEY_LANGUAGE_MODE, mode);
-        if (mode == MODE_MANUAL && locale != null) {
-            editor.putString(KEY_SELECTED_LOCALE, localeToString(locale));
+        Locale targetLocale = locale;
+        if (mode == MODE_FOLLOW_SYSTEM || targetLocale == null) {
+            targetLocale = resolveAppLocale(getSystemLocale());
         }
+        editor.putInt(KEY_LANGUAGE_MODE, MODE_MANUAL);
+        editor.putString(KEY_SELECTED_LOCALE, localeToString(targetLocale));
         editor.apply();
-        Locale targetLocale = (mode == MODE_FOLLOW_SYSTEM) ? getSystemLocale() : locale;
         setLocale(context, targetLocale);
     }
     // endregion
@@ -145,6 +152,20 @@ public class LocaleHelper {
      */
     public static boolean isEnglish(@Nullable Locale locale) {
         return locale != null && "en".equals(locale.getLanguage());
+    }
+
+    /**
+     * 将系统语言映射为应用支持的界面语言（中文简体或英文）。
+     */
+    @NonNull
+    public static Locale resolveAppLocale(@NonNull Locale systemLocale) {
+        if (isChinese(systemLocale)) {
+            return parseLocaleString(LOCALE_ZH_CN);
+        }
+        if (isEnglish(systemLocale)) {
+            return parseLocaleString(LOCALE_EN_US);
+        }
+        return parseLocaleString(LOCALE_ZH_CN);
     }
     // endregion
 }

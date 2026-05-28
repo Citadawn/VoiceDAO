@@ -38,6 +38,7 @@ import com.citadawn.speechapp.util.LocaleHelper;
 import com.citadawn.speechapp.util.StatusBarHelper;
 import com.citadawn.speechapp.util.TtsEngineHelper;
 import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
+import com.citadawn.speechapp.util.TtsLocaleDisplayHelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -751,8 +752,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
 
             LanguageVoiceItem item = getItem(position);
 
-            // 设置语言信息，使用当前界面语言获取本地化名称
-            String languageName = item.locale.getDisplayName(LocaleHelper.getCurrentLocale(context));
+            Locale appLocale = LocaleHelper.getCurrentLocale(context);
+            String languageName = TtsLocaleDisplayHelper.getDisplayName(item.locale, appLocale,
+                    TtsLocaleDisplayHelper.voicesForLocale(tts.getVoices(), item.locale));
 
             // 如果是默认语言，添加默认标识
             if (item.voice == null && item.isDefaultLanguage) {
@@ -891,8 +893,10 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 items.addAll(allItems);
             } else {
                 // 过滤匹配的语言
+                Locale appLocale = LocaleHelper.getCurrentLocale(context);
                 for (LanguageVoiceItem item : allItems) {
-                    String languageName = item.locale.getDisplayName(LocaleHelper.getCurrentLocale(context))
+                    String languageName = TtsLocaleDisplayHelper.getDisplayName(item.locale, appLocale,
+                            TtsLocaleDisplayHelper.voicesForLocale(tts.getVoices(), item.locale))
                             .toLowerCase();
                     String languageTag = item.locale.toString().toLowerCase();
 
@@ -923,7 +927,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             for (int i = 0; i < items.size(); i++) {
                 LanguageVoiceItem item = items.get(i);
                 if (item.voice == null) { // 只为语言项创建索引，跳过发音人项
-                    String languageName = item.locale.getDisplayName(LocaleHelper.getCurrentLocale(context));
+                    Locale appLocale = LocaleHelper.getCurrentLocale(context);
+                    String languageName = TtsLocaleDisplayHelper.getDisplayName(item.locale, appLocale,
+                            TtsLocaleDisplayHelper.voicesForLocale(tts.getVoices(), item.locale));
                     if (!languageName.isEmpty()) {
                         String section = languageName.substring(0, 1).toUpperCase();
                         if (!section.equals(previousSection)) {

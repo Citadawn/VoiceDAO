@@ -26,6 +26,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/statusBarBackground"
+        app:popupTheme="@style/ThemeOverlay.VoiceDAO.Toolbar.Popup"
+        app:theme="@style/ThemeOverlay.VoiceDAO.Toolbar"
         app:title="@string/app_name" />
 
     <androidx.core.widget.NestedScrollView
@@ -111,6 +113,22 @@
                     android:text="@string/btn_open_editor" />
             </LinearLayout>
 
+            <!-- 一键填入测试文本：仅在启用对应调试项时显示 -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnFillTestText"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_48"
+                android:layout_marginTop="@dimen/dp_16"
+                android:background="@drawable/btn_debug_mode_bg"
+                android:stateListAnimator="@animator/btn_scale_animator"
+                android:text="@string/btn_fill_test_text"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editText" />
+
             <!-- 语速调节区块：用于调节语音朗读速度。参见术语表SpeedBlock -->
             <LinearLayout
                 android:id="@+id/layoutSpeedBlock"
@@ -120,7 +138,7 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editText">
+                app:layout_constraintTop_toBottomOf="@id/btnFillTestText">
 
                 <!-- 第一行：标题、数值、重置 -->
                 <LinearLayout
@@ -547,13 +565,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layoutSaveAudioRow" />
 
-            <!-- 设置TTS信息保存目录按钮：仅在测试模式下显示 -->
+            <!-- 设置TTS信息保存目录按钮：仅在调试模式下显示 -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSetTtsInfoDir"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_48"
                 android:layout_marginTop="@dimen/dp_16"
-                android:background="@drawable/btn_main_bg"
+                android:background="@drawable/btn_debug_mode_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_set_tts_info_dir"
                 android:textColor="@color/white"
@@ -563,13 +581,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btnSetSaveDir" />
 
-            <!-- 立即输出TTS信息按钮：仅在测试模式下显示 -->
+            <!-- 输出 TTS 引擎诊断信息（tts_info + tts_locales 两个文件）：仅在调试模式下显示 -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnOutputTtsInfoNow"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_48"
                 android:layout_marginTop="@dimen/dp_8"
-                android:background="@drawable/btn_main_bg"
+                android:background="@drawable/btn_debug_mode_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_output_tts_info_now"
                 android:textColor="@color/white"
@@ -661,82 +679,60 @@
                         android:textColor="@color/gray_666"
                         android:textSize="@dimen/sp_13" />
                 </LinearLayout>
-                <!-- 音频保存目录区块：显示当前音频保存路径 -->
+                <!-- 音频保存目录区块：未设置时标题与值同一行；有路径时路径独占一行并换行 -->
                 <LinearLayout
+                    android:id="@+id/layoutAudioSaveDirBlock"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_8"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvAudioSaveDirLabel"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/label_audio_save_dir"
                         android:textColor="@color/text_secondary_dark"
                         android:textSize="@dimen/sp_13"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvAudioSaveDir"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/layoutAudioSaveDirValueRow"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textColor="@color/gray_666"
-                        android:textSize="@dimen/sp_13" />
+                        android:layout_marginTop="@dimen/dp_4"
+                        android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/btnCopySaveDir"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
-                        android:layout_marginStart="@dimen/dp_8"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/btn_copy_path"
-                        android:src="@drawable/ic_copy"
-                        android:visibility="gone" />
+                        <TextView
+                            android:id="@+id/tvAudioSaveDir"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:breakStrategy="simple"
+                            android:ellipsize="none"
+                            android:text=""
+                            android:textColor="@color/gray_666"
+                            android:textSize="@dimen/sp_13" />
+
+                        <ImageButton
+                            android:id="@+id/btnCopySaveDir"
+                            android:layout_width="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_20"
+                            android:layout_gravity="top"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/btn_copy_path"
+                            android:src="@drawable/ic_copy"
+                            android:visibility="gone"
+                            app:tint="@color/gray_666" />
+                    </LinearLayout>
                 </LinearLayout>
-                
-                <!-- TTS信息保存目录区块：仅测试模式下显示 -->
-                <LinearLayout
-                    android:id="@+id/layoutTtsInfoDir"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_8"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_tts_info_save_dir"
-                        android:textColor="@color/text_secondary_dark"
-                        android:textSize="@dimen/sp_13"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvTtsInfoSaveDir"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textColor="@color/gray_666"
-                        android:textSize="@dimen/sp_13" />
-
-                    <ImageButton
-                        android:id="@+id/btnCopyTtsInfoDir"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
-                        android:layout_marginStart="@dimen/dp_8"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/btn_copy_path"
-                        android:src="@drawable/ic_copy"
-                        android:visibility="gone" />
-                </LinearLayout>
-                
                 <!-- 语音合成状态区块：显示当前朗读/保存状态 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_8"
                     android:orientation="horizontal">
 
                     <TextView
@@ -751,33 +747,180 @@
                         android:id="@+id/tvTtsSpeakStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tts_idle"
+                        android:text="@string/tts_status_idle"
                         android:textColor="@color/tts_support_full"
                         android:textSize="@dimen/sp_13" />
                 </LinearLayout>
-                <!-- 当前选择的测试项区块：仅测试模式下显示 -->
+
+                <!-- 调试状态分区：TTS 信息目录、当前 Voice、已启用调试项 -->
                 <LinearLayout
+                    android:id="@+id/layoutStatusDebugSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_8"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_selected_test_cases"
-                        android:textColor="@color/text_secondary_dark"
-                        android:textSize="@dimen/sp_13"
-                        android:textStyle="bold" />
+                        android:layout_marginBottom="@dimen/dp_8"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tvSelectedTestCases"
-                        android:layout_width="0dp"
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="#40FF5722" />
+
+                        <TextView
+                            android:id="@+id/tvStatusDebugSectionTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginEnd="@dimen/dp_8"
+                            android:background="?attr/colorSurface"
+                            android:paddingStart="@dimen/dp_4"
+                            android:paddingEnd="@dimen/dp_4"
+                            android:text="@string/status_debug_section_title"
+                            android:textColor="@color/debug_mode_accent"
+                            android:textSize="@dimen/sp_15"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="#40FF5722" />
+                    </LinearLayout>
+
+                    <!-- TTS信息保存目录：启用 log_tts_voices 时显示 -->
+                    <LinearLayout
+                        android:id="@+id/layoutTtsInfoDir"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textColor="@color/gray_666"
-                        android:textSize="@dimen/sp_13" />
+                        android:layout_marginBottom="@dimen/dp_8"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tvTtsInfoSaveDirLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_tts_info_save_dir"
+                            android:textColor="@color/debug_mode_accent"
+                            android:textSize="@dimen/sp_13"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/layoutTtsInfoSaveDirValueRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_4"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvTtsInfoSaveDir"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:breakStrategy="simple"
+                                android:ellipsize="none"
+                                android:text=""
+                                android:textColor="@color/debug_mode_accent"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageButton
+                                android:id="@+id/btnCopyTtsInfoDir"
+                                android:layout_width="@dimen/dp_20"
+                                android:layout_height="@dimen/dp_20"
+                                android:layout_gravity="top"
+                                android:layout_marginStart="@dimen/dp_8"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/btn_copy_path"
+                                android:src="@drawable/ic_copy"
+                                android:visibility="gone"
+                                app:tint="@color/debug_mode_accent" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- 当前 Voice：启用 show_current_voice 时显示 -->
+                    <LinearLayout
+                        android:id="@+id/layoutCurrentVoiceDebug"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_8"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tvCurrentVoiceDebugLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_current_voice_debug"
+                            android:textColor="@color/debug_mode_accent"
+                            android:textSize="@dimen/sp_13"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/layoutCurrentVoiceDebugValueRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_4"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvCurrentVoiceDebug"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:breakStrategy="simple"
+                                android:ellipsize="none"
+                                android:text=""
+                                android:textColor="@color/debug_mode_accent"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageButton
+                                android:id="@+id/btnCopyCurrentVoice"
+                                android:layout_width="@dimen/dp_20"
+                                android:layout_height="@dimen/dp_20"
+                                android:layout_gravity="top"
+                                android:layout_marginStart="@dimen/dp_8"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/btn_copy_text"
+                                android:src="@drawable/ic_copy"
+                                android:visibility="gone"
+                                app:tint="@color/debug_mode_accent" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- 当前启用的调试项：调试模式下显示 -->
+                    <LinearLayout
+                        android:id="@+id/layoutSelectedTestCases"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tvSelectedTestCasesLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_selected_test_cases"
+                            android:textColor="@color/debug_mode_accent"
+                            android:textSize="@dimen/sp_13"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvSelectedTestCases"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/debug_mode_accent"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>

@@ -11,6 +11,12 @@
     <color name="text_secondary_dark">#333333</color>
     <color name="text_highlight">#1A272727</color>
     <color name="accent_warning">#FF5722</color>
+    <!-- 调试模式统一强调色（工具栏、调试面板、调试按钮与状态项） -->
+    <color name="debug_mode_accent">#FF5722</color>
+    <color name="debug_mode_accent_pressed">#E64A19</color>
+    <color name="debug_mode_accent_surface">#0DFF5722</color>
+    <color name="debug_mode_panel_bg">#FFF3EE</color>
+    <color name="debug_mode_panel_content_bg">#FFFFFFFF</color>
     <color name="btn_warning_bg">#E53935</color> <!-- 红色警告按钮 -->
     <color name="btn_warning_pressed">#C62828</color> <!-- 按下时的深红色 -->
 

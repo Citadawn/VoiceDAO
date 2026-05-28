@@ -1,9 +1,26 @@
 <resources>
+    <!-- Toolbar 条上直接展示的 action（含溢出「⋮」图标）：深色条配浅色文字/图标 -->
+    <style name="ThemeOverlay.VoiceDAO.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="actionMenuTextColor">@color/pure_white</item>
+        <item name="android:actionMenuTextColor">@color/pure_white</item>
+        <item name="colorControlNormal">@color/pure_white</item>
+        <item name="android:textColorPrimary">@color/pure_white</item>
+    </style>
+
+    <!-- 点击「⋮」后的下拉列表：浅色底配深色文字（勿与 Toolbar 共用 Dark 叠层） -->
+    <style name="ThemeOverlay.VoiceDAO.Toolbar.Popup" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
+        <item name="colorControlNormal">@color/text_primary</item>
+    </style>
+
     <!-- 自定义Toolbar样式，适配所有版本 -->
     <style name="AppToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/main_dark</item>
         <item name="titleTextColor">@color/white</item>
         <item name="subtitleTextColor">@color/white</item>
+        <item name="theme">@style/ThemeOverlay.VoiceDAO.Toolbar</item>
+        <item name="popupTheme">@style/ThemeOverlay.VoiceDAO.Toolbar.Popup</item>
     </style>
 
     <!-- 应用主题，继承自MaterialComponents，适配日夜模式 -->

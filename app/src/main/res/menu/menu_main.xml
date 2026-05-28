@@ -14,12 +14,15 @@
         android:title="@string/menu_language"
         app:showAsAction="never" />
 
+    <!-- 调试模式下可见；仅出现在 ⋮ 溢出菜单，标题由 DebugModeUi 着色 -->
+    <item
+        android:id="@+id/action_exit_debug_mode"
+        android:title="@string/test_mode_exit"
+        android:visible="false"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_about"
         android:title="@string/menu_about"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_test_mode"
-        android:title="@string/menu_test_mode"
         app:showAsAction="never" />
 </menu> 

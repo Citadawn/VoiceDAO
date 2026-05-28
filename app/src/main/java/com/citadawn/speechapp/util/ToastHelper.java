@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.citadawn.speechapp.R;
 
@@ -17,7 +18,38 @@ import com.citadawn.speechapp.R;
  * 使用自定义布局，实现圆角矩形、白底黑字、阴影和内边距效果
  */
 public class ToastHelper {
+    @Nullable
+    private static Toast sLastToast;
+    @Nullable
+    private static TextView sLastToastTextView;
+
     // region 静态工具方法
+
+    /**
+     * 取消当前正在显示或排队中的 Toast。
+     */
+    public static void cancel() {
+        if (sLastToast != null) {
+            sLastToast.cancel();
+            sLastToast = null;
+            sLastToastTextView = null;
+        }
+    }
+
+    /**
+     * 若当前已有本工具显示的 Toast，则仅更新文案并重新展示；否则新建 Toast。
+     * 用于需要随操作连续刷新提示的场景。
+     */
+    public static void showOrUpdateShort(@NonNull Context context, @NonNull String message) {
+        if (sLastToast != null && sLastToastTextView != null) {
+            if (!message.contentEquals(sLastToastTextView.getText())) {
+                sLastToastTextView.setText(message);
+            }
+            sLastToast.show();
+            return;
+        }
+        showCustomToast(context, message);
+    }
 
     /**
      * 显示短时间 Toast 消息
@@ -57,7 +89,7 @@ public class ToastHelper {
      * @param message 消息文本
      */
     private static void showCustomToast(@NonNull Context context, String message) {
-        // 创建自定义 Toast
+        cancel();
         Toast toast = new Toast(context);
 
         // 设置显示时长为短时间
@@ -72,7 +104,8 @@ public class ToastHelper {
         // 设置自定义视图
         toast.setView(toastView);
 
-        // 显示 Toast
+        sLastToast = toast;
+        sLastToastTextView = textView;
         toast.show();
     }
 

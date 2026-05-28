@@ -120,7 +120,8 @@ public class TtsLanguageVoiceHelper {
         Map<String, Locale> displayNameToLocale = new java.util.LinkedHashMap<>();
         
         for (Locale locale : locales) {
-            String displayName = locale.getDisplayName(currentLocale);
+            String displayName = TtsLocaleDisplayHelper.getDisplayName(locale, currentLocale,
+                    TtsLocaleDisplayHelper.voicesForLocale(voices, locale));
             
             // 如果是默认语言，直接保留
             if (locale.equals(defaultLocale)) {
@@ -179,7 +180,11 @@ public class TtsLanguageVoiceHelper {
             }
 
             // 其他语言按显示名称排序，使用当前界面语言
-            return collator.compare(l1.getDisplayName(currentLocale), l2.getDisplayName(currentLocale));
+            return collator.compare(
+                    TtsLocaleDisplayHelper.getDisplayName(l1, currentLocale,
+                            TtsLocaleDisplayHelper.voicesForLocale(voices, l1)),
+                    TtsLocaleDisplayHelper.getDisplayName(l2, currentLocale,
+                            TtsLocaleDisplayHelper.voicesForLocale(voices, l2)));
         });
 
         return sortedLocales;
@@ -212,7 +217,9 @@ public class TtsLanguageVoiceHelper {
         Collator collator = Collator.getInstance();
         Locale currentLocale = com.citadawn.speechapp.util.LocaleHelper.getCurrentLocale(context);
         sortedLocales.sort((l1, l2) ->
-                collator.compare(l1.getDisplayName(currentLocale), l2.getDisplayName(currentLocale)));
+                collator.compare(
+                        TtsLocaleDisplayHelper.getDisplayName(l1, currentLocale),
+                        TtsLocaleDisplayHelper.getDisplayName(l2, currentLocale)));
 
         return sortedLocales;
     }

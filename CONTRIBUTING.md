@@ -415,7 +415,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHold
 
 - [项目主页](./README.md) - 项目概述和快速开始
 - [状态信息区块开发说明](./docs/guides/状态信息区块开发说明.md) - 状态信息开发规范
-- [测试模式添加测试项指南](./docs/guides/测试模式添加测试项指南.md) - 测试项开发步骤
+- [调试模式添加调试项指南](./docs/guides/调试模式添加调试项指南.md) - 调试项开发步骤
 - [API 参考文档](./docs/reference/) - 详细的 API 文档
 
 ## 问题反馈

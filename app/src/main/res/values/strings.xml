@@ -255,14 +255,20 @@
     <string name="speed_info_content" tools:ignore="MissingTranslation"><![CDATA[
         Speed controls how fast the text is read.<br/><br/>
         <b>Range:</b> 0.5x - 2.0x<br/>
-        <b>Default:</b> 1.0x (normal speed)
+        <b>Default:</b> 1.0x (normal speed)<br/><br/>
+        <b>Engine compatibility:</b><br/>
+        • Some TTS engines set speech rate internally; in-app speed controls may have no effect<br/>
+        • Adjust rate in the engine settings, or check the engine docs for app-side support
     ]]></string>
 
     <string name="pitch_info_title" tools:ignore="MissingTranslation">Pitch Instructions</string>
     <string name="pitch_info_content" tools:ignore="MissingTranslation"><![CDATA[
         Adjust reading pitch: higher values sound sharper; lower values sound deeper.<br/><br/>
         <b>Range:</b> 0.5x - 2.0x<br/>
-        <b>Default:</b> 1.0x (normal pitch)
+        <b>Default:</b> 1.0x (normal pitch)<br/><br/>
+        <b>Engine compatibility:</b><br/>
+        • Some TTS engines set pitch internally; in-app pitch controls may have no effect<br/>
+        • Adjust pitch in the engine settings, or check the engine docs for app-side support
     ]]></string>
 
     <!-- 发音人信息 -->

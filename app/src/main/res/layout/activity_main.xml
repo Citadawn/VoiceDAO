@@ -159,10 +159,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
+                        android:gravity="bottom"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tvSpeedLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/label_speed"
@@ -173,8 +174,7 @@
                             android:id="@+id/ivSpeedInfo"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_marginStart="1dp"
                             android:clickable="true"
                             android:contentDescription="@string/speed_info_title"
                             android:focusable="true"
@@ -293,10 +293,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
+                        android:gravity="bottom"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tvPitchLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/label_pitch"
@@ -307,10 +308,9 @@
                             android:id="@+id/ivPitchInfo"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_marginStart="1dp"
                             android:clickable="true"
-                            android:contentDescription="@string/test_mode_info_title"
+                            android:contentDescription="@string/pitch_info_title"
                             android:focusable="true"
                             android:src="@drawable/ic_info_content" />
 
@@ -429,10 +429,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
+                        android:gravity="bottom"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tvLanguageLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/label_language"
@@ -443,8 +444,7 @@
                             android:id="@+id/ivLangSupportInfo"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_marginStart="1dp"
                             android:clickable="true"
                             android:contentDescription="@string/tts_support_info_title"
                             android:focusable="true"
@@ -483,10 +483,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
+                        android:gravity="bottom"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tvVoiceLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/label_voice"
@@ -497,10 +498,9 @@
                             android:id="@+id/ivVoiceSupportInfo"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_marginStart="1dp"
                             android:clickable="true"
-                            android:contentDescription="@string/tts_support_info_title"
+                            android:contentDescription="@string/voice_info_title"
                             android:focusable="true"
                             android:src="@drawable/ic_info_content" />
 

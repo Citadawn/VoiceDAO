@@ -60,6 +60,7 @@ import com.citadawn.speechapp.util.ClearButtonHelper;
 import com.citadawn.speechapp.util.Constants;
 import com.citadawn.speechapp.util.DialogHelper;
 import com.citadawn.speechapp.util.InfoIconHelper;
+import com.citadawn.speechapp.util.InfoIconPositionHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
 import com.citadawn.speechapp.util.SeekBarHelper;
 import com.citadawn.speechapp.util.SystemBarsHelper;
@@ -782,8 +783,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 设置信息图标
         setupInfoIcons();
+        setupInfoIconPositions();
 
-        // 设置信息图标的动态位置
         ttsStatusRunnable = new Runnable() {
             @Override
             public void run() {
@@ -2114,6 +2115,22 @@ public class MainActivity extends AppCompatActivity {
                 new Object[]{findViewById(R.id.ivSpeedInfo), R.string.speed_info_title, R.string.speed_info_content},
                 new Object[]{findViewById(R.id.ivPitchInfo), R.string.pitch_info_title,
                         R.string.pitch_info_content});
+    }
+
+    /**
+     * 设置信息图标的动态位置（右上角上标对齐）
+     */
+    private void setupInfoIconPositions() {
+        findViewById(android.R.id.content).post(() -> {
+            InfoIconPositionHelper.setIconPosition(findViewById(R.id.ivSpeedInfo),
+                    findViewById(R.id.tvSpeedLabel));
+            InfoIconPositionHelper.setIconPosition(findViewById(R.id.ivPitchInfo),
+                    findViewById(R.id.tvPitchLabel));
+            InfoIconPositionHelper.setIconPosition(findViewById(R.id.ivLangSupportInfo),
+                    findViewById(R.id.tvLanguageLabel));
+            InfoIconPositionHelper.setIconPosition(findViewById(R.id.ivVoiceSupportInfo),
+                    findViewById(R.id.tvVoiceLabel));
+        });
     }
 
     /**

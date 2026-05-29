@@ -2,6 +2,7 @@ package com.citadawn.speechapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,10 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,7 +25,7 @@ import com.citadawn.speechapp.util.ButtonTextHelper;
 import com.citadawn.speechapp.util.ClearButtonHelper;
 import com.citadawn.speechapp.util.DialogHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
-import com.citadawn.speechapp.util.StatusBarHelper;
+import com.citadawn.speechapp.util.SystemBarsHelper;
 import com.citadawn.speechapp.util.TextLengthHelper;
 
 /**
@@ -45,9 +46,11 @@ public class TextEditorActivity extends AppCompatActivity {
     // region 成员变量
 
     private EditText editorEditText;
-    private Button btnEditorClear, btnEditorOk;
+    private Button btnEditorClear, btnEditorSave;
     private TextView tvEditorCharCount;
     private int maxCharCount;
+    private String originalText = "";
+    private int lastImeInsetBottom;
 
     // endregion
 
@@ -60,53 +63,65 @@ public class TextEditorActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // 应用用户选择的语言设置 Apply user selected language setting
         LocaleHelper.setLocale(this, LocaleHelper.getCurrentLocale(this));
 
         super.onCreate(savedInstanceState);
+        SystemBarsHelper.enable(this);
         setContentView(R.layout.activity_text_editor);
 
-        // 设置状态栏为透明，让内容延伸到状态栏下方
-        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
-        StatusBarHelper.setupStatusBar(getWindow());
+        Toolbar toolbar = findViewById(R.id.editorToolbar);
+        SystemBarsHelper.applyToolbarTopInsets(toolbar);
 
-        // 动态设置状态栏占位区域的高度
-        View statusBarBackground = findViewById(R.id.statusBarBackground);
         View rootContainer = findViewById(R.id.rootContainer);
+        View layoutEditorBottomBar = findViewById(R.id.layoutEditorBottomBar);
+        final int bottomBarBaseMargin = getResources().getDimensionPixelSize(R.dimen.dp_24);
         ViewCompat.setOnApplyWindowInsetsListener(rootContainer, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            ViewGroup.LayoutParams params = statusBarBackground.getLayoutParams();
-            if (params instanceof ConstraintLayout.LayoutParams) {
-                params.height = systemBars.top;
-                statusBarBackground.setLayoutParams(params);
+            Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
+            int bottomInset = Math.max(systemBars.bottom, ime.bottom);
+
+            v.setPadding(systemBars.left, 0, systemBars.right, 0);
+
+            ViewGroup.MarginLayoutParams barParams =
+                    (ViewGroup.MarginLayoutParams) layoutEditorBottomBar.getLayoutParams();
+            barParams.bottomMargin = bottomBarBaseMargin + bottomInset;
+            layoutEditorBottomBar.setLayoutParams(barParams);
+
+            if (ime.bottom > lastImeInsetBottom) {
+                scheduleScrollEditorToCursorIfNeeded();
             }
-            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            lastImeInsetBottom = ime.bottom;
+
             return insets;
         });
+        ViewCompat.requestApplyInsets(rootContainer);
 
-        Toolbar toolbar = findViewById(R.id.editorToolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         if (toolbar.getNavigationIcon() != null) {
             toolbar.getNavigationIcon().setTint(android.graphics.Color.WHITE);
         }
-        toolbar.setNavigationOnClickListener(v -> finish()); // 返回不保存
+        toolbar.setNavigationOnClickListener(v -> requestExit());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                requestExit();
+            }
+        });
 
         editorEditText = findViewById(R.id.editorEditText);
         btnEditorClear = findViewById(R.id.btnEditorClear);
-        btnEditorOk = findViewById(R.id.btnEditorOk);
+        btnEditorSave = findViewById(R.id.btnEditorSave);
         tvEditorCharCount = findViewById(R.id.tvEditorCharCount);
 
-        // 打开时显示传入内容
         String text = getIntent().getStringExtra(EXTRA_TEXT);
         if (text != null) {
             editorEditText.setText(text);
         }
-        // 记录原始文本
-        final String originalText = text == null ? "" : text;
-        btnEditorOk.setEnabled(false); // 初始禁用
+        originalText = text == null ? "" : text;
+        btnEditorSave.setEnabled(false);
 
-        // 根据内容动态启用/禁用清空按钮和确定按钮
         btnEditorClear.setEnabled(!editorEditText.getText().toString().isEmpty());
         maxCharCount = TextLengthHelper.getMaxTextLength();
         updateCharCount();
@@ -118,52 +133,32 @@ public class TextEditorActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
                 btnEditorClear.setEnabled(s.length() > 0);
-                btnEditorOk.setEnabled(!s.toString().equals(originalText));
-                updateCharCount();
+                btnEditorSave.setEnabled(!TextUtils.equals(s, originalText));
             }
 
             @Override
             public void afterTextChanged(android.text.Editable s) {
+                updateCharCount();
             }
         });
 
-        // 设置清空按钮逻辑（复用工具类）
         ClearButtonHelper.setupClearButton(btnEditorClear, editorEditText);
 
-        // 为编辑器按钮设置自动文本大小调整
-        ButtonTextHelper.setupAutoTextSize(btnEditorOk);
-        ButtonTextHelper.setupAutoTextSize(btnEditorClear);
+        ButtonTextHelper.setupAutoTextSize(btnEditorSave);
 
-        btnEditorOk.setOnClickListener(v -> {
-            Intent data = new Intent();
-            data.putExtra(EXTRA_TEXT, editorEditText.getText().toString());
-            setResult(RESULT_OK, data);
-            finish();
-        });
+        btnEditorSave.setOnClickListener(v -> saveAndFinish());
     }
 
     // endregion
 
     // region 菜单相关方法
 
-    /**
-     * 创建选项菜单
-     *
-     * @param menu 菜单对象
-     * @return 是否成功创建
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_text_editor, menu);
         return true;
     }
 
-    /**
-     * 处理菜单项选择事件
-     *
-     * @param item 选中的菜单项
-     * @return 是否已处理
-     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_editor_info) {
@@ -178,15 +173,68 @@ public class TextEditorActivity extends AppCompatActivity {
 
     // region 私有辅助方法
 
+    private boolean hasUnsavedChanges() {
+        return !editorEditText.getText().toString().equals(originalText);
+    }
+
+    private void saveAndFinish() {
+        Intent data = new Intent();
+        data.putExtra(EXTRA_TEXT, editorEditText.getText().toString());
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    private void requestExit() {
+        if (hasUnsavedChanges()) {
+            DialogHelper.showEditorUnsavedDialog(this, this::saveAndFinish, this::finish);
+        } else {
+            finish();
+        }
+    }
+
     /**
-     * 更新字符计数显示
-     * 当字符数超过限制时，当前数字会显示为红色
+     * 键盘弹出时将光标滚入可见区域；手动滚动文本时不打断用户。
      */
+    private void scheduleScrollEditorToCursorIfNeeded() {
+        if (editorEditText == null) {
+            return;
+        }
+        editorEditText.post(this::scrollEditorToCursor);
+    }
+
+    private void scrollEditorToCursor() {
+        if (editorEditText == null) {
+            return;
+        }
+        android.text.Layout layout = editorEditText.getLayout();
+        if (layout == null) {
+            return;
+        }
+        int selection = editorEditText.getSelectionStart();
+        if (selection < 0) {
+            return;
+        }
+        int line = layout.getLineForOffset(selection);
+        int lineBottom = layout.getLineBottom(line);
+        int lineTop = layout.getLineTop(line);
+        int visibleHeight = editorEditText.getHeight()
+                - editorEditText.getTotalPaddingTop()
+                - editorEditText.getTotalPaddingBottom();
+        if (visibleHeight <= 0) {
+            return;
+        }
+        int scrollY = editorEditText.getScrollY();
+        if (lineBottom - scrollY > visibleHeight) {
+            editorEditText.scrollTo(0, lineBottom - visibleHeight);
+        } else if (lineTop < scrollY) {
+            editorEditText.scrollTo(0, lineTop);
+        }
+    }
+
     private void updateCharCount() {
         int current = editorEditText.getText().length();
         String baseText = getString(R.string.char_count, current, maxCharCount);
         if (current > maxCharCount) {
-            // 只将当前字数部分标红
             String currentStr = String.valueOf(current);
             int start = baseText.indexOf(currentStr);
             int end = start + currentStr.length();
@@ -199,5 +247,6 @@ public class TextEditorActivity extends AppCompatActivity {
             tvEditorCharCount.setTextColor(ContextCompat.getColor(this, R.color.gray_666));
         }
     }
+
     // endregion
 }

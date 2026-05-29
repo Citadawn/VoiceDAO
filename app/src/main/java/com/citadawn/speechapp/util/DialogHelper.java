@@ -86,6 +86,24 @@ public class DialogHelper {
     }
 
     /**
+     * 文本编辑器退出确认：保存、不保存或留在当前页。
+     *
+     * @param onSave    点击「保存」
+     * @param onDiscard 点击「不保存」
+     */
+    public static void showEditorUnsavedDialog(@NonNull Context context,
+                                               @NonNull Runnable onSave,
+                                               @NonNull Runnable onDiscard) {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.dialog_title_warning)
+                .setMessage(R.string.dialog_message_editor_unsaved)
+                .setPositiveButton(R.string.save, (dialog, which) -> onSave.run())
+                .setNegativeButton(R.string.dialog_button_discard, (dialog, which) -> onDiscard.run())
+                .setNeutralButton(R.string.cancel, null)
+                .show();
+    }
+
+    /**
      * 输入对话框回调接口
      */
     public interface InputDialogCallback {

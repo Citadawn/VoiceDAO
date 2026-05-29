@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.citadawn.speechapp.R;
 import com.citadawn.speechapp.util.DialogHelper;
+import com.citadawn.speechapp.util.SystemBarsHelper;
 
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class TestModeDialog extends Dialog {
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setDimAmount(0.45f);
+            SystemBarsHelper.applySolidStatusBarForOverlay(window, getContext());
         }
 
         RecyclerView rvTestCases = findViewById(R.id.rvTestCases);

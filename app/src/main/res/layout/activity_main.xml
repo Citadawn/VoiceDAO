@@ -7,25 +7,27 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
 
-    <!-- 状态栏占位区域，与 Toolbar 同色 -->
+    <!-- 程序化焦点锚点：收起输入框焦点用，不参与布局与触摸 -->
     <View
-        android:id="@+id/statusBarBackground"
+        android:id="@+id/focusSink"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/main_dark"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:importantForAccessibility="no"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
         android:titleTextColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statusBarBackground"
+        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.VoiceDAO.Toolbar.Popup"
         app:theme="@style/ThemeOverlay.VoiceDAO.Toolbar"
         app:title="@string/app_name" />
@@ -35,6 +37,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +56,7 @@
             <!-- 你的页面内容（EditText等）全部放在这里，去掉Toolbar本身和外层NestedScrollView -->
 
             <!-- 文本编辑器：用于输入和编辑朗读文本。参见术语表TextEditor -->
-            <EditText
+            <com.citadawn.speechapp.ui.ManualScrollEditText
                 android:id="@+id/editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -60,17 +64,20 @@
                 android:background="@drawable/edittext_selector"
                 android:elevation="@dimen/dp_4"
                 android:fadeScrollbars="true"
-                android:gravity="top|start"
+                android:gravity="top"
                 android:hint="@string/hint_input_text"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
-                android:lines="3"
+                android:maxLines="8"
                 android:minHeight="80dp"
-                android:paddingStart="@dimen/dp_24"
-                android:paddingTop="@dimen/dp_20"
-                android:paddingEnd="@dimen/dp_24"
-                android:paddingBottom="@dimen/dp_20"
+                android:minLines="3"
+                android:overScrollMode="ifContentScrolls"
+                android:paddingStart="@dimen/dp_16"
+                android:paddingTop="@dimen/dp_16"
+                android:paddingEnd="@dimen/dp_8"
+                android:paddingBottom="@dimen/dp_16"
                 android:scrollbars="vertical"
+                android:scrollbarStyle="insideOverlay"
                 android:textColor="@color/text_primary"
                 android:textColorHighlight="@color/text_highlight"
                 android:textColorHint="@color/hint_gray"
@@ -85,7 +92,7 @@
                 android:id="@+id/layoutEditButtons"
                 android:layout_width="@dimen/dp_44"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_8"
+                android:layout_marginStart="@dimen/dp_4"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@id/editText"
@@ -145,12 +152,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:minHeight="@dimen/settings_header_row_min_height"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="bottom"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
@@ -164,27 +173,30 @@
                             android:id="@+id/ivSpeedInfo"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_2"
                             android:clickable="true"
                             android:contentDescription="@string/speed_info_title"
                             android:focusable="true"
                             android:src="@drawable/ic_info_content" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/colon"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="@dimen/sp_16" />
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/textSpeechRateValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_2"
-                        android:layout_marginEnd="@dimen/dp_2"
-                        android:text="@string/colon"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/sp_16" />
-
-                    <TextView
-                        android:id="@+id/textSpeechRateValue"
-                        android:layout_width="@dimen/dp_32"
-                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/settings_colon_value_gap"
                         android:layout_marginEnd="@dimen/dp_8"
-                        android:gravity="center"
+                        android:gravity="start|center_vertical"
+                        android:minWidth="@dimen/dp_32"
                         android:text="@string/default_speed_value"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="@dimen/sp_16" />
@@ -196,10 +208,16 @@
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnSpeedReset"
-                        android:layout_width="@dimen/dp_32"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center_vertical"
                         android:background="@drawable/btn_main_bg"
                         android:gravity="center"
+                        android:maxLines="1"
+                        android:minWidth="@dimen/reset_button_min_width"
+                        android:paddingStart="@dimen/dp_4"
+                        android:paddingEnd="@dimen/dp_4"
+                        android:singleLine="true"
                         android:stateListAnimator="@animator/btn_scale_animator"
                         android:text="@string/btn_reset"
                         android:textColor="@color/white"
@@ -215,14 +233,15 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/btnSpeedMinus"
                         android:layout_width="@dimen/dp_32"
                         android:layout_height="@dimen/dp_32"
-                        android:gravity="center|center_vertical"
-                        android:text="@string/minus"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/sp_22" />
+                        android:clickable="true"
+                        android:contentDescription="@string/minus"
+                        android:focusable="true"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_stepper_minus" />
 
                     <SeekBar
                         android:id="@+id/seekBarSpeed"
@@ -232,23 +251,26 @@
                         android:layout_marginEnd="@dimen/dp_8"
                         android:layout_weight="1"
                         android:backgroundTint="?attr/colorOnSurface"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:max="15"
                         android:progress="5"
                         android:progressTint="?attr/colorOnSurface"
                         android:thumbTint="?attr/colorOnSurface" />
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/btnSpeedPlus"
                         android:layout_width="@dimen/dp_32"
                         android:layout_height="@dimen/dp_32"
-                        android:gravity="center|center_vertical"
-                        android:text="@string/plus"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/sp_22" />
+                        android:clickable="true"
+                        android:contentDescription="@string/plus"
+                        android:focusable="true"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_stepper_plus" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 音调调节区块：用于调节语音朗读音调。参见术语表PitchBlock -->
+            <!-- 音高调节区块：用于调节语音朗读音高。参见术语表PitchBlock -->
             <LinearLayout
                 android:id="@+id/layoutPitchBlock"
                 android:layout_width="0dp"
@@ -264,12 +286,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:minHeight="@dimen/settings_header_row_min_height"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="bottom"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
@@ -283,27 +307,30 @@
                             android:id="@+id/ivPitchInfo"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_2"
                             android:clickable="true"
                             android:contentDescription="@string/test_mode_info_title"
                             android:focusable="true"
                             android:src="@drawable/ic_info_content" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/colon"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="@dimen/sp_16" />
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/textPitchValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_2"
-                        android:layout_marginEnd="@dimen/dp_2"
-                        android:text="@string/colon"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/sp_16" />
-
-                    <TextView
-                        android:id="@+id/textPitchValue"
-                        android:layout_width="@dimen/dp_32"
-                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/settings_colon_value_gap"
                         android:layout_marginEnd="@dimen/dp_8"
-                        android:gravity="center"
+                        android:gravity="start|center_vertical"
+                        android:minWidth="@dimen/dp_32"
                         android:text="@string/default_pitch_value"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="@dimen/sp_16" />
@@ -315,10 +342,16 @@
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnPitchReset"
-                        android:layout_width="@dimen/dp_32"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center_vertical"
                         android:background="@drawable/btn_main_bg"
                         android:gravity="center"
+                        android:maxLines="1"
+                        android:minWidth="@dimen/reset_button_min_width"
+                        android:paddingStart="@dimen/dp_4"
+                        android:paddingEnd="@dimen/dp_4"
+                        android:singleLine="true"
                         android:stateListAnimator="@animator/btn_scale_animator"
                         android:text="@string/btn_reset"
                         android:textColor="@color/white"
@@ -334,14 +367,15 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/btnPitchMinus"
                         android:layout_width="@dimen/dp_32"
                         android:layout_height="@dimen/dp_32"
-                        android:gravity="center|center_vertical"
-                        android:text="@string/minus"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/sp_22" />
+                        android:clickable="true"
+                        android:contentDescription="@string/minus"
+                        android:focusable="true"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_stepper_minus" />
 
                     <SeekBar
                         android:id="@+id/seekBarPitch"
@@ -351,19 +385,22 @@
                         android:layout_marginEnd="@dimen/dp_8"
                         android:layout_weight="1"
                         android:backgroundTint="?attr/colorOnSurface"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:max="15"
                         android:progress="5"
                         android:progressTint="?attr/colorOnSurface"
                         android:thumbTint="?attr/colorOnSurface" />
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/btnPitchPlus"
                         android:layout_width="@dimen/dp_32"
                         android:layout_height="@dimen/dp_32"
-                        android:gravity="center|center_vertical"
-                        android:text="@string/plus"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/sp_22" />
+                        android:clickable="true"
+                        android:contentDescription="@string/plus"
+                        android:focusable="true"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_stepper_plus" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -385,12 +422,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_8"
                     android:gravity="center_vertical"
+                    android:minHeight="@dimen/settings_header_row_min_height"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="bottom"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
@@ -404,19 +443,29 @@
                             android:id="@+id/ivLangSupportInfo"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_2"
                             android:clickable="true"
                             android:contentDescription="@string/tts_support_info_title"
                             android:focusable="true"
                             android:src="@drawable/ic_info_content" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/colon"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="@dimen/sp_16" />
                     </LinearLayout>
 
                     <Spinner
                         android:id="@+id/spinnerLanguage"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/settings_colon_value_gap"
                         android:layout_weight="1"
                         android:minWidth="120dp"
-                        android:minHeight="@dimen/dp_48"
                         android:scrollbars="horizontal"
                         android:spinnerMode="dropdown" />
                 </LinearLayout>
@@ -427,12 +476,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_8"
                     android:gravity="center_vertical"
+                    android:minHeight="@dimen/settings_header_row_min_height"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="bottom"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
@@ -446,19 +497,29 @@
                             android:id="@+id/ivVoiceSupportInfo"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_2"
                             android:clickable="true"
                             android:contentDescription="@string/tts_support_info_title"
                             android:focusable="true"
                             android:src="@drawable/ic_info_content" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/colon"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="@dimen/sp_16" />
                     </LinearLayout>
 
                     <Spinner
                         android:id="@+id/spinnerVoice"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/settings_colon_value_gap"
                         android:layout_weight="1"
                         android:minWidth="120dp"
-                        android:minHeight="@dimen/dp_48"
                         android:scrollbars="horizontal"
                         android:spinnerMode="dropdown" />
                 </LinearLayout>
@@ -466,11 +527,16 @@
                 <!-- 第三行：重置按钮 -->
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnLangVoiceReset"
-                    android:layout_width="@dimen/dp_32"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp_24"
                     android:layout_gravity="end"
                     android:background="@drawable/btn_main_bg"
                     android:gravity="center"
+                    android:maxLines="1"
+                    android:minWidth="@dimen/reset_button_min_width"
+                    android:paddingStart="@dimen/dp_4"
+                    android:paddingEnd="@dimen/dp_4"
+                    android:singleLine="true"
                     android:stateListAnimator="@animator/btn_scale_animator"
                     android:text="@string/btn_reset"
                     android:textColor="@color/white"
@@ -520,7 +586,7 @@
                 android:id="@+id/layoutSaveAudioRow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_32"
+                android:layout_marginTop="@dimen/main_action_button_row_gap"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -555,7 +621,7 @@
                 android:id="@+id/btnSetSaveDir"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_48"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/main_action_button_row_gap"
                 android:background="@drawable/btn_main_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_set_save_dir"
@@ -570,7 +636,7 @@
                 android:id="@+id/btnSetTtsInfoDir"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_48"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/main_action_button_row_gap"
                 android:background="@drawable/btn_debug_mode_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_set_tts_info_dir"
@@ -586,7 +652,7 @@
                 android:id="@+id/btnOutputTtsInfoNow"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_48"
-                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginTop="@dimen/main_action_button_row_gap"
                 android:background="@drawable/btn_debug_mode_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_output_tts_info_now"
@@ -716,12 +782,13 @@
 
                         <ImageButton
                             android:id="@+id/btnCopySaveDir"
-                            android:layout_width="@dimen/dp_20"
-                            android:layout_height="@dimen/dp_20"
+                            android:layout_width="@dimen/status_info_copy_button_size"
+                            android:layout_height="@dimen/status_info_copy_button_size"
                             android:layout_gravity="top"
-                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginStart="@dimen/dp_4"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/btn_copy_path"
+                            android:scaleType="centerInside"
                             android:src="@drawable/ic_copy"
                             android:visibility="gone"
                             app:tint="@color/gray_666" />
@@ -833,12 +900,13 @@
 
                             <ImageButton
                                 android:id="@+id/btnCopyTtsInfoDir"
-                                android:layout_width="@dimen/dp_20"
-                                android:layout_height="@dimen/dp_20"
+                                android:layout_width="@dimen/status_info_copy_button_size"
+                                android:layout_height="@dimen/status_info_copy_button_size"
                                 android:layout_gravity="top"
-                                android:layout_marginStart="@dimen/dp_8"
+                                android:layout_marginStart="@dimen/dp_4"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/btn_copy_path"
+                                android:scaleType="centerInside"
                                 android:src="@drawable/ic_copy"
                                 android:visibility="gone"
                                 app:tint="@color/debug_mode_accent" />
@@ -883,12 +951,13 @@
 
                             <ImageButton
                                 android:id="@+id/btnCopyCurrentVoice"
-                                android:layout_width="@dimen/dp_20"
-                                android:layout_height="@dimen/dp_20"
+                                android:layout_width="@dimen/status_info_copy_button_size"
+                                android:layout_height="@dimen/status_info_copy_button_size"
                                 android:layout_gravity="top"
-                                android:layout_marginStart="@dimen/dp_8"
+                                android:layout_marginStart="@dimen/dp_4"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/btn_copy_text"
+                                android:scaleType="centerInside"
                                 android:src="@drawable/ic_copy"
                                 android:visibility="gone"
                                 app:tint="@color/debug_mode_accent" />

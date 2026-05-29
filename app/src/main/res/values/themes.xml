@@ -17,6 +17,8 @@
     <!-- 自定义Toolbar样式，适配所有版本 -->
     <style name="AppToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/main_dark</item>
+        <item name="android:minHeight">@dimen/toolbar_content_height</item>
+        <item name="titleTextAppearance">@style/TextAppearance.VoiceDAO.Toolbar.Title</item>
         <item name="titleTextColor">@color/white</item>
         <item name="subtitleTextColor">@color/white</item>
         <item name="theme">@style/ThemeOverlay.VoiceDAO.Toolbar</item>
@@ -33,6 +35,11 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSurface">@color/theme_light_bg</item>
         <item name="colorOnSurface">@color/text_primary</item>
+        <item name="actionBarSize">@dimen/toolbar_content_height</item>
+        <!-- edge-to-edge：系统栏透明，Toolbar 背景延伸至状态栏区域 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- 全局Toolbar样式 -->
         <item name="toolbarStyle">@style/AppToolbar</item>
 

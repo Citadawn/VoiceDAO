@@ -4,6 +4,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.view.ViewCompat;
 
 import com.citadawn.speechapp.R;
 
@@ -32,20 +34,30 @@ public class ClearButtonHelper {
             if (now - lastClickTime[0] < Constants.CLEAR_BUTTON_DOUBLE_CLICK_DELAY) { // 1500ms内双击
                 editText.setText("");
                 ButtonTextHelper.setTextWithAutoSize(btnClear, R.string.clear);
-                // 恢复原始背景
-                btnClear.setBackgroundResource(R.drawable.btn_main_bg);
+                applyButtonBackground(btnClear, R.drawable.btn_main_bg);
             } else {
                 ButtonTextHelper.setTextWithAutoSize(btnClear, R.string.clear_again);
-                // 设置为红色警告背景
-                btnClear.setBackgroundResource(R.drawable.btn_warning_bg);
+                applyButtonBackground(btnClear, R.drawable.btn_warning_bg);
                 DelayedTaskHelper.postDelayed(btnClear, Constants.CLEAR_BUTTON_TEXT_RESTORE_DELAY, () -> {
                     ButtonTextHelper.setTextWithAutoSize(btnClear, R.string.clear);
-                    // 恢复原始背景
-                    btnClear.setBackgroundResource(R.drawable.btn_main_bg);
+                    applyButtonBackground(btnClear, R.drawable.btn_main_bg);
                 });
             }
             lastClickTime[0] = now;
         });
     }
+
+    /**
+     * 设置按钮背景；清除 Material/AppCompat 的 backgroundTint，避免警告色 drawable 不生效。
+     */
+    private static void applyButtonBackground(@NonNull Button button, int drawableResId) {
+        if (button instanceof AppCompatButton) {
+            ((AppCompatButton) button).setSupportBackgroundTintList(null);
+        } else {
+            ViewCompat.setBackgroundTintList(button, null);
+        }
+        button.setBackgroundResource(drawableResId);
+    }
+
     // endregion
 }

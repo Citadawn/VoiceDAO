@@ -42,18 +42,12 @@
     <string name="dialog_button_cancel_save" tools:ignore="MissingTranslation">Cancel Save</string>
     <string name="dialog_message_cancel_save" tools:ignore="MissingTranslation">Are you sure you want to cancel audio saving and delete the file?</string>
     <string name="dialog_title_editor_info" tools:ignore="MissingTranslation">Instructions</string>
-    <string name="dialog_message_editor_info" tools:ignore="MissingTranslation"><![CDATA[<b>Text Editing Features</b><br/><br/>
-• Edit, paste, and organize large texts<br/>
-• Convenient for reading or saving audio files<br/>
-• Supports multi-line scrolling, copy, paste, and other operations<br/><br/>
-
-<b>Button Instructions</b><br/><br/>
-• <b>OK</b>: Only available after content is modified, returns content to main screen<br/>
-• <b>Clear</b>: Requires two consecutive clicks to actually clear, prevents accidental operation<br/>
-• <b>Back</b>: Does not save content, exits editor directly<br/><br/>
-
-<b>Usage Tips</b><br/><br/>
-It is recommended to organize your text content in this editor before returning to the main screen for reading or saving operations.]]></string>
+    <string name="dialog_message_editor_info" tools:ignore="MissingTranslation"><![CDATA[
+• <b>Save</b>: Only available after content is modified; returns content to the main screen<br/>
+• <b>Clear</b>: Requires two consecutive taps to clear, to prevent accidental taps<br/>
+• <b>Back</b>: If content was modified, asks whether to save; you can discard changes]]></string>
+    <string name="dialog_message_editor_unsaved" tools:ignore="MissingTranslation">Content has been modified. Save before exiting?</string>
+    <string name="dialog_button_discard" tools:ignore="MissingTranslation">Don\'t save</string>
     <string name="btn_clear" tools:ignore="MissingTranslation">Clear</string>
     <string name="btn_open_editor" tools:ignore="MissingTranslation">Editor</string>
     <string name="btn_reset" tools:ignore="MissingTranslation">Reset</string>
@@ -164,7 +158,7 @@ It is recommended to organize your text content in this editor before returning 
     <string name="tts_idle" tools:ignore="MissingTranslation">Idle</string>
     <string name="char_count" tools:ignore="MissingTranslation">Char count: %1$d/%2$d</string>
     <string name="clear">Clear</string>
-    <string name="clear_again">Confirm\nClear</string>
+    <string name="clear_again">Confirm clear</string>
     <string name="tts_status_engine_not_ready" tools:ignore="MissingTranslation">Engine not ready</string>
     <string name="tts_status_idle" tools:ignore="MissingTranslation">Idle</string>
     <string name="tts_status_preparing_speak" tools:ignore="MissingTranslation">Preparing speech (submitted)…</string>
@@ -233,8 +227,8 @@ It is recommended to organize your text content in this editor before returning 
     <string name="toast_test_text_filled" tools:ignore="MissingTranslation">Test text filled</string>
     <!-- Debug mode - show current speak Voice -->
     <string name="test_case_show_current_voice" tools:ignore="MissingTranslation">Show Current Voice</string>
-    <string name="test_case_show_current_voice_desc" tools:ignore="MissingTranslation">When enabled, the status block shows Voice from TextToSpeech.getVoice() (toString) in real time after TTS is ready; updates when you change the voice. A copy button appears beside the value.</string>
-    <string name="label_current_voice_debug" tools:ignore="MissingTranslation">Current Voice object:</string>
+    <string name="test_case_show_current_voice_desc" tools:ignore="MissingTranslation">When enabled, the status block shows the current Voice from TextToSpeech.getVoice() (toString) in real time after TTS is ready; updates when you change the voice. A copy button appears beside the value.</string>
+    <string name="label_current_voice_debug" tools:ignore="MissingTranslation">Current Voice:</string>
     <string name="voice_debug_tts_not_ready" tools:ignore="MissingTranslation">TTS not ready</string>
     <string name="voice_debug_get_voice_null" tools:ignore="MissingTranslation">getVoice() returned null</string>
 
@@ -256,7 +250,7 @@ It is recommended to organize your text content in this editor before returning 
         • Debug mode does not affect normal app functionality
     ]]></string>
 
-    <!-- 语速和音调信息 -->
+    <!-- Speed and pitch info -->
     <string name="speed_info_title" tools:ignore="MissingTranslation">Speed Instructions</string>
     <string name="speed_info_content" tools:ignore="MissingTranslation"><![CDATA[
         Speed controls how fast the text is read.<br/><br/>
@@ -266,7 +260,7 @@ It is recommended to organize your text content in this editor before returning 
 
     <string name="pitch_info_title" tools:ignore="MissingTranslation">Pitch Instructions</string>
     <string name="pitch_info_content" tools:ignore="MissingTranslation"><![CDATA[
-        Pitch controls the highness or lowness of the voice.<br/><br/>
+        Adjust reading pitch: higher values sound sharper; lower values sound deeper.<br/><br/>
         <b>Range:</b> 0.5x - 2.0x<br/>
         <b>Default:</b> 1.0x (normal pitch)
     ]]></string>

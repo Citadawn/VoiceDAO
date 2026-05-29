@@ -77,10 +77,23 @@ public class ButtonTextHelper {
             // 最小字体大小为 8sp
             float minSize = 8f * button.getContext().getResources().getDisplayMetrics().scaledDensity;
 
+            int buttonHeight = button.getHeight()
+                    - button.getPaddingTop() - button.getPaddingBottom();
+            String[] lines = text.split("\n", -1);
             paint.setTextSize(trySize);
-            while (paint.measureText(text) > buttonWidth && trySize > minSize) {
-                trySize -= 1f;
+            while (trySize > minSize) {
                 paint.setTextSize(trySize);
+                float maxLineWidth = 0f;
+                for (String line : lines) {
+                    maxLineWidth = Math.max(maxLineWidth, paint.measureText(line));
+                }
+                Paint.FontMetrics fm = paint.getFontMetrics();
+                float textHeight = (fm.bottom - fm.top) * lines.length;
+                if (maxLineWidth <= buttonWidth
+                        && (buttonHeight <= 0 || textHeight <= buttonHeight)) {
+                    break;
+                }
+                trySize -= 1f;
             }
 
             button.setTextSize(TypedValue.COMPLEX_UNIT_PX, trySize);

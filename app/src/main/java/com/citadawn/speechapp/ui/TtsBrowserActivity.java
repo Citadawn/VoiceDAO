@@ -26,16 +26,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.citadawn.speechapp.R;
 import com.citadawn.speechapp.util.DialogHelper;
 import com.citadawn.speechapp.util.EngineLabelHelper;
 import com.citadawn.speechapp.util.LocaleHelper;
-import com.citadawn.speechapp.util.StatusBarHelper;
+import com.citadawn.speechapp.util.SystemBarsHelper;
 import com.citadawn.speechapp.util.TtsEngineHelper;
 import com.citadawn.speechapp.util.TtsLanguageVoiceHelper;
 import com.citadawn.speechapp.util.TtsLocaleDisplayHelper;
@@ -80,6 +77,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SystemBarsHelper.enable(this);
         setContentView(R.layout.activity_tts_browser);
 
         initViews();
@@ -90,11 +88,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // 在Android 15上，需要重新设置状态栏颜色
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            StatusBarHelper.forceStatusBarColor(getWindow());
-        }
+        SystemBarsHelper.reapply(this);
     }
 
     @Override
@@ -138,31 +132,14 @@ public class TtsBrowserActivity extends AppCompatActivity {
     private void initViews() {
         // 设置工具栏
         Toolbar toolbar = findViewById(R.id.toolbar);
+        SystemBarsHelper.applyToolbarTopInsets(toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.tts_browser_title);
         }
 
-        // 设置状态栏为透明，让内容延伸到状态栏下方
-        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
-        
-        // 设置状态栏文字为白色
-        StatusBarHelper.setupStatusBar(getWindow());
-
-        // 动态设置状态栏占位区域的高度
-        View statusBarBackground = findViewById(R.id.statusBarBackground);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_container), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            
-            // 设置状态栏占位区域的高度为状态栏高度
-            ViewGroup.LayoutParams params = statusBarBackground.getLayoutParams();
-            params.height = systemBars.top;
-            statusBarBackground.setLayoutParams(params);
-            
-            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        SystemBarsHelper.applyContentMarginInsets(findViewById(R.id.main_container));
 
         // 初始化 ViewPager2 和 TabLayout
         viewPager = findViewById(R.id.view_pager);
@@ -294,40 +271,40 @@ public class TtsBrowserActivity extends AppCompatActivity {
             ListView listView = holder.listView;
             listViews.put(currentPos, listView);
 
-            // 添加滚动监听器，实时保存滚动位置
-            listView.setOnScrollListener(new android.widget.AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(@NonNull android.widget.AbsListView view, int scrollState) {
-                    // 滚动状态改变时保存位置
-                    if (scrollState == android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+            // 添加滚动监听器，实时保存滚动位置（每个 ViewHolder 仅注册一次）
+            if (!holder.scrollListenerAttached) {
+                holder.scrollListenerAttached = true;
+                listView.setOnScrollListener(new android.widget.AbsListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull android.widget.AbsListView view, int scrollState) {
+                        if (scrollState == android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                            int adapterPosition = holder.getAdapterPosition();
+                            if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                                saveScrollPosition(listView, adapterPosition);
+                            }
+
+                            view.post(() -> {
+                                view.setEnabled(true);
+                                view.setFocusable(true);
+                                view.setFocusableInTouchMode(true);
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onScroll(android.widget.AbsListView view, int firstVisibleItem,
+                                         int visibleItemCount, int totalItemCount) {
                         int adapterPosition = holder.getAdapterPosition();
                         if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
                             saveScrollPosition(listView, adapterPosition);
                         }
-
-                        // 确保滚动状态正确重置
-                        view.post(() -> {
-                            view.setEnabled(true);
-                            view.setFocusable(true);
-                            view.setFocusableInTouchMode(true);
-                        });
                     }
-                }
-
-                @Override
-                public void onScroll(android.widget.AbsListView view, int firstVisibleItem,
-                                     int visibleItemCount, int totalItemCount) {
-                    // 滚动时实时保存位置
-                    int adapterPosition = holder.getAdapterPosition();
-                    if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
-                        saveScrollPosition(listView, adapterPosition);
-                    }
-                }
-            });
+                });
+            }
 
             // 如果是语言发音人页面，设置搜索功能
             if (currentPos == 1) {
-                setupSearchFunctionality(holder.itemView);
+                setupSearchFunctionality(holder);
             }
 
             // 如果适配器已存在，直接使用；否则创建新的
@@ -460,13 +437,22 @@ public class TtsBrowserActivity extends AppCompatActivity {
         /**
          * 设置搜索功能
          */
-        private void setupSearchFunctionality(@NonNull View view) {
+        private void setupSearchFunctionality(@NonNull ViewHolder holder) {
+            if (holder.searchInitialized) {
+                return;
+            }
+            holder.searchInitialized = true;
+
+            View view = holder.itemView;
             EditText searchEditText = view.findViewById(R.id.search_edit_text);
             ImageButton clearSearchButton = view.findViewById(R.id.clear_search_button);
 
             if (searchEditText == null || clearSearchButton == null) {
                 return;
             }
+
+            holder.pendingSearchQuery = "";
+            holder.searchDebounceRunnable = () -> performSearch(holder.pendingSearchQuery);
 
             // 搜索文本变化监听
             searchEditText.addTextChangedListener(new android.text.TextWatcher() {
@@ -481,12 +467,15 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(@NonNull android.text.Editable s) {
                     String query = s.toString().trim();
+                    holder.pendingSearchQuery = query;
 
                     // 显示/隐藏清除按钮
                     clearSearchButton.setVisibility(query.isEmpty() ? View.GONE : View.VISIBLE);
 
-                    // 执行搜索
-                    performSearch(query);
+                    if (holder.searchDebounceRunnable != null) {
+                        searchEditText.removeCallbacks(holder.searchDebounceRunnable);
+                        searchEditText.postDelayed(holder.searchDebounceRunnable, 200);
+                    }
                 }
             });
 
@@ -519,6 +508,10 @@ public class TtsBrowserActivity extends AppCompatActivity {
 
         static class ViewHolder extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
             final ListView listView;
+            boolean scrollListenerAttached;
+            boolean searchInitialized;
+            String pendingSearchQuery = "";
+            @Nullable Runnable searchDebounceRunnable;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -536,6 +529,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
         private final List<TextToSpeech.EngineInfo> engines;
         private final LayoutInflater inflater;
         private final String defaultEngineName;
+        private final Map<String, Drawable> iconCache = new HashMap<>();
 
         public EngineAdapter(Context context, List<TextToSpeech.EngineInfo> engines, String defaultEngineName) {
             this.context = context;
@@ -579,8 +573,18 @@ public class TtsBrowserActivity extends AppCompatActivity {
             // 设置图标
             try {
                 if (engine.icon != 0) {
-                    Drawable icon = context.getPackageManager().getDrawable(engine.name, engine.icon, null);
-                    holder.iconView.setImageDrawable(icon);
+                    Drawable icon = iconCache.get(engine.name);
+                    if (icon == null) {
+                        icon = context.getPackageManager().getDrawable(engine.name, engine.icon, null);
+                        if (icon != null) {
+                            iconCache.put(engine.name, icon);
+                        }
+                    }
+                    if (icon != null) {
+                        holder.iconView.setImageDrawable(icon);
+                    } else {
+                        holder.iconView.setImageResource(R.drawable.ic_launcher_foreground);
+                    }
                 } else {
                     holder.iconView.setImageResource(R.drawable.ic_launcher_foreground);
                 }
@@ -640,6 +644,16 @@ public class TtsBrowserActivity extends AppCompatActivity {
         private final LayoutInflater inflater;
         private final TextToSpeech tts;
         @NonNull
+        private final Map<Locale, List<Voice>> voicesByLocale;
+        @NonNull
+        private final Map<Locale, String> languageDisplayNameCache;
+        private final Locale appLocale;
+        private final float languageItemTextSizePx;
+        private final float voiceItemTextSizePx;
+        private final int languageItemTextColor;
+        private final int voiceItemTextColor;
+        private final int voiceItemPaddingStartPx;
+        @NonNull
         private String currentFilter = ""; // 当前搜索关键词
 
         // 快速滚动索引相关
@@ -650,13 +664,30 @@ public class TtsBrowserActivity extends AppCompatActivity {
             this.context = context;
             this.tts = tts;
             this.inflater = LayoutInflater.from(context);
+            this.voicesByLocale = TtsLanguageVoiceHelper.indexVoicesByLocale(voices);
+            this.appLocale = LocaleHelper.getCurrentLocale(context);
+            this.languageItemTextSizePx = context.getResources().getDimension(R.dimen.sp_16);
+            this.voiceItemTextSizePx = context.getResources().getDimension(R.dimen.sp_14);
+            this.languageItemTextColor = ContextCompat.getColor(context, R.color.text_primary);
+            this.voiceItemTextColor = ContextCompat.getColor(context, R.color.gray_666);
+            this.voiceItemPaddingStartPx = (int) context.getResources().getDimension(R.dimen.dp_32);
 
-            // 使用改进的方法构建语言和发音人数据
             this.allItems = buildLanguageVoiceItems(languages, voices);
-            this.items = new ArrayList<>(this.allItems); // 初始显示所有数据
+            this.items = new ArrayList<>(this.allItems);
 
-            // 初始化快速滚动索引
+            this.languageDisplayNameCache = new HashMap<>();
+            for (LanguageVoiceItem item : allItems) {
+                if (item.voice == null && !languageDisplayNameCache.containsKey(item.locale)) {
+                    languageDisplayNameCache.put(item.locale, getLanguageDisplayName(item.locale));
+                }
+            }
+
             buildSectionIndex();
+        }
+
+        @NonNull
+        private String getLanguageDisplayName(@NonNull Locale locale) {
+            return TtsLocaleDisplayHelper.getDisplayName(locale, appLocale, voicesByLocale.get(locale));
         }
 
         /**
@@ -752,9 +783,7 @@ public class TtsBrowserActivity extends AppCompatActivity {
 
             LanguageVoiceItem item = getItem(position);
 
-            Locale appLocale = LocaleHelper.getCurrentLocale(context);
-            String languageName = TtsLocaleDisplayHelper.getDisplayName(item.locale, appLocale,
-                    TtsLocaleDisplayHelper.voicesForLocale(tts.getVoices(), item.locale));
+            String languageName = getLanguageDisplayName(item.locale);
 
             // 如果是默认语言，添加默认标识
             if (item.voice == null && item.isDefaultLanguage) {
@@ -799,10 +828,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
 
             // 设置发音人信息
             if (item.voice != null) {
-                // 这是发音人项，调整样式
-                holder.languageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.sp_14));
-                holder.languageView.setTextColor(ContextCompat.getColor(context, R.color.gray_666));
-                holder.languageView.setPadding((int) context.getResources().getDimension(R.dimen.dp_32), 0, 0, 0); // 缩进
+                holder.languageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, voiceItemTextSizePx);
+                holder.languageView.setTextColor(voiceItemTextColor);
+                holder.languageView.setPadding(voiceItemPaddingStartPx, 0, 0, 0); // 缩进
 
                 // 检查是否为默认发音人
                 boolean isDefault = item.voice.equals(item.defaultVoice);
@@ -837,9 +865,8 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 holder.voiceView.setText(voiceInfo.toString());
                 holder.voiceView.setVisibility(View.VISIBLE);
             } else {
-                // 这是语言项，使用默认样式
-                holder.languageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.sp_16));
-                holder.languageView.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
+                holder.languageView.setTextSize(TypedValue.COMPLEX_UNIT_PX, languageItemTextSizePx);
+                holder.languageView.setTextColor(languageItemTextColor);
                 holder.languageView.setPadding(0, 0, 0, 0);
                 holder.voiceView.setVisibility(View.GONE);
             }
@@ -885,35 +912,25 @@ public class TtsBrowserActivity extends AppCompatActivity {
             }
 
             currentFilter = newFilter;
-            int oldSize = items.size();
             items.clear();
 
             if (currentFilter.isEmpty()) {
-                // 如果搜索为空，显示所有数据
                 items.addAll(allItems);
             } else {
-                // 过滤匹配的语言
-                Locale appLocale = LocaleHelper.getCurrentLocale(context);
                 for (LanguageVoiceItem item : allItems) {
-                    String languageName = TtsLocaleDisplayHelper.getDisplayName(item.locale, appLocale,
-                            TtsLocaleDisplayHelper.voicesForLocale(tts.getVoices(), item.locale))
+                    String languageName = languageDisplayNameCache
+                            .getOrDefault(item.locale, getLanguageDisplayName(item.locale))
                             .toLowerCase();
                     String languageTag = item.locale.toString().toLowerCase();
 
-                    // 如果搜索关键词匹配语言名称或语言标签，则包含该项
                     if (languageName.contains(currentFilter) || languageTag.contains(currentFilter)) {
                         items.add(item);
                     }
                 }
             }
 
-            // 对于BaseAdapter，使用notifyDataSetChanged，但可以优化调用时机
-            // 只有在数据真正发生变化时才调用
-            if (oldSize != items.size()) {
-                // 重新构建索引
-                buildSectionIndex();
-                notifyDataSetChanged();
-            }
+            buildSectionIndex();
+            notifyDataSetChanged();
         }
 
         /**
@@ -926,10 +943,9 @@ public class TtsBrowserActivity extends AppCompatActivity {
             String previousSection = "";
             for (int i = 0; i < items.size(); i++) {
                 LanguageVoiceItem item = items.get(i);
-                if (item.voice == null) { // 只为语言项创建索引，跳过发音人项
-                    Locale appLocale = LocaleHelper.getCurrentLocale(context);
-                    String languageName = TtsLocaleDisplayHelper.getDisplayName(item.locale, appLocale,
-                            TtsLocaleDisplayHelper.voicesForLocale(tts.getVoices(), item.locale));
+                if (item.voice == null) {
+                    String languageName = languageDisplayNameCache
+                            .getOrDefault(item.locale, getLanguageDisplayName(item.locale));
                     if (!languageName.isEmpty()) {
                         String section = languageName.substring(0, 1).toUpperCase();
                         if (!section.equals(previousSection)) {

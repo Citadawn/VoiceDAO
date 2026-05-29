@@ -27,28 +27,31 @@ import com.citadawn.speechapp.R;
  */
 public final class DebugModeUi {
 
-    private static final long TITLE_TAP_FEEDBACK_MS = 300L;
+    private static final long TITLE_TAP_FEEDBACK_MS = 340L;
 
     private DebugModeUi() {
     }
 
     /**
-     * 连点 Toolbar 标题时的左右轻摆 + 轻微旋转，并触发短触觉反馈。
+     * 连点 Toolbar 标题时的左右轻摆 + 旋转回弹，并触发短触觉反馈。
      */
     public static void playTitleTapFeedback(@NonNull View target) {
+        playTitleTapFeedback(target, null);
+    }
+
+    public static void playTitleTapFeedback(@NonNull View target, @Nullable Runnable onRestore) {
         target.animate().cancel();
         ObjectAnimator prior = (ObjectAnimator) target.getTag(R.id.debug_mode_title_tap_animator);
         if (prior != null) {
             prior.cancel();
         }
-        target.setTranslationX(0f);
-        target.setRotation(0f);
+        resetTitleTapAnimationState(target);
 
         float dx = 5f * target.getResources().getDisplayMetrics().density;
         PropertyValuesHolder translationX = PropertyValuesHolder.ofFloat(
-                View.TRANSLATION_X, 0f, -dx, dx, -dx * 0.55f, dx * 0.55f, 0f);
+                View.TRANSLATION_X, 0f, -dx, dx, -dx * 0.6f, dx * 0.6f, 0f);
         PropertyValuesHolder rotation = PropertyValuesHolder.ofFloat(
-                View.ROTATION, 0f, -3f, 3f, -1.5f, 1.5f, 0f);
+                View.ROTATION, 0f, -8f, 8f, -5f, 5f, -2f, 2f, 0f);
 
         ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, translationX, rotation);
         animator.setDuration(TITLE_TAP_FEEDBACK_MS);
@@ -56,12 +59,12 @@ public final class DebugModeUi {
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(@NonNull Animator animation) {
-                resetTitleTapAnimationState(target, animation);
+                finishTitleTapFeedback(target, animation, onRestore);
             }
 
             @Override
             public void onAnimationCancel(@NonNull Animator animation) {
-                resetTitleTapAnimationState(target, animation);
+                finishTitleTapFeedback(target, animation, onRestore);
             }
         });
         target.setTag(R.id.debug_mode_title_tap_animator, animator);
@@ -69,12 +72,20 @@ public final class DebugModeUi {
         target.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
     }
 
-    private static void resetTitleTapAnimationState(@NonNull View target, @NonNull Animator animation) {
+    private static void resetTitleTapAnimationState(@NonNull View target) {
+        target.setTranslationX(0f);
+        target.setRotation(0f);
+    }
+
+    private static void finishTitleTapFeedback(@NonNull View target, @NonNull Animator animation,
+            @Nullable Runnable onRestore) {
         if (animation == target.getTag(R.id.debug_mode_title_tap_animator)) {
             target.setTag(R.id.debug_mode_title_tap_animator, null);
         }
-        target.setTranslationX(0f);
-        target.setRotation(0f);
+        resetTitleTapAnimationState(target);
+        if (onRestore != null) {
+            onRestore.run();
+        }
     }
 
     public static int accentColor(@NonNull Context context) {

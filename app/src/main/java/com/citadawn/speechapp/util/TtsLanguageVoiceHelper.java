@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,44 @@ public class TtsLanguageVoiceHelper {
      * @param voices    可用发音人集合
      * @return 语言到发音人列表的映射
      */
+    /**
+     * 将发音人按 {@link Locale} 分组，供排序与界面展示复用，避免对每个语言重复扫描全部发音人。
+     */
+    @NonNull
+    public static Map<Locale, List<Voice>> indexVoicesByLocale(@Nullable Set<Voice> voices) {
+        Map<Locale, List<Voice>> map = new HashMap<>();
+        if (voices == null) {
+            return map;
+        }
+        for (Voice voice : voices) {
+            Locale locale = voice.getLocale();
+            map.computeIfAbsent(locale, k -> new ArrayList<>()).add(voice);
+        }
+        return map;
+    }
+
+    /**
+     * 预计算语言下拉列表的显示文案。
+     */
+    @NonNull
+    public static List<String> buildLanguageDisplayNames(@NonNull Context context,
+                                                         @NonNull List<Locale> locales,
+                                                         @NonNull Map<Locale, List<Voice>> voicesByLocale,
+                                                         @Nullable Locale defaultLocale) {
+        Locale appLocale = LocaleHelper.getCurrentLocale(context);
+        String defaultSuffix = context.getString(com.citadawn.speechapp.R.string.default_value);
+        List<String> names = new ArrayList<>(locales.size());
+        for (Locale locale : locales) {
+            List<Voice> localeVoices = voicesByLocale.get(locale);
+            String name = TtsLocaleDisplayHelper.getDisplayName(locale, appLocale, localeVoices);
+            if (locale.equals(defaultLocale)) {
+                name += defaultSuffix;
+            }
+            names.add(name);
+        }
+        return names;
+    }
+
     @NonNull
     public static Map<Locale, List<Voice>> buildLanguageVoicesMap(@NonNull Set<Locale> languages, @NonNull Set<Voice> voices) {
         Map<Locale, List<Voice>> languageVoicesMap = new HashMap<>();
@@ -104,24 +143,28 @@ public class TtsLanguageVoiceHelper {
      * @return 排序后且去重的语言列表
      */
     @NonNull
-    public static List<Locale> sortLocalesByDisplayName(@NonNull Set<Locale> locales, Locale defaultLocale, @NonNull Context context, @Nullable Set<Voice> voices) {
-        Locale currentLocale = com.citadawn.speechapp.util.LocaleHelper.getCurrentLocale(context);
-        
-        // 统计每个Locale的发音人数量
-        Map<Locale, Integer> localeVoiceCount = new java.util.HashMap<>();
-        if (voices != null) {
-            for (Voice voice : voices) {
-                Locale voiceLocale = voice.getLocale();
-                localeVoiceCount.put(voiceLocale, localeVoiceCount.getOrDefault(voiceLocale, 0) + 1);
-            }
+    public static List<Locale> sortLocalesByDisplayName(@NonNull Set<Locale> locales, Locale defaultLocale,
+                                                       @NonNull Context context,
+                                                       @Nullable Set<Voice> voices) {
+        return sortLocalesByDisplayName(locales, defaultLocale, context, indexVoicesByLocale(voices));
+    }
+
+    @NonNull
+    public static List<Locale> sortLocalesByDisplayName(@NonNull Set<Locale> locales, Locale defaultLocale,
+                                                       @NonNull Context context,
+                                                       @NonNull Map<Locale, List<Voice>> voicesByLocale) {
+        Locale currentLocale = LocaleHelper.getCurrentLocale(context);
+
+        Map<Locale, Integer> localeVoiceCount = new HashMap<>();
+        for (Map.Entry<Locale, List<Voice>> entry : voicesByLocale.entrySet()) {
+            localeVoiceCount.put(entry.getKey(), entry.getValue().size());
         }
-        
-        // 按显示名称分组，去除重复
+
         Map<String, Locale> displayNameToLocale = new java.util.LinkedHashMap<>();
-        
+
         for (Locale locale : locales) {
-            String displayName = TtsLocaleDisplayHelper.getDisplayName(locale, currentLocale,
-                    TtsLocaleDisplayHelper.voicesForLocale(voices, locale));
+            List<Voice> localeVoices = voicesByLocale.get(locale);
+            String displayName = TtsLocaleDisplayHelper.getDisplayName(locale, currentLocale, localeVoices);
             
             // 如果是默认语言，直接保留
             if (locale.equals(defaultLocale)) {
@@ -181,10 +224,8 @@ public class TtsLanguageVoiceHelper {
 
             // 其他语言按显示名称排序，使用当前界面语言
             return collator.compare(
-                    TtsLocaleDisplayHelper.getDisplayName(l1, currentLocale,
-                            TtsLocaleDisplayHelper.voicesForLocale(voices, l1)),
-                    TtsLocaleDisplayHelper.getDisplayName(l2, currentLocale,
-                            TtsLocaleDisplayHelper.voicesForLocale(voices, l2)));
+                    TtsLocaleDisplayHelper.getDisplayName(l1, currentLocale, voicesByLocale.get(l1)),
+                    TtsLocaleDisplayHelper.getDisplayName(l2, currentLocale, voicesByLocale.get(l2)));
         });
 
         return sortedLocales;
@@ -200,7 +241,7 @@ public class TtsLanguageVoiceHelper {
      */
     @NonNull
     public static List<Locale> sortLocalesByDisplayName(@NonNull Set<Locale> locales, Locale defaultLocale, @NonNull Context context) {
-        return sortLocalesByDisplayName(locales, defaultLocale, context, null);
+        return sortLocalesByDisplayName(locales, defaultLocale, context, Collections.emptyMap());
     }
 
     /**
@@ -266,15 +307,17 @@ public class TtsLanguageVoiceHelper {
      */
     @NonNull
     public static List<Voice> getVoicesForLanguage(@NonNull Set<Voice> voices, Locale targetLocale) {
-        List<Voice> result = new ArrayList<>();
+        return new ArrayList<>(getVoicesForLanguage(indexVoicesByLocale(voices), targetLocale));
+    }
 
-        for (Voice voice : voices) {
-            if (voice.getLocale().equals(targetLocale)) {
-                result.add(voice);
-            }
+    @NonNull
+    public static List<Voice> getVoicesForLanguage(@NonNull Map<Locale, List<Voice>> voicesByLocale,
+                                                   @Nullable Locale targetLocale) {
+        if (targetLocale == null) {
+            return Collections.emptyList();
         }
-
-        return result;
+        List<Voice> list = voicesByLocale.get(targetLocale);
+        return list != null ? new ArrayList<>(list) : Collections.emptyList();
     }
 
     /**

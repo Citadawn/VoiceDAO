@@ -69,6 +69,11 @@ public final class TtsSpeakStatusHelper {
                 || state == WorkState.PREPARING_SAVE;
     }
 
+    /** 朗读/保存进行中的状态需周期性刷新按钮与状态文案；空闲时不轮询。 */
+    public static boolean needsStatusPolling(@NonNull WorkState state, boolean isSavingAudio) {
+        return blocksSpeakAndSave(state, isSavingAudio);
+    }
+
     @NonNull
     public static String getErrorDetail(@NonNull Context context, int errorCode) {
         return context.getString(getErrorDetailRes(errorCode));

@@ -816,11 +816,11 @@ public class TtsBrowserActivity extends AppCompatActivity {
                 }
                 case TextToSpeech.LANG_NOT_SUPPORTED -> {
                     supportText = context.getString(R.string.language_not_supported);
-                    yield R.color.tts_support_none;
+                    yield R.color.btn_disabled_bg;
                 }
                 default -> {
                     supportText = context.getString(R.string.language_unknown);
-                    yield R.color.tts_support_none;
+                    yield R.color.btn_disabled_bg;
                 }
             };
             holder.supportView.setText(supportText);

@@ -34,7 +34,7 @@
                 android:layout_width="@dimen/dp_4"
                 android:layout_height="@dimen/dp_28"
                 android:layout_marginEnd="@dimen/dp_12"
-                android:background="@color/debug_mode_accent" />
+                android:background="@color/accent_warning" />
 
             <TextView
                 android:id="@+id/tvTestModeDialogTitle"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/test_mode_dialog_title"
-                android:textColor="@color/debug_mode_accent"
+                android:textColor="@color/accent_warning"
                 android:textSize="@dimen/sp_20"
                 android:textStyle="bold" />
 
@@ -55,8 +55,8 @@
                 android:clickable="true"
                 android:contentDescription="@string/test_mode_info_title"
                 android:focusable="true"
-                android:src="@drawable/ic_info_content"
-                app:tint="@color/debug_mode_accent" />
+                android:src="@drawable/ic_info"
+                app:tint="@color/accent_warning" />
         </LinearLayout>
 
         <TextView
@@ -97,7 +97,7 @@
             android:paddingEnd="@dimen/dp_8"
             android:paddingBottom="@dimen/dp_8"
             android:text="@string/test_mode_btn_expand_all_short"
-            android:textColor="@color/debug_mode_accent"
+            android:textColor="@color/accent_warning"
             android:textSize="@dimen/sp_13"
             android:textStyle="bold"
             tools:ignore="RtlSymmetry" />
@@ -124,7 +124,7 @@
             android:paddingEnd="@dimen/dp_8"
             android:paddingBottom="@dimen/dp_8"
             android:text="@string/test_mode_btn_collapse_all_short"
-            android:textColor="@color/debug_mode_accent"
+            android:textColor="@color/accent_warning"
             android:textSize="@dimen/sp_13"
             android:textStyle="bold"
             tools:ignore="RtlSymmetry" />
@@ -147,7 +147,7 @@
             android:clipToPadding="false"
             android:nestedScrollingEnabled="true"
             android:overScrollMode="ifContentScrolls"
-            android:paddingEnd="@dimen/debug_panel_list_scroll_gutter"
+            android:paddingEnd="@dimen/dp_10"
             android:scrollbarStyle="outsideInset"
             android:scrollbarThumbVertical="@drawable/bg_debug_panel_scrollbar_thumb"
             android:scrollbars="vertical" />
@@ -159,7 +159,7 @@
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_12"
         android:layout_marginEnd="@dimen/dp_16"
-        android:background="#40FF5722" />
+        android:background="@color/accent_warning_overlay_25" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -190,7 +190,7 @@
             android:stateListAnimator="@animator/btn_scale_animator"
             android:text="@string/test_mode_btn_start"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/pure_white"
             android:textSize="@dimen/sp_16" />
     </LinearLayout>
 </LinearLayout>

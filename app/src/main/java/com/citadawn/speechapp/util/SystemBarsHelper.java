@@ -3,15 +3,19 @@ package com.citadawn.speechapp.util;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -57,9 +61,40 @@ public final class SystemBarsHelper {
         ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, windowInsets) -> {
             Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
             v.setPadding(initialLeft, statusBars.top, initialRight, initialBottom);
+            v.post(() -> alignToolbarContent(toolbar));
             return windowInsets;
         });
         ViewCompat.requestApplyInsets(toolbar);
+        toolbar.post(() -> alignToolbarContent(toolbar));
+    }
+
+    /**
+     * 标题与 ⋮ 等菜单项在 Toolbar 内容区垂直居中对齐（大字号标题需关闭 includeFontPadding）。
+     */
+    public static void alignToolbarContent(@NonNull Toolbar toolbar) {
+        TextView titleView = toolbar.findViewById(androidx.appcompat.R.id.action_bar_title);
+        if (titleView != null) {
+            titleView.setIncludeFontPadding(false);
+            ViewGroup.LayoutParams params = titleView.getLayoutParams();
+            if (params instanceof Toolbar.LayoutParams toolbarParams) {
+                toolbarParams.gravity = Gravity.CENTER_VERTICAL;
+                titleView.setLayoutParams(toolbarParams);
+            } else if (params instanceof androidx.appcompat.app.ActionBar.LayoutParams actionBarParams) {
+                actionBarParams.gravity = Gravity.CENTER_VERTICAL;
+                titleView.setLayoutParams(actionBarParams);
+            }
+        }
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            View child = toolbar.getChildAt(i);
+            if (child instanceof ActionMenuView menuView) {
+                ViewGroup.LayoutParams params = menuView.getLayoutParams();
+                if (params instanceof Toolbar.LayoutParams toolbarParams) {
+                    toolbarParams.gravity = Gravity.CENTER_VERTICAL;
+                    menuView.setLayoutParams(toolbarParams);
+                }
+                break;
+            }
+        }
     }
 
     /**

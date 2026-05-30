@@ -69,7 +69,7 @@ public class TestModeDialog extends Dialog {
 
         ivTestModeInfo.setOnClickListener(v -> showTestModeInfo());
 
-        int scrollbarPx = getContext().getResources().getDimensionPixelSize(R.dimen.debug_panel_scrollbar_width);
+        int scrollbarPx = getContext().getResources().getDimensionPixelSize(R.dimen.dp_4);
         rvTestCases.setScrollBarSize(scrollbarPx);
         rvTestCases.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TestCaseAdapter(testCases);
@@ -77,7 +77,6 @@ public class TestModeDialog extends Dialog {
         adapter.setOnSelectionChangedListener(this::updateButtonState);
         updateButtonState();
 
-        DebugModeUi.styleDebugPanelPrimaryButton(btnStartTest);
         btnCancel.setOnClickListener(v -> dismiss());
         btnStartTest.setOnClickListener(v -> {
             if (listener != null) {

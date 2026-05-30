@@ -5,6 +5,6 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path
-        android:fillColor="@color/debug_mode_accent"
+        android:fillColor="@color/accent_warning"
         android:pathData="M8.12,9.29L12,13.17l3.88,-3.88c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41l-4.59,4.59c-0.39,0.39 -1.02,0.39 -1.41,0L6.71,10.7c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0z" />
 </vector>

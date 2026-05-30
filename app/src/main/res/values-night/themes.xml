@@ -6,8 +6,8 @@
         <item name="windowNoTitle">true</item>
         <!-- 主题主色调 -->
         <item name="colorPrimary">@color/main_dark</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="actionBarSize">@dimen/toolbar_content_height</item>
+        <item name="colorOnPrimary">@color/pure_white</item>
+        <item name="actionBarSize">@dimen/dp_44</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>

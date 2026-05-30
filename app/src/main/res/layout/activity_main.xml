@@ -24,10 +24,12 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
+        android:gravity="center_vertical"
         android:titleTextColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:buttonGravity="center_vertical"
         app:popupTheme="@style/ThemeOverlay.VoiceDAO.Toolbar.Popup"
         app:theme="@style/ThemeOverlay.VoiceDAO.Toolbar"
         app:title="@string/app_name" />
@@ -74,10 +76,11 @@
                 android:overScrollMode="ifContentScrolls"
                 android:paddingStart="@dimen/dp_16"
                 android:paddingTop="@dimen/dp_16"
-                android:paddingEnd="@dimen/dp_8"
+                android:paddingEnd="@dimen/dp_12"
                 android:paddingBottom="@dimen/dp_16"
                 android:scrollbars="vertical"
-                android:scrollbarStyle="insideOverlay"
+                android:scrollbarSize="@dimen/dp_4"
+                android:scrollbarStyle="insideInset"
                 android:textColor="@color/text_primary"
                 android:textColorHighlight="@color/text_highlight"
                 android:textColorHint="@color/hint_gray"
@@ -129,7 +132,7 @@
                 android:background="@drawable/btn_debug_mode_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_fill_test_text"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="@dimen/sp_16"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +155,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="@dimen/settings_header_row_min_height"
+                    android:minHeight="@dimen/dp_48"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -178,7 +181,8 @@
                             android:clickable="true"
                             android:contentDescription="@string/speed_info_title"
                             android:focusable="true"
-                            android:src="@drawable/ic_info_content" />
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/hint_gray" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -193,7 +197,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/settings_colon_value_gap"
+                        android:layout_marginStart="@dimen/dp_4"
                         android:layout_marginEnd="@dimen/dp_8"
                         android:gravity="start|center_vertical"
                         android:minWidth="@dimen/dp_32"
@@ -214,13 +218,13 @@
                         android:background="@drawable/btn_main_bg"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:minWidth="@dimen/reset_button_min_width"
+                        android:minWidth="@dimen/dp_52"
                         android:paddingStart="@dimen/dp_4"
                         android:paddingEnd="@dimen/dp_4"
                         android:singleLine="true"
                         android:stateListAnimator="@animator/btn_scale_animator"
                         android:text="@string/btn_reset"
-                        android:textColor="@color/white"
+                        android:textColor="@color/pure_white"
                         android:textSize="@dimen/sp_12" />
                 </LinearLayout>
 
@@ -286,7 +290,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="@dimen/settings_header_row_min_height"
+                    android:minHeight="@dimen/dp_48"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -312,7 +316,8 @@
                             android:clickable="true"
                             android:contentDescription="@string/pitch_info_title"
                             android:focusable="true"
-                            android:src="@drawable/ic_info_content" />
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/hint_gray" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -327,7 +332,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/settings_colon_value_gap"
+                        android:layout_marginStart="@dimen/dp_4"
                         android:layout_marginEnd="@dimen/dp_8"
                         android:gravity="start|center_vertical"
                         android:minWidth="@dimen/dp_32"
@@ -348,13 +353,13 @@
                         android:background="@drawable/btn_main_bg"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:minWidth="@dimen/reset_button_min_width"
+                        android:minWidth="@dimen/dp_52"
                         android:paddingStart="@dimen/dp_4"
                         android:paddingEnd="@dimen/dp_4"
                         android:singleLine="true"
                         android:stateListAnimator="@animator/btn_scale_animator"
                         android:text="@string/btn_reset"
-                        android:textColor="@color/white"
+                        android:textColor="@color/pure_white"
                         android:textSize="@dimen/sp_12" />
                 </LinearLayout>
 
@@ -422,7 +427,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_8"
                     android:gravity="center_vertical"
-                    android:minHeight="@dimen/settings_header_row_min_height"
+                    android:minHeight="@dimen/dp_48"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -448,7 +453,8 @@
                             android:clickable="true"
                             android:contentDescription="@string/tts_support_info_title"
                             android:focusable="true"
-                            android:src="@drawable/ic_info_content" />
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/hint_gray" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -463,9 +469,9 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/settings_colon_value_gap"
+                        android:layout_marginStart="@dimen/dp_4"
                         android:layout_weight="1"
-                        android:minWidth="120dp"
+                        android:minWidth="@dimen/dp_120"
                         android:scrollbars="horizontal"
                         android:spinnerMode="dropdown" />
                 </LinearLayout>
@@ -476,7 +482,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_8"
                     android:gravity="center_vertical"
-                    android:minHeight="@dimen/settings_header_row_min_height"
+                    android:minHeight="@dimen/dp_48"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -502,7 +508,8 @@
                             android:clickable="true"
                             android:contentDescription="@string/voice_info_title"
                             android:focusable="true"
-                            android:src="@drawable/ic_info_content" />
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/hint_gray" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -517,9 +524,9 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/settings_colon_value_gap"
+                        android:layout_marginStart="@dimen/dp_4"
                         android:layout_weight="1"
-                        android:minWidth="120dp"
+                        android:minWidth="@dimen/dp_120"
                         android:scrollbars="horizontal"
                         android:spinnerMode="dropdown" />
                 </LinearLayout>
@@ -533,13 +540,13 @@
                     android:background="@drawable/btn_main_bg"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:minWidth="@dimen/reset_button_min_width"
+                    android:minWidth="@dimen/dp_52"
                     android:paddingStart="@dimen/dp_4"
                     android:paddingEnd="@dimen/dp_4"
                     android:singleLine="true"
                     android:stateListAnimator="@animator/btn_scale_animator"
                     android:text="@string/btn_reset"
-                    android:textColor="@color/white"
+                    android:textColor="@color/pure_white"
                     android:textSize="@dimen/sp_12"
                     android:tooltipText="@string/tip_reset_lang_voice"
                     tools:targetApi="26" />
@@ -566,7 +573,7 @@
                     android:background="@drawable/btn_main_bg"
                     android:stateListAnimator="@animator/btn_scale_animator"
                     android:text="@string/btn_speak"
-                    android:textColor="@color/white"
+                    android:textColor="@color/pure_white"
                     android:textSize="@dimen/sp_18" />
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -577,7 +584,7 @@
                     android:background="@drawable/btn_main_bg"
                     android:stateListAnimator="@animator/btn_scale_animator"
                     android:text="@string/btn_stop_speak"
-                    android:textColor="@color/white"
+                    android:textColor="@color/pure_white"
                     android:textSize="@dimen/sp_18" />
             </LinearLayout>
 
@@ -586,7 +593,7 @@
                 android:id="@+id/layoutSaveAudioRow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/main_action_button_row_gap"
+                android:layout_marginTop="@dimen/dp_12"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -602,7 +609,7 @@
                     android:background="@drawable/btn_main_bg"
                     android:stateListAnimator="@animator/btn_scale_animator"
                     android:text="@string/btn_save_audio"
-                    android:textColor="@color/white"
+                    android:textColor="@color/pure_white"
                     android:textSize="@dimen/sp_18" />
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -613,7 +620,7 @@
                     android:background="@drawable/btn_main_bg"
                     android:stateListAnimator="@animator/btn_scale_animator"
                     android:text="@string/btn_cancel_save"
-                    android:textColor="@color/white"
+                    android:textColor="@color/pure_white"
                     android:textSize="@dimen/sp_16" />
             </LinearLayout>
 
@@ -621,11 +628,11 @@
                 android:id="@+id/btnSetSaveDir"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_48"
-                android:layout_marginTop="@dimen/main_action_button_row_gap"
+                android:layout_marginTop="@dimen/dp_12"
                 android:background="@drawable/btn_main_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_set_save_dir"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="@dimen/sp_16"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -636,11 +643,11 @@
                 android:id="@+id/btnSetTtsInfoDir"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_48"
-                android:layout_marginTop="@dimen/main_action_button_row_gap"
+                android:layout_marginTop="@dimen/dp_12"
                 android:background="@drawable/btn_debug_mode_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_set_tts_info_dir"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="@dimen/sp_16"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -652,11 +659,11 @@
                 android:id="@+id/btnOutputTtsInfoNow"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_48"
-                android:layout_marginTop="@dimen/main_action_button_row_gap"
+                android:layout_marginTop="@dimen/dp_12"
                 android:background="@drawable/btn_debug_mode_bg"
                 android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="@string/btn_output_tts_info_now"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="@dimen/sp_16"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -782,8 +789,8 @@
 
                         <ImageButton
                             android:id="@+id/btnCopySaveDir"
-                            android:layout_width="@dimen/status_info_copy_button_size"
-                            android:layout_height="@dimen/status_info_copy_button_size"
+                            android:layout_width="@dimen/dp_16"
+                            android:layout_height="@dimen/dp_16"
                             android:layout_gravity="top"
                             android:layout_marginStart="@dimen/dp_4"
                             android:background="?attr/selectableItemBackgroundBorderless"
@@ -839,7 +846,7 @@
                             android:layout_width="0dp"
                             android:layout_height="1dp"
                             android:layout_weight="1"
-                            android:background="#40FF5722" />
+                            android:background="@color/accent_warning_overlay_25" />
 
                         <TextView
                             android:id="@+id/tvStatusDebugSectionTitle"
@@ -851,7 +858,7 @@
                             android:paddingStart="@dimen/dp_4"
                             android:paddingEnd="@dimen/dp_4"
                             android:text="@string/status_debug_section_title"
-                            android:textColor="@color/debug_mode_accent"
+                            android:textColor="@color/accent_warning"
                             android:textSize="@dimen/sp_15"
                             android:textStyle="bold" />
 
@@ -859,7 +866,7 @@
                             android:layout_width="0dp"
                             android:layout_height="1dp"
                             android:layout_weight="1"
-                            android:background="#40FF5722" />
+                            android:background="@color/accent_warning_overlay_25" />
                     </LinearLayout>
 
                     <!-- TTS信息保存目录：启用 log_tts_voices 时显示 -->
@@ -876,7 +883,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/label_tts_info_save_dir"
-                            android:textColor="@color/debug_mode_accent"
+                            android:textColor="@color/accent_warning"
                             android:textSize="@dimen/sp_13"
                             android:textStyle="bold" />
 
@@ -895,13 +902,13 @@
                                 android:breakStrategy="simple"
                                 android:ellipsize="none"
                                 android:text=""
-                                android:textColor="@color/debug_mode_accent"
+                                android:textColor="@color/accent_warning"
                                 android:textSize="@dimen/sp_13" />
 
                             <ImageButton
                                 android:id="@+id/btnCopyTtsInfoDir"
-                                android:layout_width="@dimen/status_info_copy_button_size"
-                                android:layout_height="@dimen/status_info_copy_button_size"
+                                android:layout_width="@dimen/dp_16"
+                                android:layout_height="@dimen/dp_16"
                                 android:layout_gravity="top"
                                 android:layout_marginStart="@dimen/dp_4"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -909,7 +916,7 @@
                                 android:scaleType="centerInside"
                                 android:src="@drawable/ic_copy"
                                 android:visibility="gone"
-                                app:tint="@color/debug_mode_accent" />
+                                app:tint="@color/accent_warning" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -927,7 +934,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/label_current_voice_debug"
-                            android:textColor="@color/debug_mode_accent"
+                            android:textColor="@color/accent_warning"
                             android:textSize="@dimen/sp_13"
                             android:textStyle="bold" />
 
@@ -946,13 +953,13 @@
                                 android:breakStrategy="simple"
                                 android:ellipsize="none"
                                 android:text=""
-                                android:textColor="@color/debug_mode_accent"
+                                android:textColor="@color/accent_warning"
                                 android:textSize="@dimen/sp_13" />
 
                             <ImageButton
                                 android:id="@+id/btnCopyCurrentVoice"
-                                android:layout_width="@dimen/status_info_copy_button_size"
-                                android:layout_height="@dimen/status_info_copy_button_size"
+                                android:layout_width="@dimen/dp_16"
+                                android:layout_height="@dimen/dp_16"
                                 android:layout_gravity="top"
                                 android:layout_marginStart="@dimen/dp_4"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -960,7 +967,7 @@
                                 android:scaleType="centerInside"
                                 android:src="@drawable/ic_copy"
                                 android:visibility="gone"
-                                app:tint="@color/debug_mode_accent" />
+                                app:tint="@color/accent_warning" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -977,7 +984,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/label_selected_test_cases"
-                            android:textColor="@color/debug_mode_accent"
+                            android:textColor="@color/accent_warning"
                             android:textSize="@dimen/sp_13"
                             android:textStyle="bold" />
 
@@ -987,7 +994,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text=""
-                            android:textColor="@color/debug_mode_accent"
+                            android:textColor="@color/accent_warning"
                             android:textSize="@dimen/sp_13" />
                     </LinearLayout>
                 </LinearLayout>

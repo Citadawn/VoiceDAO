@@ -1298,7 +1298,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.toolbar_title_text_size));
+                getResources().getDimension(R.dimen.sp_22));
+        titleView.setIncludeFontPadding(false);
         TextViewCompat.setAutoSizeTextTypeWithDefaults(titleView,
                 TextViewCompat.AUTO_SIZE_TEXT_TYPE_NONE);
         titleView.setSingleLine(true);
@@ -1332,6 +1333,7 @@ public class MainActivity extends AppCompatActivity {
         boolean debugMode = TestManager.getInstance().isTestMode();
         toolbar.post(() -> {
             applyMainToolbarTitleAppearance(toolbar, debugMode);
+            SystemBarsHelper.alignToolbarContent(toolbar);
             bindDebugModeTitleTapTarget(toolbar);
         });
     }
@@ -1707,7 +1709,6 @@ public class MainActivity extends AppCompatActivity {
                 String ttsInfoDirPath = getTtsInfoSaveDirDisplayPath();
                 bindSaveDirectoryDisplay(layoutTtsInfoDir, tvTtsInfoSaveDirLabel, layoutTtsInfoSaveDirValueRow,
                         tvTtsInfoSaveDir, btnCopyTtsInfoDir, ttsInfoDirPath);
-                DebugModeUi.applyAccentText(tvTtsInfoSaveDirLabel, tvTtsInfoSaveDir);
             } else {
                 layoutTtsInfoDir.setVisibility(View.GONE);
             }
@@ -1781,7 +1782,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         layoutCurrentVoiceDebug.setVisibility(View.VISIBLE);
-        DebugModeUi.applyAccentText(tvCurrentVoiceDebugLabel, tvCurrentVoiceDebug);
         if (!isTtsReady || tts == null) {
             tvCurrentVoiceDebug.setText(R.string.voice_debug_tts_not_ready);
             if (btnCopyCurrentVoice != null) {
@@ -1821,10 +1821,6 @@ public class MainActivity extends AppCompatActivity {
 
         btnSetTtsInfoDir.setVisibility(showTtsInfoDirButton ? View.VISIBLE : View.GONE);
         btnOutputTtsInfoNow.setVisibility(showTtsInfoDirButton ? View.VISIBLE : View.GONE);
-        if (showTtsInfoDirButton) {
-            DebugModeUi.styleDebugButton(btnSetTtsInfoDir);
-            DebugModeUi.styleDebugButton(btnOutputTtsInfoNow);
-        }
     }
 
     /**
@@ -1837,9 +1833,6 @@ public class MainActivity extends AppCompatActivity {
         }
         boolean show = isDebugItemSelected("fill_test_text");
         btnFillTestText.setVisibility(show ? View.VISIBLE : View.GONE);
-        if (show) {
-            DebugModeUi.styleDebugButton(btnFillTestText);
-        }
     }
 
     // endregion
@@ -2267,7 +2260,7 @@ public class MainActivity extends AppCompatActivity {
         if (copyButton == null) {
             return;
         }
-        int size = getResources().getDimensionPixelSize(R.dimen.status_info_copy_button_size);
+        int size = getResources().getDimensionPixelSize(R.dimen.dp_16);
         int marginStart = getResources().getDimensionPixelSize(R.dimen.dp_4);
         LinearLayout.LayoutParams copyLp = new LinearLayout.LayoutParams(size, size);
         copyLp.gravity = android.view.Gravity.TOP;

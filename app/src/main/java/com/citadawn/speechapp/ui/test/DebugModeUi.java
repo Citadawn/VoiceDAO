@@ -12,10 +12,6 @@ import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -23,7 +19,8 @@ import androidx.core.content.ContextCompat;
 import com.citadawn.speechapp.R;
 
 /**
- * 调试模式相关控件的统一配色（{@link R.color#debug_mode_accent}）与标题连点反馈。
+ * 调试模式：Toolbar 标题连点反馈、强调色读取、溢出菜单「退出调试模式」样式。
+ * 静态控件配色在布局 XML 中声明（{@link R.color#accent_warning}、{@link R.drawable#btn_debug_mode_bg} 等）。
  */
 public final class DebugModeUi {
 
@@ -89,32 +86,7 @@ public final class DebugModeUi {
     }
 
     public static int accentColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.debug_mode_accent);
-    }
-
-    public static void applyAccentText(@Nullable TextView... textViews) {
-        if (textViews == null) {
-            return;
-        }
-        for (TextView textView : textViews) {
-            if (textView != null) {
-                textView.setTextColor(accentColor(textView.getContext()));
-            }
-        }
-    }
-
-    public static void styleDebugButton(@NonNull Button button) {
-        button.setBackgroundResource(R.drawable.btn_debug_mode_bg);
-        button.setTextColor(ContextCompat.getColor(button.getContext(), R.color.white));
-    }
-
-    public static void styleDebugPanelPrimaryButton(@NonNull Button button) {
-        styleDebugButton(button);
-    }
-
-    public static void tintCheckbox(@NonNull CheckBox checkBox) {
-        checkBox.setButtonTintList(ContextCompat.getColorStateList(checkBox.getContext(),
-                R.color.debug_mode_checkbox_tint));
+        return ContextCompat.getColor(context, R.color.accent_warning);
     }
 
     /**

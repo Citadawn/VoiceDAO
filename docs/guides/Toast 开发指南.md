@@ -5,7 +5,7 @@
 本指南介绍如何在 VoiceDAO 项目中正确使用 Toast 消息提示功能。项目使用自定义 Toast 样式，确保所有 Toast
 消息具有一致的外观和用户体验。
 
-**遵循规范**：请严格遵循本项目 [CONTRIBUTING.md](../../CONTRIBUTING.md) 的协作规范（分层、分区、命名、国际化与资源管理等）。
+**遵循规范**：请严格遵循本项目 [开发规范](./开发规范.md)（分层、分区、命名、国际化与资源管理等）。
 
 ## Toast 样式规范
 
@@ -365,7 +365,7 @@ private static void showCustomToast(Context context, String message, int duratio
 
 ---
 
-- [CONTRIBUTING.md](../../CONTRIBUTING.md) - 项目协作规范
+- [开发规范](./开发规范.md) - 项目开发规范
 - [状态信息区块开发说明](./状态信息区块开发说明.md) - 主界面状态信息的开发规范
 - [调试模式添加调试项指南](./调试模式添加调试项指南.md) - 为调试模式新增调试项的步骤
 - [README.md](../../README.md) - 项目说明文档

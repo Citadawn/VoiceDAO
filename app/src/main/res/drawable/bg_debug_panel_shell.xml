@@ -4,6 +4,6 @@
     <solid android:color="@color/debug_mode_panel_bg" />
     <stroke
         android:width="2dp"
-        android:color="@color/debug_mode_accent" />
+        android:color="@color/accent_warning" />
     <corners android:radius="@dimen/dp_16" />
 </shape>

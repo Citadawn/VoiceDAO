@@ -13,9 +13,11 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
+        android:gravity="center_vertical"
         android:elevation="@dimen/dp_4"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:buttonGravity="center_vertical"
+        android:theme="@style/ThemeOverlay.VoiceDAO.Toolbar"
+        app:popupTheme="@style/ThemeOverlay.VoiceDAO.Toolbar.Popup" />
 
     <!-- 选项卡 -->
     <com.google.android.material.tabs.TabLayout

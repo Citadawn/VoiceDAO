@@ -64,7 +64,6 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
                 ? R.drawable.ic_debug_collapse
                 : R.drawable.ic_debug_expand);
 
-        DebugModeUi.tintCheckbox(holder.cbTestCase);
         applyItemCardStyle(holder, testCase.selected);
 
         holder.btnToggleDesc.setOnClickListener(v -> {
@@ -100,7 +99,7 @@ public class TestCaseAdapter extends RecyclerView.Adapter<TestCaseAdapter.ViewHo
                 selected ? R.color.debug_mode_accent_surface : R.color.pure_white);
         holder.cardTestCase.setCardBackgroundColor(ColorStateList.valueOf(surfaceColor));
         holder.cbTestCase.setTextColor(ContextCompat.getColor(holder.itemView.getContext(),
-                selected ? R.color.debug_mode_accent : R.color.text_primary));
+                selected ? R.color.accent_warning : R.color.text_primary));
     }
 
     @Override

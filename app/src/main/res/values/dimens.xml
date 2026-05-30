@@ -2,36 +2,19 @@
     <dimen name="dp_2">2dp</dimen>
     <dimen name="dp_4">4dp</dimen>
     <dimen name="dp_8">8dp</dimen>
-    <!-- 调试面板列表：滚动条宽度与右侧留白（滚动条在卡片边框外侧） -->
-    <dimen name="debug_panel_scrollbar_width">4dp</dimen>
-    <dimen name="debug_panel_list_scroll_gutter">10dp</dimen>
-    <!-- 主界面输入框：左右文字边距一致；右侧为文字留白 + 滚动条间隔 + 滚动条宽度 -->
-    <dimen name="edit_text_padding_horizontal">16dp</dimen>
-    <dimen name="edit_text_scrollbar_width">4dp</dimen>
-    <dimen name="main_edit_text_scroll_gutter">8dp</dimen>
-    <dimen name="main_edit_text_padding_end">28dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
     <dimen name="dp_12">12dp</dimen>
     <dimen name="dp_16">16dp</dimen>
-    <!-- 状态信息区块：路径/文本旁的复制图标按钮 -->
-    <dimen name="status_info_copy_button_size">16dp</dimen>
     <dimen name="dp_20">20dp</dimen>
-    <dimen name="dp_28">28dp</dimen>
     <dimen name="dp_24">24dp</dimen>
+    <dimen name="dp_28">28dp</dimen>
     <dimen name="dp_32">32dp</dimen>
     <dimen name="dp_36">36dp</dimen>
-
-    <dimen name="dp_64">64dp</dimen>
-    <dimen name="dp_120">120dp</dimen>
     <dimen name="dp_44">44dp</dimen>
     <dimen name="dp_48">48dp</dimen>
-    <!-- Toolbar 标题行高度（不含状态栏 inset；默认 actionBarSize 为 56dp） -->
-    <dimen name="toolbar_content_height">44dp</dimen>
-    <dimen name="toolbar_title_text_size">22sp</dimen>
-    <dimen name="reset_button_min_width">52dp</dimen>
-    <dimen name="settings_colon_value_gap">4dp</dimen>
-    <!-- 主界面朗读/保存/目录等操作按钮：相邻两排之间的垂直间距 -->
-    <dimen name="main_action_button_row_gap">12dp</dimen>
-    <dimen name="settings_header_row_min_height">48dp</dimen>
+    <dimen name="dp_52">52dp</dimen>
+    <dimen name="dp_64">64dp</dimen>
+    <dimen name="dp_120">120dp</dimen>
     <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_13">13sp</dimen>
     <dimen name="sp_14">14sp</dimen>
@@ -40,4 +23,4 @@
     <dimen name="sp_18">18sp</dimen>
     <dimen name="sp_20">20sp</dimen>
     <dimen name="sp_22">22sp</dimen>
-</resources> 
+</resources>

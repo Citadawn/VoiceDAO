@@ -5,8 +5,9 @@
     <item
         android:id="@+id/action_editor_info"
         android:contentDescription="@string/dialog_title_editor_info"
-        android:icon="@drawable/ic_info_toolbar"
+        android:icon="@drawable/ic_info"
         android:title="@string/dialog_title_editor_info"
+        app:iconTint="@color/pure_white"
         app:showAsAction="always" />
 
 </menu> 

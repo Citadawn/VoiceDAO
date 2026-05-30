@@ -22,7 +22,7 @@
             <corners android:radius="@dimen/dp_16" />
             <stroke
                 android:width="2dp"
-                android:color="@color/focus_border" />
+                android:color="@color/main_dark" />
         </shape>
     </item>
 </layer-list> 

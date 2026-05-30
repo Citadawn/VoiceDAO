@@ -101,7 +101,7 @@ public final class TtsSpeakStatusHelper {
                                             @Nullable String errorUtteranceId) {
         if (!engineReady) {
             return new StatusPresentation(R.string.tts_status_engine_not_ready, null,
-                    R.color.tts_support_none);
+                    R.color.btn_disabled_bg);
         }
         return switch (state) {
             case PREPARING_SPEAK -> new StatusPresentation(R.string.tts_status_preparing_speak, null,

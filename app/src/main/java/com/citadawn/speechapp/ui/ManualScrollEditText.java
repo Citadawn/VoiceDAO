@@ -39,8 +39,6 @@ public class ManualScrollEditText extends AppCompatEditText {
     public ManualScrollEditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        setVerticalScrollBarEnabled(true);
-        setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
         applyJustifiedAlignment();
     }
 
